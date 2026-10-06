@@ -1,0 +1,31 @@
+yaml
+name: Manual Test Pull
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - run: pip install pandas requests
+
+      - name: Pull one known day as a smoke test
+        run: |
+          python -c "
+          from datetime import date
+          from pull_season import pull_season
+          games_df, team_df = pull_season(date(2026,2,5), date(2026,2,5), out_dir='test_output', fetch_innings=True, debug=True)
+          print(games_df.shape, team_df.shape)
+          "
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: test-output
+          path: test_output/
