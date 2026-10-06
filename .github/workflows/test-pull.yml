@@ -1,6 +1,3 @@
-yaml
-name: Manual Test Pull
-
 on:
   workflow_dispatch:
 
