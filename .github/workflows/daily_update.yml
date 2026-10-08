@@ -3,7 +3,7 @@ name: Daily Kahl Index Update
 on:
   schedule:
     - cron: '0 8 * * *' # Auto-runs daily at 8:00 AM UTC (4:00 AM EST)
-  workflow_dispatch: # Keeps the "Run workflow" manual button
+  workflow_dispatch: # Manual trigger button
 
 jobs:
   run-pipeline:
@@ -23,13 +23,7 @@ jobs:
           pip install pandas requests numpy
 
       - name: Run Season Data Scraper
-        run: |
-          python -c "
-          from datetime import date
-          from pull_season import pull_season
-          # Pulls opening day through today's date
-          pull_season(start=date(2026,2,1), end=date.today(), out_dir='.', fetch_innings=True)
-          "
+        run: python pull_season.py
 
       - name: Compute Kahl Index Ratings
         run: python compute_ratings.py
