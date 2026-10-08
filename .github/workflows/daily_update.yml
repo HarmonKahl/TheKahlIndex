@@ -1,0 +1,42 @@
+name: Daily Kahl Index Update
+
+on:
+  schedule:
+    - cron: '0 8 * * *' # Auto-runs daily at 8:00 AM UTC (4:00 AM EST)
+  workflow_dispatch: # Keeps the "Run workflow" manual button
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas requests numpy
+
+      - name: Run Season Data Scraper
+        run: |
+          python -c "
+          from datetime import date
+          from pull_season import pull_season
+          # Pulls opening day through today's date
+          pull_season(start=date(2026,2,1), end=date.today(), out_dir='.', fetch_innings=True)
+          "
+
+      - name: Compute Kahl Index Ratings
+        run: python compute_ratings.py
+
+      - name: Commit and Save Data Back to Repo
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add games_season.csv team_games_season.csv _completed_dates.txt ratings.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Auto-update ratings data" && git push)
