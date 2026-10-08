@@ -1,6 +1,3 @@
-Here is the complete pull_season.py code with the date range fix applied. It checks the active softball season window (February 1 through June 30) so it doesn't waste time making API calls during the offseason.
-
-Python
 import os
 import re
 import threading
