@@ -1,6 +1,5 @@
 import os
 import re
-import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, timedelta
@@ -11,35 +10,16 @@ import requests
 SCOREBOARD_URL = "https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
 BOXSCORE_URL = "https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
 
-REQUESTS_PER_SECOND_LIMIT = 5
-_MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
-
-
-class RateLimiter:
-
-    def __init__(self, min_interval=_MIN_INTERVAL):
-        self.min_interval = min_interval
-        self._last = 0.0
-        self._lock = threading.Lock()
-
-    def wait(self):
-        with self._lock:
-            elapsed = time.time() - self._last
-            if elapsed < self.min_interval:
-                time.sleep(self.min_interval - elapsed)
-            self._last = time.time()
-
-
-_limiter = RateLimiter()
 _session = requests.Session()
-_adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
+_adapter = requests.adapters.HTTPAdapter(
+    pool_connections=20, pool_maxsize=20, max_retries=2
+)
 _session.mount("https://", _adapter)
 _session.mount("http://", _adapter)
 
 
 def _get_json(url):
-    _limiter.wait()
-    resp = _session.get(url, timeout=10)
+    resp = _session.get(url, timeout=5)
     resp.raise_for_status()
     return resp.json()
 
@@ -117,14 +97,12 @@ def parse_innings_pitched(ip_str):
     return whole + thirds
 
 
-def fetch_innings_for_game(game_id, debug=False):
+def fetch_innings_for_game(game_id):
     if not game_id:
         return None, None
     try:
         data = _get_json(BOXSCORE_URL.format(game_id=game_id))
-    except Exception as e:
-        if debug:
-            print(f"  boxscore fetch failed for game {game_id}: {e}")
+    except Exception:
         return None, None
 
     teams_meta = data.get("teams", [])
@@ -155,33 +133,22 @@ def fetch_innings_for_game(game_id, debug=False):
     return away_ip, home_ip
 
 
-def fetch_innings_concurrent(game_ids, debug=False, max_workers=10):
+def fetch_innings_concurrent(game_ids, max_workers=5):
     results = {}
     with ThreadPoolExecutor(max_workers=max_workers) as ex:
         futures = {
-            ex.submit(fetch_innings_for_game, gid, debug): gid
-            for gid in game_ids
+            ex.submit(fetch_innings_for_game, gid): gid for gid in game_ids
         }
         for fut in as_completed(futures):
             gid = futures[fut]
             try:
                 results[gid] = fut.result()
-            except Exception as e:
-                if debug:
-                    print(f"  concurrent fetch failed for game {gid}: {e}")
+            except Exception:
                 results[gid] = (None, None)
     return results
 
 
-def pull_day(
-    year,
-    month,
-    day,
-    max_pages=20,
-    fetch_innings=True,
-    debug=False,
-    innings_workers=10,
-):
+def pull_day(year, month, day, max_pages=10, fetch_innings=True):
     date_str = f"{year}-{month:02d}-{day:02d}"
     seen, seen_order = {}, []
 
@@ -229,9 +196,7 @@ def pull_day(
 
     if fetch_innings:
         game_ids = [row["game_id"] for row in games if row["game_id"]]
-        inn_map = fetch_innings_concurrent(
-            game_ids, debug=debug, max_workers=innings_workers
-        )
+        inn_map = fetch_innings_concurrent(game_ids, max_workers=5)
         for row in games:
             row["away_innings"], row["home_innings"] = inn_map.get(
                 row["game_id"], (None, None)
@@ -307,9 +272,7 @@ def _daterange(start, end):
         d += timedelta(days=1)
 
 
-def pull_season(
-    start, end, out_dir=".", fetch_innings=True, debug=False, max_retries=1
-):
+def pull_season(start, end, out_dir="."):
     os.makedirs(out_dir, exist_ok=True)
     games_path = os.path.join(out_dir, "games_season.csv")
     team_path = os.path.join(out_dir, "team_games_season.csv")
@@ -338,48 +301,30 @@ def pull_season(
         if date_str in completed:
             continue
 
-        day_games, attempt = None, 0
-        while attempt <= max_retries:
-            try:
-                day_games = pull_day(
-                    d.year,
-                    d.month,
-                    d.day,
-                    fetch_innings=fetch_innings,
-                    debug=debug,
-                )
-                break
-            except Exception as e:
-                attempt += 1
-                if debug:
-                    print(
-                        f"[{i}/{len(dates)}] {date_str}: error ({e}), retry {attempt}/{max_retries}"
-                    )
-                time.sleep(1)
-
-        if day_games is None:
+        try:
+            day_games = pull_day(d.year, d.month, d.day, fetch_innings=True)
+        except Exception as e:
+            print(f"[{i}/{len(dates)}] {date_str}: skipped on error ({e})")
             continue
 
         all_games.extend(day_games)
         all_team_rows.extend(games_to_team_rows(day_games))
         completed.add(date_str)
 
-        # Save progress incrementally after each day
+        # Save progress incrementally
         pd.DataFrame(all_games).to_csv(games_path, index=False)
         pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
         with open(progress_path, "w") as f:
             f.write("\n".join(sorted(completed)))
 
         print(
-            f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games pulled successfully."
+            f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games pulled."
         )
 
     return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
 
 
 if __name__ == "__main__":
-    from datetime import date
-
     current_year = date.today().year
 
     # Division I Softball season bounds: Feb 1 through June 30
@@ -388,10 +333,4 @@ if __name__ == "__main__":
     end_date = min(date.today(), season_end)
 
     print(f"Starting season pull from {start_date} to {end_date}...")
-    pull_season(
-        start=start_date,
-        end=end_date,
-        out_dir=".",
-        fetch_innings=True,
-        debug=False,
-    )
+    pull_season(start=start_date, end=end_date, out_dir=".")
