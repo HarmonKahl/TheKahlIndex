@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Kahl Index | NCAA Softball Ratings</title>
+  <style>
+    :root { --primary: #0f172a; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; --accent: #2563eb; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text); margin: 0; padding: 2rem 1rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    header { margin-bottom: 2rem; }
+    h1 { font-size: 2.25rem; font-weight: 800; color: var(--primary); margin: 0 0 0.5rem 0; }
+    p { color: #64748b; margin: 0; }
+    .controls { margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+    input { padding: 0.75rem 1rem; border: 1px solid #cbd5e1; border-radius: 8px; width: 100%; max-width: 320px; font-size: 1rem; outline: none; }
+    input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .table-card { background: var(--card); border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th { background: var(--primary); color: white; padding: 1rem; font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    td { padding: 0.875rem 1rem; border-bottom: 1px solid #f1f5f9; white-space: nowrap; font-size: 0.95rem; }
+    tr:hover { background: #f8fafc; }
+    .bold { font-weight: 700; color: var(--primary); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>The Kahl Index</h1>
+      <p>NCAA Division I Softball Power Ratings & Strength of Schedule</p>
+    </header>
+
+    <div class="controls">
+      <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search team...">
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Team</th>
+            <th>Games</th>
+            <th>R/7</th>
+            <th>RA/7</th>
+            <th>Off Adj</th>
+            <th>Def Adj</th>
+            <th>Net Adj</th>
+            <th>SOS</th>
+            <th>Adj Rating</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    async function loadRatings() {
+      try {
+        const response = await fetch('ratings.json');
+        const data = await response.json();
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+
+        data.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td class="bold">${row.rank}</td>
+            <td class="bold">${row.team}</td>
+            <td>${row.games}</td>
+            <td>${row.r_per_7.toFixed(2)}</td>
+            <td>${row.ra_per_7.toFixed(2)}</td>
+            <td>${row.off_adj.toFixed(2)}</td>
+            <td>${row.def_adj.toFixed(2)}</td>
+            <td>${row.net_adj.toFixed(2)}</td>
+            <td>${row.sos.toFixed(2)}</td>
+            <td class="bold" style="color:var(--accent);">${row.adj_rating.toFixed(2)}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error('Failed to load ratings:', err);
+      }
+    }
+
+    function filterTable() {
+      const query = document.getElementById("searchInput").value.toUpperCase();
+      const rows = document.getElementById("tableBody").getElementsByTagName("tr");
+      for (let row of rows) {
+        const teamCell = row.getElementsByTagName("td")[1];
+        if (teamCell) {
+          const match = (teamCell.textContent || teamCell.innerText).toUpperCase().includes(query);
+          row.style.display = match ? "" : "none";
+        }
+      }
+    }
+
+    loadRatings();
+  </script>
+</body>
+</html>
