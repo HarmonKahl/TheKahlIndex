@@ -1,3 +1,6 @@
+Here is the complete pull_season.py code with the date range fix applied. It checks the active softball season window (February 1 through June 30) so it doesn't waste time making API calls during the offseason.
+
+Python
 import os
 import re
 import threading
@@ -380,8 +383,13 @@ def pull_season(
 if __name__ == "__main__":
     from datetime import date
 
-    start_date = date(2026, 2, 1)
-    end_date = date.today()
+    current_year = date.today().year
+
+    # Division I Softball season bounds: Feb 1 through June 30
+    start_date = date(current_year, 2, 1)
+    season_end = date(current_year, 6, 30)
+    end_date = min(date.today(), season_end)
+
     print(f"Starting season pull from {start_date} to {end_date}...")
     pull_season(
         start=start_date,
