@@ -1,5 +1,6 @@
 import os
 import re
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import date, timedelta
@@ -10,16 +11,34 @@ import requests
 SCOREBOARD_URL = "https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
 BOXSCORE_URL = "https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
 
+REQUESTS_PER_SECOND_LIMIT = 5
+_MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
+
+
+class RateLimiter:
+    def __init__(self, min_interval=_MIN_INTERVAL):
+        self.min_interval = min_interval
+        self._last = 0.0
+        self._lock = threading.Lock()
+
+    def wait(self):
+        with self._lock:
+            elapsed = time.time() - self._last
+            if elapsed < self.min_interval:
+                time.sleep(self.min_interval - elapsed)
+            self._last = time.time()
+
+
+_limiter = RateLimiter()
 _session = requests.Session()
-_adapter = requests.adapters.HTTPAdapter(
-    pool_connections=20, pool_maxsize=20, max_retries=2
-)
+_adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
 _session.mount("https://", _adapter)
 _session.mount("http://", _adapter)
 
 
 def _get_json(url):
-    resp = _session.get(url, timeout=5)
+    _limiter.wait()
+    resp = _session.get(url, timeout=15)
     resp.raise_for_status()
     return resp.json()
 
@@ -35,12 +54,7 @@ def extract_team(side_data, fallback):
     if not isinstance(side_data, dict):
         return fallback
     names = side_data.get("names", {})
-    return (
-        names.get("short")
-        or names.get("full")
-        or side_data.get("description")
-        or fallback
-    )
+    return names.get("short") or names.get("full") or side_data.get("description") or fallback
 
 
 def extract_score(side_data):
@@ -70,12 +84,7 @@ def unique_key(game, away_team, home_team, away_score, home_score, date_str):
     url = game.get("url") or game.get("link")
     if url:
         return f"url:{url}"
-    start = (
-        game.get("startTime")
-        or game.get("startTimeEpoch")
-        or game.get("gameTime")
-        or ""
-    )
+    start = game.get("startTime") or game.get("startTimeEpoch") or game.get("gameTime") or ""
     return f"fallback:{date_str}|{away_team}|{home_team}|{away_score}|{home_score}|{start}"
 
 
@@ -97,21 +106,19 @@ def parse_innings_pitched(ip_str):
     return whole + thirds
 
 
-def fetch_innings_for_game(game_id):
+def fetch_innings_for_game(game_id, debug=False):
     if not game_id:
         return None, None
     try:
         data = _get_json(BOXSCORE_URL.format(game_id=game_id))
-    except Exception:
+    except Exception as e:
+        if debug:
+            print(f"  boxscore fetch failed for game {game_id}: {e}")
         return None, None
 
     teams_meta = data.get("teams", [])
-    home_id = next(
-        (t["teamId"] for t in teams_meta if t.get("isHome")), None
-    )
-    away_id = next(
-        (t["teamId"] for t in teams_meta if t.get("isHome") is False), None
-    )
+    home_id = next((t["teamId"] for t in teams_meta if t.get("isHome")), None)
+    away_id = next((t["teamId"] for t in teams_meta if t.get("isHome") is False), None)
     if home_id is None or away_id is None:
         return None, None
     home_id, away_id = str(home_id), str(away_id)
@@ -119,12 +126,8 @@ def fetch_innings_for_game(game_id):
     ip_by_team = {}
     for tb in data.get("teamBoxscore", []):
         tid = str(tb.get("teamId"))
-        pitcher_totals = (tb.get("teamStats") or {}).get(
-            "pitcherTotals"
-        ) or {}
-        ip_by_team[tid] = parse_innings_pitched(
-            pitcher_totals.get("inningsPitched")
-        )
+        pitcher_totals = (tb.get("teamStats") or {}).get("pitcherTotals") or {}
+        ip_by_team[tid] = parse_innings_pitched(pitcher_totals.get("inningsPitched"))
 
     home_ip = ip_by_team.get(home_id)
     away_ip = ip_by_team.get(away_id)
@@ -133,31 +136,27 @@ def fetch_innings_for_game(game_id):
     return away_ip, home_ip
 
 
-def fetch_innings_concurrent(game_ids, max_workers=5):
+def fetch_innings_concurrent(game_ids, debug=False, max_workers=5):
     results = {}
     with ThreadPoolExecutor(max_workers=max_workers) as ex:
-        futures = {
-            ex.submit(fetch_innings_for_game, gid): gid for gid in game_ids
-        }
+        futures = {ex.submit(fetch_innings_for_game, gid, debug): gid for gid in game_ids}
         for fut in as_completed(futures):
             gid = futures[fut]
             try:
                 results[gid] = fut.result()
-            except Exception:
+            except Exception as e:
+                if debug:
+                    print(f"  concurrent fetch failed for game {gid}: {e}")
                 results[gid] = (None, None)
     return results
 
 
-def pull_day(year, month, day, max_pages=10, fetch_innings=True):
+def pull_day(year, month, day, max_pages=20, fetch_innings=True, debug=False, innings_workers=5):
     date_str = f"{year}-{month:02d}-{day:02d}"
     seen, seen_order = {}, []
 
     for page in range(1, max_pages + 1):
-        try:
-            data = _get_scoreboard_page(year, month, day, page)
-        except Exception:
-            break
-
+        data = _get_scoreboard_page(year, month, day, page)  # let errors propagate to caller
         raw_games = data.get("games", [])
         if not raw_games:
             break
@@ -173,34 +172,28 @@ def pull_day(year, month, day, max_pages=10, fetch_innings=True):
             status = game.get("status", "")
             game_id = extract_game_id(game)
 
-            key = unique_key(
-                game, away_team, home_team, away_score, home_score, date_str
-            )
+            key = unique_key(game, away_team, home_team, away_score, home_score, date_str)
             if key in seen:
                 continue
             seen[key] = {
-                "date": date_str,
-                "game_id": game_id,
-                "away_team": away_team,
-                "away_score": away_score,
-                "home_team": home_team,
-                "home_score": home_score,
-                "state": state,
-                "status": status,
-                "away_innings": None,
-                "home_innings": None,
+                "date": date_str, "game_id": game_id,
+                "away_team": away_team, "away_score": away_score,
+                "home_team": home_team, "home_score": home_score,
+                "state": state, "status": status,
+                "away_innings": None, "home_innings": None,
             }
             seen_order.append(key)
+
+        if debug:
+            print(f"    page {page}: {len(raw_games)} game(s)")
 
     games = [seen[k] for k in seen_order]
 
     if fetch_innings:
-        game_ids = [row["game_id"] for row in games if row["game_id"]]
-        inn_map = fetch_innings_concurrent(game_ids, max_workers=5)
+        game_ids = [row["game_id"] for row in games]
+        inn_map = fetch_innings_concurrent(game_ids, debug=debug, max_workers=innings_workers)
         for row in games:
-            row["away_innings"], row["home_innings"] = inn_map.get(
-                row["game_id"], (None, None)
-            )
+            row["away_innings"], row["home_innings"] = inn_map.get(row["game_id"], (None, None))
 
     return games
 
@@ -216,52 +209,17 @@ def games_to_team_rows(games):
             continue
 
         pairs = [
-            (
-                "away",
-                g["away_team"],
-                g["home_team"],
-                away_score,
-                home_score,
-                g["away_innings"],
-                g["home_innings"],
-            ),
-            (
-                "home",
-                g["home_team"],
-                g["away_team"],
-                home_score,
-                away_score,
-                g["home_innings"],
-                g["away_innings"],
-            ),
+            ("away", g["away_team"], g["home_team"], away_score, home_score, g["away_innings"], g["home_innings"]),
+            ("home", g["home_team"], g["away_team"], home_score, away_score, g["home_innings"], g["away_innings"]),
         ]
-        for (
-            role,
-            team,
-            opponent,
-            runs_for,
-            runs_against,
-            inn_batted,
-            inn_fielded,
-        ) in pairs:
-            rows.append(
-                {
-                    "date": g["date"],
-                    "game_id": g["game_id"],
-                    "team": team,
-                    "opponent": opponent,
-                    "role": role,
-                    "runs_for": runs_for,
-                    "runs_against": runs_against,
-                    "innings_batted": inn_batted,
-                    "innings_fielded": inn_fielded,
-                    "win": (
-                        None
-                        if runs_for == runs_against
-                        else int(runs_for > runs_against)
-                    ),
-                }
-            )
+        for role, team, opponent, runs_for, runs_against, inn_batted, inn_fielded in pairs:
+            rows.append({
+                "date": g["date"], "game_id": g["game_id"],
+                "team": team, "opponent": opponent, "role": role,
+                "runs_for": runs_for, "runs_against": runs_against,
+                "innings_batted": inn_batted, "innings_fielded": inn_fielded,
+                "win": None if runs_for == runs_against else int(runs_for > runs_against),
+            })
     return rows
 
 
@@ -272,7 +230,18 @@ def _daterange(start, end):
         d += timedelta(days=1)
 
 
-def pull_season(start, end, out_dir="."):
+def estimate_season_pull(start, end, games_per_day=48, fetch_innings=True):
+    n_days = (end - start).days + 1
+    n_games = n_days * games_per_day
+    n_requests = n_days + (n_games if fetch_innings else 0)
+    seconds = n_requests / REQUESTS_PER_SECOND_LIMIT
+    print(f"~{n_days} days, ~{n_games} games (rough estimate at {games_per_day}/day)")
+    print(f"~{n_requests} requests at the API's 5/sec cap -> at least ~{seconds/60:.0f} minutes, "
+          f"likely more with real network latency")
+
+
+def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
+                 max_retries=2, games_per_day_estimate=48):
     os.makedirs(out_dir, exist_ok=True)
     games_path = os.path.join(out_dir, "games_season.csv")
     team_path = os.path.join(out_dir, "team_games_season.csv")
@@ -283,54 +252,53 @@ def pull_season(start, end, out_dir="."):
         with open(progress_path) as f:
             completed = set(line.strip() for line in f if line.strip())
 
-    all_games = (
-        pd.read_csv(games_path).to_dict("records")
-        if os.path.exists(games_path)
-        else []
-    )
-    all_team_rows = (
-        pd.read_csv(team_path).to_dict("records")
-        if os.path.exists(team_path)
-        else []
-    )
+    all_games = pd.read_csv(games_path).to_dict("records") if os.path.exists(games_path) else []
+    all_team_rows = pd.read_csv(team_path).to_dict("records") if os.path.exists(team_path) else []
 
     dates = list(_daterange(start, end))
+    estimate_season_pull(start, end, games_per_day_estimate, fetch_innings)
+    print(f"{len(completed)} day(s) already done, {len(dates) - len(completed)} remaining\n")
 
+    failed_dates = []
     for i, d in enumerate(dates, 1):
         date_str = d.isoformat()
         if date_str in completed:
             continue
 
-        try:
-            day_games = pull_day(d.year, d.month, d.day, fetch_innings=True)
-        except Exception as e:
-            print(f"[{i}/{len(dates)}] {date_str}: skipped on error ({e})")
+        day_games, attempt = None, 0
+        while attempt <= max_retries:
+            try:
+                day_games = pull_day(d.year, d.month, d.day, fetch_innings=fetch_innings, debug=debug)
+                break
+            except Exception as e:
+                attempt += 1
+                print(f"[{i}/{len(dates)}] {date_str}: error ({e}), retry {attempt}/{max_retries}")
+                time.sleep(2 * attempt)
+
+        if day_games is None:
+            print(f"[{i}/{len(dates)}] {date_str}: FAILED after {max_retries} retries — "
+                  f"skipped, will retry on next run")
+            failed_dates.append(date_str)
             continue
 
         all_games.extend(day_games)
         all_team_rows.extend(games_to_team_rows(day_games))
         completed.add(date_str)
 
-        # Save progress incrementally
         pd.DataFrame(all_games).to_csv(games_path, index=False)
         pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
         with open(progress_path, "w") as f:
             f.write("\n".join(sorted(completed)))
 
-        print(
-            f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games pulled."
-        )
+        print(f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games "
+              f"(running total: {len(all_games)} games, {len(all_team_rows)} team-rows)")
+
+    if failed_dates:
+        print(f"\n{len(failed_dates)} day(s) failed and were not marked complete — "
+              f"rerun pull_season() with the same out_dir to retry just those:")
+        print(" ", failed_dates)
+    else:
+        print(f"\nDone. {len(all_games)} games, {len(all_team_rows)} team-rows "
+              f"written to {out_dir}/")
 
     return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
-
-
-if __name__ == "__main__":
-    current_year = date.today().year
-
-    # Division I Softball season bounds: Feb 1 through June 30
-    start_date = date(current_year, 2, 1)
-    season_end = date(current_year, 6, 30)
-    end_date = min(date.today(), season_end)
-
-    print(f"Starting season pull from {start_date} to {end_date}...")
-    pull_season(start=start_date, end=end_date, out_dir=".")
