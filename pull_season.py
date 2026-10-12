@@ -306,11 +306,17 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
 
 if __name__ == "__main__":
     import sys
-    if len(sys.argv) > 1:
-        target = date.fromisoformat(sys.argv[1])
+    if len(sys.argv) >= 3:
+        # two dates given: a range, e.g. for a one-time historical backfill
+        start_date = date.fromisoformat(sys.argv[1])
+        end_date = date.fromisoformat(sys.argv[2])
+    elif len(sys.argv) == 2:
+        # one date given: just that single day (useful for testing)
+        start_date = end_date = date.fromisoformat(sys.argv[1])
     else:
-        target = date.today() - timedelta(days=1)
+        # no date given: yesterday -- this is the real daily-automation default
+        start_date = end_date = date.today() - timedelta(days=1)
 
-    print(f"Pulling games for {target.isoformat()}...")
-    games_df, team_df = pull_season(target, target, out_dir=".", fetch_innings=True, debug=True)
-    print(f"Pulled {len(games_df)} games, {len(team_df)} team-rows for {target.isoformat()}")
+    print(f"Pulling games from {start_date.isoformat()} to {end_date.isoformat()}...")
+    games_df, team_df = pull_season(start_date, end_date, out_dir=".", fetch_innings=True, debug=True)
+    print(f"Pulled {len(games_df)} games, {len(team_df)} team-rows total")
