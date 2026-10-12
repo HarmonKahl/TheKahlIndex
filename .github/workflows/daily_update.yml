@@ -2,8 +2,11 @@ name: Daily Kahl Index Update
 
 on:
   schedule:
-    - cron: '0 8 * * *' # Auto-runs daily at 8:00 AM UTC (4:00 AM EST)
+    - cron: '0 8 * * *' # Auto-runs daily at 8:00 AM UTC (4:00 AM EST / 3:00 AM EST during standard time)
   workflow_dispatch: # Manual trigger button
+
+permissions:
+  contents: write
 
 jobs:
   run-pipeline:
@@ -23,12 +26,13 @@ jobs:
           pip install pandas requests numpy
 
       - name: Run Season Data Scraper
-        run: python pull_season.py
+        run: python pull_season.py 2026-02-05 2026-06-04
 
       - name: Compute Kahl Index Ratings
         run: python compute_ratings.py
 
       - name: Commit and Save Data Back to Repo
+        if: always()
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
