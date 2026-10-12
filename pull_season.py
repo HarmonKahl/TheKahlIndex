@@ -302,12 +302,12 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
               f"written to {out_dir}/")
 
     return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
-                     if __name__ == "__main__":
+   if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1:
-        target = date.fromisoformat(sys.argv[1])  # e.g. python pull_season.py 2026-02-05
+        target = date.fromisoformat(sys.argv[1])
     else:
-        target = date.today() - timedelta(days=1)  # default: yesterday, for the real daily job
+        target = date.today() - timedelta(days=1)
 
     print(f"Pulling games for {target.isoformat()}...")
     games_df, team_df = pull_season(target, target, out_dir=".", fetch_innings=True, debug=True)
