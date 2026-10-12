@@ -302,7 +302,9 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
               f"written to {out_dir}/")
 
     return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
-   if __name__ == "__main__":
+
+
+if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1:
         target = date.fromisoformat(sys.argv[1])
