@@ -259,33 +259,3 @@ def games_to_team_rows(games):
                 g["home_team"],
                 away_score,
                 home_score,
-                away_inn,
-                home_inn,
-            ),
-            (
-                "home",
-                g["home_team"],
-                g["away_team"],
-                home_score,
-                away_score,
-                home_inn,
-                away_inn,
-            ),
-        ]
-        for (
-            role,
-            team,
-            opponent,
-            runs_for,
-            runs_against,
-            inn_batted,
-            inn_fielded,
-        ) in pairs:
-            rows.append(
-                {
-                    "date": g["date"],
-                    "game_id": g["game_id"],
-                    "team": team,
-                    "opponent": opponent,
-                    "role": role,
-                    "runs
