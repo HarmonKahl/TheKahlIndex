@@ -154,4 +154,204 @@ def fetch_innings_for_game(game_id):
     if home_ip is None:
         home_ip = estimate_innings_from_batting(hitting_by_team.get(away_id))
     if away_ip is None:
-        away_ip = estimate_innings_from_batting(hitting_by_team.get)
+        away_ip = estimate_innings_from_batting(hitting_by_team.get(home_id))
+
+    return away_ip, home_ip
+
+
+def fetch_innings_concurrent(game_ids, max_workers=5):
+    results = {}
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        futures = {
+            ex.submit(fetch_innings_for_game, gid): gid for gid in game_ids
+        }
+        for fut in as_completed(futures):
+            gid = futures[fut]
+            try:
+                results[gid] = fut.result()
+            except Exception:
+                results[gid] = (None, None)
+    return results
+
+
+def pull_day(year, month, day, max_pages=10, fetch_innings=True):
+    date_str = f"{year}-{month:02d}-{day:02d}"
+    seen, seen_order = {}, []
+
+    for page in range(1, max_pages + 1):
+        try:
+            data = _get_scoreboard_page(year, month, day, page)
+        except Exception:
+            break
+
+        raw_games = data.get("games", [])
+        if not raw_games:
+            break
+
+        for entry in raw_games:
+            game = entry.get("game", entry)
+            away_data, home_data = game.get("away", {}), game.get("home", {})
+            away_team = extract_team(away_data, "Away")
+            home_team = extract_team(home_data, "Home")
+            away_score = extract_score(away_data)
+            home_score = extract_score(home_data)
+            state = game.get("gameState", "unknown")
+            status = game.get("status", "")
+            game_id = extract_game_id(game)
+
+            key = unique_key(
+                game, away_team, home_team, away_score, home_score, date_str
+            )
+            if key in seen:
+                continue
+            seen[key] = {
+                "date": date_str,
+                "game_id": game_id,
+                "away_team": away_team,
+                "away_score": away_score,
+                "home_team": home_team,
+                "home_score": home_score,
+                "state": state,
+                "status": status,
+                "away_innings": None,
+                "home_innings": None,
+            }
+            seen_order.append(key)
+
+    games = [seen[k] for k in seen_order]
+
+    if fetch_innings:
+        game_ids = [row["game_id"] for row in games if row["game_id"]]
+        inn_map = fetch_innings_concurrent(game_ids, max_workers=5)
+        for row in games:
+            row["away_innings"], row["home_innings"] = inn_map.get(
+                row["game_id"], (None, None)
+            )
+
+    return games
+
+
+def games_to_team_rows(games):
+    rows = []
+    for g in games:
+        if g["away_score"] is None or g["home_score"] is None:
+            continue
+        try:
+            away_score, home_score = int(g["away_score"]), int(g["home_score"])
+        except (TypeError, ValueError):
+            continue
+
+        away_inn = (
+            g["away_innings"]
+            if g["away_innings"] and g["away_innings"] > 0
+            else 7.0
+        )
+        home_inn = (
+            g["home_innings"]
+            if g["home_innings"] and g["home_innings"] > 0
+            else 7.0
+        )
+
+        pairs = [
+            ("away", g["away_team"], g["home_team"], away_score, home_score, away_inn, home_inn),
+            ("home", g["home_team"], g["away_team"], home_score, away_score, home_inn, away_inn),
+        ]
+        for role, team, opponent, runs_for, runs_against, inn_batted, inn_fielded in pairs:
+            rows.append(
+                {
+                    "date": g["date"],
+                    "game_id": g["game_id"],
+                    "team": team,
+                    "opponent": opponent,
+                    "role": role,
+                    "runs_for": runs_for,
+                    "runs_against": runs_against,
+                    "innings_batted": inn_batted,
+                    "innings_fielded": inn_fielded,
+                    "win": None if runs_for == runs_against else int(runs_for > runs_against),
+                }
+            )
+    return rows
+
+
+def _daterange(start, end):
+    d = start
+    while d <= end:
+        yield d
+        d += timedelta(days=1)
+
+
+def pull_season(start, end, out_dir="."):
+    os.makedirs(out_dir, exist_ok=True)
+    games_path = os.path.join(out_dir, "games_season.csv")
+    team_path = os.path.join(out_dir, "team_games_season.csv")
+    progress_path = os.path.join(out_dir, "_completed_dates.txt")
+
+    completed = set()
+    if os.path.exists(progress_path):
+        with open(progress_path) as f:
+            completed = set(line.strip() for line in f if line.strip())
+
+    # Safety check: If CSV files are missing or empty, clear completed history
+    if not os.path.exists(team_path) or os.stat(team_path).st_size == 0:
+        completed = set()
+
+    all_games = (
+        pd.read_csv(games_path).to_dict("records")
+        if os.path.exists(games_path) and os.stat(games_path).st_size > 0
+        else []
+    )
+    all_team_rows = (
+        pd.read_csv(team_path).to_dict("records")
+        if os.path.exists(team_path) and os.stat(team_path).st_size > 0
+        else []
+    )
+
+    dates = list(_daterange(start, end))
+
+    for i, d in enumerate(dates, 1):
+        date_str = d.isoformat()
+        if date_str in completed:
+            continue
+
+        try:
+            day_games = pull_day(d.year, d.month, d.day, fetch_innings=True)
+        except Exception as e:
+            print(f"[{i}/{len(dates)}] {date_str}: skipped on error ({e})")
+            continue
+
+        all_games.extend(day_games)
+        all_team_rows.extend(games_to_team_rows(day_games))
+        completed.add(date_str)
+
+        pd.DataFrame(all_games).to_csv(games_path, index=False)
+        pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
+        with open(progress_path, "w") as f:
+            f.write("\n".join(sorted(completed)))
+
+        print(f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games pulled.")
+
+    return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) >= 3:
+        start_date = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
+        end_date = datetime.strptime(sys.argv[2], "%Y-%m-%d").date()
+        print(f"Running custom date range from CLI: {start_date} to {end_date}...")
+    else:
+        today = date.today()
+        current_year = today.year
+        progress_path = "_completed_dates.txt"
+        has_history = os.path.exists(progress_path) and os.path.getsize(progress_path) > 0
+
+        if not has_history:
+            start_date = date(current_year, 2, 1)
+            season_end = date(current_year, 6, 30)
+            end_date = min(today, season_end)
+            print(f"No history found. Rebuilding full season data from {start_date} to {end_date}...")
+        else:
+            start_date = today - timedelta(days=1)
+            end_date = today
+
+    pull_season(start=start_date, end=end_date, out_dir=".")
