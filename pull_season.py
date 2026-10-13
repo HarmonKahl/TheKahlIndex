@@ -97,6 +97,25 @@ def parse_innings_pitched(ip_str):
     return whole + thirds
 
 
+def estimate_innings_from_batting(hitting_stats):
+    """Estimates innings played by calculating total outs made by team at bat: (AB - H + SF + SH + CS) / 3"""
+    if not isinstance(hitting_stats, dict):
+        return None
+    try:
+        ab = float(hitting_stats.get("atBats", 0) or 0)
+        h = float(hitting_stats.get("hits", 0) or 0)
+        sf = float(hitting_stats.get("sacrificeFlies", 0) or 0)
+        sh = float(hitting_stats.get("sacrificeHits", 0) or 0)
+        cs = float(hitting_stats.get("caughtStealing", 0) or 0)
+
+        outs_made = (ab - h) + sf + sh + cs
+        if outs_made > 0:
+            return round(outs_made / 3.0, 4)
+    except Exception:
+        pass
+    return None
+
+
 def fetch_innings_for_game(game_id):
     if not game_id:
         return None, None
@@ -117,19 +136,33 @@ def fetch_innings_for_game(game_id):
     home_id, away_id = str(home_id), str(away_id)
 
     ip_by_team = {}
+    hitting_by_team = {}
+
     for tb in data.get("teamBoxscore", []):
         tid = str(tb.get("teamId"))
-        pitcher_totals = (tb.get("teamStats") or {}).get(
-            "pitcherTotals"
-        ) or {}
+        team_stats = tb.get("teamStats") or {}
+
+        # 1. Primary: Try pitching statistics (inningsPitched)
+        pitcher_totals = team_stats.get("pitcherTotals") or {}
         ip_by_team[tid] = parse_innings_pitched(
             pitcher_totals.get("inningsPitched")
         )
 
+        # Store hitting stats for secondary fallback calculation
+        hitting_by_team[tid] = team_stats.get("hittingTotals") or {}
+
     home_ip = ip_by_team.get(home_id)
     away_ip = ip_by_team.get(away_id)
-    if home_ip is None or away_ip is None:
-        return None, None
+
+    # 2. Secondary Fallback: If pitching stats missing, estimate from opponent hitting outs
+    if home_ip is None:
+        # Home team fielded while away team was batting
+        home_ip = estimate_innings_from_batting(hitting_by_team.get(away_id))
+
+    if away_ip is None:
+        # Away team fielded while home team was batting
+        away_ip = estimate_innings_from_batting(hitting_by_team.get(home_id))
+
     return away_ip, home_ip
 
 
@@ -180,13 +213,4 @@ def pull_day(year, month, day, max_pages=10, fetch_innings=True):
                 continue
             seen[key] = {
                 "date": date_str,
-                "game_id": game_id,
-                "away_team": away_team,
-                "away_score": away_score,
-                "home_team": home_team,
-                "home_score": home_score,
-                "state": state,
-                "status": status,
-                "away_innings": None,
-                "home_innings": None,
-            }
+                "game_id": game
