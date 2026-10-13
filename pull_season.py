@@ -96,7 +96,6 @@ def unique_key(game, away_team, home_team, away_score, home_score, date_str, idx
         or game.get("gameTime")
         or ""
     )
-    # Include idx to guarantee doubleheaders without explicit gameIDs aren't dropped
     return f"fallback:{date_str}|{away_team}|{home_team}|{away_score}|{home_score}|{start}|idx:{idx}"
 
 
@@ -258,7 +257,6 @@ def games_to_team_rows(games):
         except (TypeError, ValueError):
             continue
 
-        # Safeguard: Fallback missing/zero innings to standard regulation 7.0
         away_inn = (
             g["away_innings"]
             if g["away_innings"] and g["away_innings"] > 0
@@ -320,6 +318,19 @@ def games_to_team_rows(games):
     return rows
 
 
+def filter_min_games(team_df, min_games=20):
+    """Filters out any team that has played fewer than min_games."""
+    if team_df.empty or "team" not in team_df.columns:
+        return team_df
+    
+    counts = team_df.groupby("team")["date"].count()
+    valid_teams = counts[counts >= min_games].index
+    
+    filtered_df = team_df[team_df["team"].isin(valid_teams)].copy()
+    print(f"Filtered out {len(counts) - len(valid_teams)} teams with fewer than {min_games} games.")
+    return filtered_df
+
+
 def _daterange(start, end):
     d = start
     while d <= end:
@@ -334,7 +345,7 @@ def pull_season(
     fetch_innings=True,
     debug=False,
     max_retries=2,
-    games_per_day_estimate=48,
+    min_games=20,
 ):
     os.makedirs(out_dir, exist_ok=True)
     games_path = os.path.join(out_dir, "games_season.csv")
@@ -346,7 +357,6 @@ def pull_season(
         with open(progress_path) as f:
             completed = set(line.strip() for line in f if line.strip())
 
-    # Safety: If CSV files are missing/empty, clear completed memory
     if not os.path.exists(team_path) or os.stat(team_path).st_size == 0:
         completed = set()
 
@@ -392,17 +402,22 @@ def pull_season(
         all_team_rows.extend(games_to_team_rows(day_games))
         completed.add(date_str)
 
+        # Convert to DataFrame to apply min_games threshold filter
+        team_df = pd.DataFrame(all_team_rows)
+        team_df = filter_min_games(team_df, min_games=min_games)
+
         pd.DataFrame(all_games).to_csv(games_path, index=False)
-        pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
+        team_df.to_csv(team_path, index=False)
         with open(progress_path, "w") as f:
             f.write("\n".join(sorted(completed)))
 
         print(
             f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games "
-            f"(running total: {len(all_games)} games, {len(all_team_rows)} team-rows)"
+            f"(running total: {len(all_games)} games, {len(team_df)} team-rows)"
         )
 
-    return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
+    final_team_df = filter_min_games(pd.DataFrame(all_team_rows), min_games=min_games)
+    return pd.DataFrame(all_games), final_team_df
 
 
 if __name__ == "__main__":
@@ -415,4 +430,4 @@ if __name__ == "__main__":
         start_date = date(current_year, 2, 1)
         end_date = min(today, date(current_year, 6, 30))
 
-    pull_season(start=start_date, end=end_date, out_dir=".")
+    pull_season(start=start_date, end=end_date, out_dir=".", min_games=20)
