@@ -1,8 +1,9 @@
 import os
 import re
+import sys
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 import pandas as pd
 import requests
@@ -98,7 +99,6 @@ def parse_innings_pitched(ip_str):
 
 
 def estimate_innings_from_batting(hitting_stats):
-    """Estimates innings played by calculating total outs made by team at bat: (AB - H + SF + SH + CS) / 3"""
     if not isinstance(hitting_stats, dict):
         return None
     try:
@@ -142,25 +142,18 @@ def fetch_innings_for_game(game_id):
         tid = str(tb.get("teamId"))
         team_stats = tb.get("teamStats") or {}
 
-        # 1. Primary: Try pitching statistics (inningsPitched)
         pitcher_totals = team_stats.get("pitcherTotals") or {}
         ip_by_team[tid] = parse_innings_pitched(
             pitcher_totals.get("inningsPitched")
         )
-
-        # Store hitting stats for secondary fallback calculation
         hitting_by_team[tid] = team_stats.get("hittingTotals") or {}
 
     home_ip = ip_by_team.get(home_id)
     away_ip = ip_by_team.get(away_id)
 
-    # 2. Secondary Fallback: If pitching stats missing, estimate from opponent hitting outs
     if home_ip is None:
-        # Home team fielded while away team was batting
         home_ip = estimate_innings_from_batting(hitting_by_team.get(away_id))
-
     if away_ip is None:
-        # Away team fielded while home team was batting
         away_ip = estimate_innings_from_batting(hitting_by_team.get(home_id))
 
     return away_ip, home_ip
@@ -213,4 +206,86 @@ def pull_day(year, month, day, max_pages=10, fetch_innings=True):
                 continue
             seen[key] = {
                 "date": date_str,
-                "game_id": game
+                "game_id": game_id,
+                "away_team": away_team,
+                "away_score": away_score,
+                "home_team": home_team,
+                "home_score": home_score,
+                "state": state,
+                "status": status,
+                "away_innings": None,
+                "home_innings": None,
+            }
+            seen_order.append(key)
+
+    games = [seen[k] for k in seen_order]
+
+    if fetch_innings:
+        game_ids = [row["game_id"] for row in games if row["game_id"]]
+        inn_map = fetch_innings_concurrent(game_ids, max_workers=5)
+        for row in games:
+            row["away_innings"], row["home_innings"] = inn_map.get(
+                row["game_id"], (None, None)
+            )
+
+    return games
+
+
+def games_to_team_rows(games):
+    rows = []
+    for g in games:
+        if g["away_score"] is None or g["home_score"] is None:
+            continue
+        try:
+            away_score, home_score = int(g["away_score"]), int(g["home_score"])
+        except (TypeError, ValueError):
+            continue
+
+        away_inn = (
+            g["away_innings"]
+            if g["away_innings"] and g["away_innings"] > 0
+            else 7.0
+        )
+        home_inn = (
+            g["home_innings"]
+            if g["home_innings"] and g["home_innings"] > 0
+            else 7.0
+        )
+
+        pairs = [
+            (
+                "away",
+                g["away_team"],
+                g["home_team"],
+                away_score,
+                home_score,
+                away_inn,
+                home_inn,
+            ),
+            (
+                "home",
+                g["home_team"],
+                g["away_team"],
+                home_score,
+                away_score,
+                home_inn,
+                away_inn,
+            ),
+        ]
+        for (
+            role,
+            team,
+            opponent,
+            runs_for,
+            runs_against,
+            inn_batted,
+            inn_fielded,
+        ) in pairs:
+            rows.append(
+                {
+                    "date": g["date"],
+                    "game_id": g["game_id"],
+                    "team": team,
+                    "opponent": opponent,
+                    "role": role,
+                    "runs
