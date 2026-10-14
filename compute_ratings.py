@@ -16,15 +16,34 @@ def load_data(team_csv_path="team_games_season.csv"):
     return df
 
 
-def compute_kahl_index(
-    team_df, min_games=20, max_iters=100, tol=1e-6
-):
-    # Drop placeholder/garbage team names (e.g. "TBA")
-    team_df = team_df[team_df["team"] != "TBA"].copy()
+def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
+    # Step 0: Drop placeholder/garbage teams
+    team_df = team_df[(team_df["team"] != "TBA") & (team_df["opponent"] != "TBA")].copy()
 
-    # Step 1: Season totals -> raw runs/7, league-average-centered off/def
+    # Determine which teams meet the minimum games threshold in the raw data
+    raw_counts = team_df.groupby("team")["opponent"].count()
+    valid_teams = set(raw_counts[raw_counts >= min_games].index)
+
+    # STRICT PURGE: Keep ONLY games where BOTH the team AND opponent are valid ranked teams
+    clean_df = team_df[
+        team_df["team"].isin(valid_teams) & team_df["opponent"].isin(valid_teams)
+    ].copy()
+
+    # Re-verify counts after mutual purge to ensure no team dropped below min_games
+    clean_counts = clean_df.groupby("team")["opponent"].count()
+    final_valid_teams = set(clean_counts[clean_counts >= min_games].index)
+    
+    clean_df = clean_df[
+        clean_df["team"].isin(final_valid_teams) & clean_df["opponent"].isin(final_valid_teams)
+    ].copy()
+
+    if clean_df.empty:
+        print(f"No teams remaining after filtering games against non-ranked teams.")
+        return pd.DataFrame()
+
+    # Step 1: Season totals on PURGED data -> raw runs/7, league-centered off/def
     season = (
-        team_df.groupby("team")
+        clean_df.groupby("team")
         .agg(
             games=("opponent", "count"),
             runs_for=("runs_for", "sum"),
@@ -37,27 +56,9 @@ def compute_kahl_index(
         .reset_index()
     )
 
-    season["r_per_7"] = (
-        season["runs_for"] / season["innings_batted"] * 7
-    )
-    season["ra_per_7"] = (
-        season["runs_against"] / season["innings_fielded"] * 7
-    )
+    season["r_per_7"] = season["runs_for"] / season["innings_batted"] * 7
+    season["ra_per_7"] = season["runs_against"] / season["innings_fielded"] * 7
     season["diff"] = season["r_per_7"] - season["ra_per_7"]
-
-    # Filter out teams with too few games
-    too_few = season[season["games"] < min_games]
-    if len(too_few):
-        print(
-            f"Dropping {len(too_few)} team(s) with fewer than {min_games} games."
-        )
-        season = season[season["games"] >= min_games].reset_index(
-            drop=True
-        )
-
-    if len(season) == 0:
-        print(f"No teams left after filtering to games >= {min_games}.")
-        return pd.DataFrame()
 
     mean_r_per_7 = season["r_per_7"].mean()
     mean_ra_per_7 = season["ra_per_7"].mean()
@@ -65,12 +66,10 @@ def compute_kahl_index(
     season["def_adj"] = mean_ra_per_7 - season["ra_per_7"]
     season["net_adj"] = season["off_adj"] + season["def_adj"]
 
-    # Step 2: Each team's opponents, ONE ENTRY PER GAME PLAYED
-    opponents = (
-        team_df.groupby("team")["opponent"].apply(list).to_dict()
-    )
+    # Step 2: Opponent lists from PURGED dataset (ONLY ranked opponents included)
+    opponents = clean_df.groupby("team")["opponent"].apply(list).to_dict()
 
-    # Step 3: Iterative SOS loop, recentered every pass so league mean stays pinned at 0
+    # Step 3: Iterative SOS loop (centered every pass)
     net_adj = season.set_index("team")["net_adj"].to_dict()
     rating = dict(net_adj)
 
@@ -79,41 +78,26 @@ def compute_kahl_index(
         for team, opp_list in opponents.items():
             if team not in rating:
                 continue
-            opp_ratings = [
-                rating[o] for o in opp_list if o in rating
-            ]
+            opp_ratings = [rating[o] for o in opp_list if o in rating]
             sos = np.mean(opp_ratings) if opp_ratings else 0.0
             new_rating[team] = net_adj[team] + sos
 
         mean_now = np.mean(list(new_rating.values()))
         new_rating = {t: r - mean_now for t, r in new_rating.items()}
 
-        max_change = max(
-            abs(new_rating[t] - rating[t]) for t in new_rating
-        )
+        max_change = max(abs(new_rating[t] - rating[t]) for t in new_rating)
         rating = new_rating
 
         if max_change < tol:
-            print(
-                f"Converged after {n} iterations (largest change: {max_change:.6f})"
-            )
+            print(f"Converged after {n} iterations (largest change: {max_change:.6f})")
             break
 
-    # Step 4: Map back rating and compute exact SOS by definition
-    season["rating"] = season["team"].map(rating)
-    season["sos"] = season["rating"] - season["net_adj"]
+    # Step 4: Map final rating & calculate exact SoS
+    season["adj_rating"] = season["team"].map(rating)
+    season["sos"] = season["adj_rating"] - season["net_adj"]
 
-    # Sort descending and assign ranks
-    season = season.sort_values("rating", ascending=False).reset_index(
-        drop=True
-    )
+    season = season.sort_values("adj_rating", ascending=False).reset_index(drop=True)
     season["rank"] = range(1, len(season) + 1)
-
-    # Round numerical metrics
-    season["rating"] = season["rating"].round(2)
-    season["r_per_7"] = season["r_per_7"].round(2)
-    season["ra_per_7"] = season["ra_per_7"].round(2)
-    season["sos"] = season["sos"].round(2)
 
     return season
 
@@ -125,29 +109,26 @@ def save_ratings_json(final_df, output_path="ratings.json"):
         print(f"Wrote empty list to {output_path}")
         return
 
-    # Structure payload matching website/app specifications
     records = []
     for _, row in final_df.iterrows():
         records.append(
             {
                 "rank": int(row["rank"]),
                 "team": row["team"],
-                "rating": float(row["rating"]),
+                "rating": round(float(row["adj_rating"]), 2),
                 "games_played": int(row["games"]),
                 "wins": int(row["wins"]),
                 "losses": int(row["losses"]),
-                "r_per_7": float(row["r_per_7"]),
-                "ra_per_7": float(row["ra_per_7"]),
-                "sos": float(row["sos"]),
+                "r_per_7": round(float(row["r_per_7"]), 2),
+                "ra_per_7": round(float(row["ra_per_7"]), 2),
+                "sos": round(float(row["sos"]), 2),
             }
         )
 
     with open(output_path, "w") as f:
         json.dump(records, f, indent=2)
 
-    print(
-        f"Successfully computed ratings for {len(records)} teams and saved to {output_path}."
-    )
+    print(f"Successfully computed ratings for {len(records)} teams and saved to {output_path}.")
 
 
 if __name__ == "__main__":
