@@ -1,0 +1,37 @@
+name: Daily Kahl Index Update
+
+on:
+  schedule:
+    # Runs automatically every day at 09:00 UTC (4:00 AM EST)
+    - cron: '0 9 * * *'
+  workflow_dispatch: # Allows you to manually trigger a run anytime from GitHub UI
+
+jobs:
+  update-ratings:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install pandas requests numpy
+
+      - name: Run daily game scraper
+        run: python pull_season.py
+
+      - name: Compute updated ratings
+        run: python compute_ratings.py
+
+      - name: Commit and push updated ratings & season data
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add ratings.json _completed_dates.txt games_season.csv team_games_season.csv
+          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update Kahl Index ratings [skip ci]"
+          git push
