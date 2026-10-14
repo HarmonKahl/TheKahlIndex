@@ -200,7 +200,7 @@
   </div>
 
   <script>
-    let rawRatings = [];
+    var rawRatings = [];
 
     async function loadRatings() {
       try {
@@ -211,55 +211,8 @@
       } catch (error) {
         console.error('Error loading ratings.json:', error);
         document.getElementById('rankingsBody').innerHTML = 
-          `<tr><td colspan="7" style="text-align: center; color: var(--red-text);">Failed to load ratings.json. Make sure the pipeline has run.</td></tr>`;
+          '<tr><td colspan="7" style="text-align: center; color: var(--red-text);">Failed to load ratings.json. Make sure the pipeline has run.</td></tr>';
       }
     }
 
     function renderTopThree(top3) {
-      const container = document.getElementById('topThree');
-      if (!top3 || top3.length === 0) return;
-
-      const classes = ['rank-1', 'rank-2', 'rank-3'];
-      const labels = ['#1 Ranked', '#2 Ranked', '#3 Ranked'];
-
-      container.innerHTML = top3.map((team, idx) => `
-        <div class="podium-card \${classes[idx]}">
-          <div class="podium-badge">\${labels[idx]}</div>
-          <div class="podium-team">\${team.team}</div>
-          <div class="podium-raa">${team.raa > 0 ? '+' : ''}${team.raa.toFixed(2)}</div>
-          <div class="record-text" style="margin-top:0.4rem;">${team.wins}-${team.losses} | SoS: ${team.sos > 0 ? '+' : ''}${team.sos.toFixed(2)}</div>
-        </div>
-      `).join('');
-    }
-
-    function renderTable(data) {
-      const tbody = document.getElementById('rankingsBody');
-      tbody.innerHTML = data.map(row => {
-        const raaClass = row.raa >= 0 ? 'raa-positive' : 'raa-negative';
-        const raaFormatted = (row.raa > 0 ? '+' : '') + row.raa.toFixed(2);
-        const sosFormatted = (row.sos > 0 ? '+' : '') + row.sos.toFixed(2);
-
-        return `
-          <tr>
-            <td style="font-weight: 700; color: var(--text-muted);">#\${row.rank}</td>
-            <td style="font-weight: 600;">\${row.team}</td>
-            <td><span class="raa-badge ${raaClass}">${raaFormatted}</span></td>
-            <td>${row.wins}-${row.losses}</td>
-            <td>\${row.r_per_7.toFixed(2)}</td>
-            <td>\${row.ra_per_7.toFixed(2)}</td>
-            <td style="color: var(--text-muted);">\${sosFormatted}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function filterTable() {
-      const query = document.getElementById('searchInput').value.toLowerCase();
-      const filtered = rawRatings.filter(item => item.team.toLowerCase().includes(query));
-      renderTable(filtered);
-    }
-
-    loadRatings();
-  </script>
-</body>
-</html>
