@@ -2,7 +2,7 @@
   {
     "rank": 1,
     "team": "Oklahoma",
-    "rating": 12.22,
+    "raa": 12.22,
     "games_played": 61,
     "wins": 52,
     "losses": 9,
@@ -13,7 +13,7 @@
   {
     "rank": 2,
     "team": "UCLA",
-    "rating": 11.38,
+    "raa": 11.38,
     "games_played": 61,
     "wins": 52,
     "losses": 9,
@@ -24,7 +24,7 @@
   {
     "rank": 3,
     "team": "Texas Tech",
-    "rating": 11.06,
+    "raa": 11.06,
     "games_played": 69,
     "wins": 60,
     "losses": 9,
@@ -35,7 +35,7 @@
   {
     "rank": 4,
     "team": "Arkansas",
-    "rating": 10.91,
+    "raa": 10.91,
     "games_played": 58,
     "wins": 46,
     "losses": 12,
@@ -46,7 +46,7 @@
   {
     "rank": 5,
     "team": "Texas",
-    "rating": 10.39,
+    "raa": 10.39,
     "games_played": 63,
     "wins": 51,
     "losses": 12,
@@ -57,7 +57,7 @@
   {
     "rank": 6,
     "team": "Nebraska",
-    "rating": 9.93,
+    "raa": 9.93,
     "games_played": 58,
     "wins": 50,
     "losses": 8,
@@ -68,7 +68,7 @@
   {
     "rank": 7,
     "team": "Alabama",
-    "rating": 9.82,
+    "raa": 9.82,
     "games_played": 63,
     "wins": 55,
     "losses": 8,
@@ -79,7 +79,7 @@
   {
     "rank": 8,
     "team": "Florida",
-    "rating": 9.67,
+    "raa": 9.67,
     "games_played": 63,
     "wins": 51,
     "losses": 12,
@@ -90,7 +90,7 @@
   {
     "rank": 9,
     "team": "Georgia",
-    "rating": 8.97,
+    "raa": 8.97,
     "games_played": 60,
     "wins": 40,
     "losses": 20,
@@ -101,7 +101,7 @@
   {
     "rank": 10,
     "team": "Texas A&M",
-    "rating": 8.74,
+    "raa": 8.74,
     "games_played": 55,
     "wins": 37,
     "losses": 18,
@@ -112,7 +112,7 @@
   {
     "rank": 11,
     "team": "Tennessee",
-    "rating": 8.69,
+    "raa": 8.69,
     "games_played": 60,
     "wins": 49,
     "losses": 11,
@@ -123,7 +123,7 @@
   {
     "rank": 12,
     "team": "LSU",
-    "rating": 8.55,
+    "raa": 8.55,
     "games_played": 58,
     "wins": 39,
     "losses": 19,
@@ -134,7 +134,7 @@
   {
     "rank": 13,
     "team": "Florida St.",
-    "rating": 8.4,
+    "raa": 8.4,
     "games_played": 59,
     "wins": 50,
     "losses": 9,
@@ -145,7 +145,7 @@
   {
     "rank": 14,
     "team": "Virginia Tech",
-    "rating": 7.87,
+    "raa": 7.87,
     "games_played": 58,
     "wins": 47,
     "losses": 11,
@@ -156,7 +156,7 @@
   {
     "rank": 15,
     "team": "Oklahoma St.",
-    "rating": 7.58,
+    "raa": 7.58,
     "games_played": 59,
     "wins": 41,
     "losses": 18,
@@ -167,7 +167,7 @@
   {
     "rank": 16,
     "team": "Duke",
-    "rating": 7.49,
+    "raa": 7.49,
     "games_played": 62,
     "wins": 45,
     "losses": 17,
@@ -178,7 +178,7 @@
   {
     "rank": 17,
     "team": "Oregon",
-    "rating": 7.48,
+    "raa": 7.48,
     "games_played": 54,
     "wins": 41,
     "losses": 13,
@@ -189,7 +189,7 @@
   {
     "rank": 18,
     "team": "Mississippi St.",
-    "rating": 7.47,
+    "raa": 7.47,
     "games_played": 63,
     "wins": 43,
     "losses": 20,
@@ -200,7 +200,7 @@
   {
     "rank": 19,
     "team": "Arizona",
-    "rating": 7.47,
+    "raa": 7.47,
     "games_played": 57,
     "wins": 37,
     "losses": 20,
@@ -211,7 +211,7 @@
   {
     "rank": 20,
     "team": "Arizona St.",
-    "rating": 7.19,
+    "raa": 7.19,
     "games_played": 61,
     "wins": 44,
     "losses": 17,
@@ -222,7 +222,7 @@
   {
     "rank": 21,
     "team": "Washington",
-    "rating": 6.92,
+    "raa": 6.92,
     "games_played": 56,
     "wins": 37,
     "losses": 19,
@@ -233,7 +233,7 @@
   {
     "rank": 22,
     "team": "UCF",
-    "rating": 6.89,
+    "raa": 6.89,
     "games_played": 59,
     "wins": 40,
     "losses": 18,
@@ -244,7 +244,7 @@
   {
     "rank": 23,
     "team": "South Carolina",
-    "rating": 6.88,
+    "raa": 6.88,
     "games_played": 60,
     "wins": 32,
     "losses": 28,
@@ -255,7 +255,7 @@
   {
     "rank": 24,
     "team": "Indiana",
-    "rating": 6.67,
+    "raa": 6.67,
     "games_played": 57,
     "wins": 42,
     "losses": 15,
@@ -266,7 +266,7 @@
   {
     "rank": 25,
     "team": "Stanford",
-    "rating": 6.6,
+    "raa": 6.6,
     "games_played": 52,
     "wins": 37,
     "losses": 15,
@@ -277,7 +277,7 @@
   {
     "rank": 26,
     "team": "Ole Miss",
-    "rating": 6.24,
+    "raa": 6.24,
     "games_played": 61,
     "wins": 36,
     "losses": 25,
@@ -288,7 +288,7 @@
   {
     "rank": 27,
     "team": "Northwestern",
-    "rating": 5.91,
+    "raa": 5.91,
     "games_played": 50,
     "wins": 29,
     "losses": 21,
@@ -299,7 +299,7 @@
   {
     "rank": 28,
     "team": "Omaha",
-    "rating": 5.75,
+    "raa": 5.75,
     "games_played": 45,
     "wins": 34,
     "losses": 11,
@@ -310,7 +310,7 @@
   {
     "rank": 29,
     "team": "Kansas",
-    "rating": 5.54,
+    "raa": 5.54,
     "games_played": 56,
     "wins": 35,
     "losses": 21,
@@ -321,7 +321,7 @@
   {
     "rank": 30,
     "team": "Georgia Tech",
-    "rating": 5.54,
+    "raa": 5.54,
     "games_played": 60,
     "wins": 32,
     "losses": 28,
@@ -332,7 +332,7 @@
   {
     "rank": 31,
     "team": "Grand Canyon",
-    "rating": 5.43,
+    "raa": 5.43,
     "games_played": 60,
     "wins": 51,
     "losses": 9,
@@ -343,7 +343,7 @@
   {
     "rank": 32,
     "team": "Virginia",
-    "rating": 5.35,
+    "raa": 5.35,
     "games_played": 54,
     "wins": 40,
     "losses": 14,
@@ -354,7 +354,7 @@
   {
     "rank": 33,
     "team": "Michigan",
-    "rating": 5.33,
+    "raa": 5.33,
     "games_played": 57,
     "wins": 36,
     "losses": 21,
@@ -365,7 +365,7 @@
   {
     "rank": 34,
     "team": "Missouri",
-    "rating": 5.31,
+    "raa": 5.31,
     "games_played": 57,
     "wins": 28,
     "losses": 29,
@@ -376,7 +376,7 @@
   {
     "rank": 35,
     "team": "Clemson",
-    "rating": 5.29,
+    "raa": 5.29,
     "games_played": 56,
     "wins": 34,
     "losses": 22,
@@ -387,7 +387,7 @@
   {
     "rank": 36,
     "team": "Utah",
-    "rating": 5.18,
+    "raa": 5.18,
     "games_played": 56,
     "wins": 35,
     "losses": 20,
@@ -398,7 +398,7 @@
   {
     "rank": 37,
     "team": "Southeastern La.",
-    "rating": 5.08,
+    "raa": 5.08,
     "games_played": 59,
     "wins": 45,
     "losses": 14,
@@ -409,7 +409,7 @@
   {
     "rank": 38,
     "team": "Penn St.",
-    "rating": 4.99,
+    "raa": 4.99,
     "games_played": 53,
     "wins": 33,
     "losses": 20,
@@ -420,7 +420,7 @@
   {
     "rank": 39,
     "team": "Louisville",
-    "rating": 4.97,
+    "raa": 4.97,
     "games_played": 57,
     "wins": 44,
     "losses": 13,
@@ -431,7 +431,7 @@
   {
     "rank": 40,
     "team": "North Carolina",
-    "rating": 4.93,
+    "raa": 4.93,
     "games_played": 50,
     "wins": 32,
     "losses": 18,
@@ -442,7 +442,7 @@
   {
     "rank": 41,
     "team": "Auburn",
-    "rating": 4.89,
+    "raa": 4.89,
     "games_played": 53,
     "wins": 26,
     "losses": 27,
@@ -453,7 +453,7 @@
   {
     "rank": 42,
     "team": "Nevada",
-    "rating": 4.82,
+    "raa": 4.82,
     "games_played": 56,
     "wins": 37,
     "losses": 19,
@@ -464,7 +464,7 @@
   {
     "rank": 43,
     "team": "Purdue",
-    "rating": 4.61,
+    "raa": 4.61,
     "games_played": 54,
     "wins": 34,
     "losses": 20,
@@ -475,7 +475,7 @@
   {
     "rank": 44,
     "team": "Fla. Atlantic",
-    "rating": 4.49,
+    "raa": 4.49,
     "games_played": 52,
     "wins": 33,
     "losses": 19,
@@ -486,7 +486,7 @@
   {
     "rank": 45,
     "team": "Wichita St.",
-    "rating": 4.36,
+    "raa": 4.36,
     "games_played": 51,
     "wins": 35,
     "losses": 16,
@@ -497,7 +497,7 @@
   {
     "rank": 46,
     "team": "Jacksonville St.",
-    "rating": 4.29,
+    "raa": 4.29,
     "games_played": 58,
     "wins": 42,
     "losses": 16,
@@ -508,7 +508,7 @@
   {
     "rank": 47,
     "team": "Texas St.",
-    "rating": 4.27,
+    "raa": 4.27,
     "games_played": 59,
     "wins": 38,
     "losses": 21,
@@ -519,7 +519,7 @@
   {
     "rank": 48,
     "team": "Baylor",
-    "rating": 4.21,
+    "raa": 4.21,
     "games_played": 58,
     "wins": 30,
     "losses": 28,
@@ -530,7 +530,7 @@
   {
     "rank": 49,
     "team": "Iowa St.",
-    "rating": 4.13,
+    "raa": 4.13,
     "games_played": 55,
     "wins": 32,
     "losses": 23,
@@ -541,7 +541,7 @@
   {
     "rank": 50,
     "team": "Ohio St.",
-    "rating": 4.04,
+    "raa": 4.04,
     "games_played": 53,
     "wins": 26,
     "losses": 27,
@@ -552,7 +552,7 @@
   {
     "rank": 51,
     "team": "Cal St. Fullerton",
-    "rating": 3.98,
+    "raa": 3.98,
     "games_played": 54,
     "wins": 39,
     "losses": 15,
@@ -563,7 +563,7 @@
   {
     "rank": 52,
     "team": "St. Thomas (MN)",
-    "rating": 3.88,
+    "raa": 3.88,
     "games_played": 51,
     "wins": 34,
     "losses": 17,
@@ -574,7 +574,7 @@
   {
     "rank": 53,
     "team": "Louisiana",
-    "rating": 3.86,
+    "raa": 3.86,
     "games_played": 55,
     "wins": 29,
     "losses": 26,
@@ -585,7 +585,7 @@
   {
     "rank": 54,
     "team": "Kentucky",
-    "rating": 3.83,
+    "raa": 3.83,
     "games_played": 54,
     "wins": 25,
     "losses": 29,
@@ -596,7 +596,7 @@
   {
     "rank": 55,
     "team": "South Fla.",
-    "rating": 3.78,
+    "raa": 3.78,
     "games_played": 59,
     "wins": 42,
     "losses": 17,
@@ -607,7 +607,7 @@
   {
     "rank": 56,
     "team": "Marshall",
-    "rating": 3.68,
+    "raa": 3.68,
     "games_played": 56,
     "wins": 37,
     "losses": 19,
@@ -618,7 +618,7 @@
   {
     "rank": 57,
     "team": "Wisconsin",
-    "rating": 3.64,
+    "raa": 3.64,
     "games_played": 53,
     "wins": 32,
     "losses": 21,
@@ -629,7 +629,7 @@
   {
     "rank": 58,
     "team": "Boston U.",
-    "rating": 3.43,
+    "raa": 3.43,
     "games_played": 61,
     "wins": 45,
     "losses": 16,
@@ -640,7 +640,7 @@
   {
     "rank": 59,
     "team": "NC State",
-    "rating": 3.31,
+    "raa": 3.31,
     "games_played": 53,
     "wins": 27,
     "losses": 26,
@@ -651,7 +651,7 @@
   {
     "rank": 60,
     "team": "Rutgers",
-    "rating": 3.22,
+    "raa": 3.22,
     "games_played": 54,
     "wins": 27,
     "losses": 27,
@@ -662,7 +662,7 @@
   {
     "rank": 61,
     "team": "Belmont",
-    "rating": 3.2,
+    "raa": 3.2,
     "games_played": 53,
     "wins": 40,
     "losses": 13,
@@ -673,7 +673,7 @@
   {
     "rank": 62,
     "team": "Western Ky.",
-    "rating": 3.13,
+    "raa": 3.13,
     "games_played": 50,
     "wins": 38,
     "losses": 12,
@@ -684,7 +684,7 @@
   {
     "rank": 63,
     "team": "Saint Mary's (CA)",
-    "rating": 3.11,
+    "raa": 3.11,
     "games_played": 57,
     "wins": 41,
     "losses": 16,
@@ -695,7 +695,7 @@
   {
     "rank": 64,
     "team": "Iowa",
-    "rating": 3.11,
+    "raa": 3.11,
     "games_played": 53,
     "wins": 27,
     "losses": 26,
@@ -706,7 +706,7 @@
   {
     "rank": 65,
     "team": "South Alabama",
-    "rating": 2.84,
+    "raa": 2.84,
     "games_played": 58,
     "wins": 31,
     "losses": 27,
@@ -717,7 +717,7 @@
   {
     "rank": 66,
     "team": "App State",
-    "rating": 2.76,
+    "raa": 2.76,
     "games_played": 50,
     "wins": 29,
     "losses": 21,
@@ -728,7 +728,7 @@
   {
     "rank": 67,
     "team": "Central Ark.",
-    "rating": 2.71,
+    "raa": 2.71,
     "games_played": 52,
     "wins": 34,
     "losses": 17,
@@ -739,7 +739,7 @@
   {
     "rank": 68,
     "team": "Charlotte",
-    "rating": 2.71,
+    "raa": 2.71,
     "games_played": 56,
     "wins": 31,
     "losses": 25,
@@ -750,7 +750,7 @@
   {
     "rank": 69,
     "team": "Stetson",
-    "rating": 2.7,
+    "raa": 2.7,
     "games_played": 56,
     "wins": 34,
     "losses": 22,
@@ -761,7 +761,7 @@
   {
     "rank": 70,
     "team": "FIU",
-    "rating": 2.65,
+    "raa": 2.65,
     "games_played": 52,
     "wins": 34,
     "losses": 18,
@@ -772,7 +772,7 @@
   {
     "rank": 71,
     "team": "Troy",
-    "rating": 2.64,
+    "raa": 2.64,
     "games_played": 54,
     "wins": 32,
     "losses": 22,
@@ -783,7 +783,7 @@
   {
     "rank": 72,
     "team": "McNeese",
-    "rating": 2.56,
+    "raa": 2.56,
     "games_played": 62,
     "wins": 40,
     "losses": 22,
@@ -794,7 +794,7 @@
   {
     "rank": 73,
     "team": "Notre Dame",
-    "rating": 2.54,
+    "raa": 2.54,
     "games_played": 53,
     "wins": 25,
     "losses": 28,
@@ -805,7 +805,7 @@
   {
     "rank": 74,
     "team": "Miami (OH)",
-    "rating": 2.53,
+    "raa": 2.53,
     "games_played": 55,
     "wins": 38,
     "losses": 17,
@@ -816,7 +816,7 @@
   {
     "rank": 75,
     "team": "ULM",
-    "rating": 2.49,
+    "raa": 2.49,
     "games_played": 57,
     "wins": 37,
     "losses": 20,
@@ -827,7 +827,7 @@
   {
     "rank": 76,
     "team": "California Baptist",
-    "rating": 2.48,
+    "raa": 2.48,
     "games_played": 59,
     "wins": 41,
     "losses": 18,
@@ -838,7 +838,7 @@
   {
     "rank": 77,
     "team": "LMU (CA)",
-    "rating": 2.44,
+    "raa": 2.44,
     "games_played": 52,
     "wins": 33,
     "losses": 19,
@@ -849,7 +849,7 @@
   {
     "rank": 78,
     "team": "Southern Ill.",
-    "rating": 2.37,
+    "raa": 2.37,
     "games_played": 48,
     "wins": 33,
     "losses": 15,
@@ -860,7 +860,7 @@
   {
     "rank": 79,
     "team": "North Florida",
-    "rating": 2.34,
+    "raa": 2.34,
     "games_played": 58,
     "wins": 37,
     "losses": 21,
@@ -871,7 +871,7 @@
   {
     "rank": 80,
     "team": "James Madison",
-    "rating": 2.28,
+    "raa": 2.28,
     "games_played": 51,
     "wins": 27,
     "losses": 24,
@@ -882,7 +882,7 @@
   {
     "rank": 81,
     "team": "North Ala.",
-    "rating": 2.26,
+    "raa": 2.26,
     "games_played": 49,
     "wins": 35,
     "losses": 14,
@@ -893,7 +893,7 @@
   {
     "rank": 82,
     "team": "Louisiana Tech",
-    "rating": 2.22,
+    "raa": 2.22,
     "games_played": 53,
     "wins": 30,
     "losses": 23,
@@ -904,7 +904,7 @@
   {
     "rank": 83,
     "team": "Boise St.",
-    "rating": 2.21,
+    "raa": 2.21,
     "games_played": 55,
     "wins": 25,
     "losses": 30,
@@ -915,7 +915,7 @@
   {
     "rank": 84,
     "team": "Liberty",
-    "rating": 2.14,
+    "raa": 2.14,
     "games_played": 54,
     "wins": 27,
     "losses": 27,
@@ -926,7 +926,7 @@
   {
     "rank": 85,
     "team": "Ohio",
-    "rating": 2.13,
+    "raa": 2.13,
     "games_played": 55,
     "wins": 37,
     "losses": 18,
@@ -937,7 +937,7 @@
   {
     "rank": 86,
     "team": "UConn",
-    "rating": 2.12,
+    "raa": 2.12,
     "games_played": 59,
     "wins": 32,
     "losses": 27,
@@ -948,7 +948,7 @@
   {
     "rank": 87,
     "team": "UIW",
-    "rating": 2.05,
+    "raa": 2.05,
     "games_played": 52,
     "wins": 32,
     "losses": 20,
@@ -959,7 +959,7 @@
   {
     "rank": 88,
     "team": "New Mexico",
-    "rating": 2.05,
+    "raa": 2.05,
     "games_played": 51,
     "wins": 27,
     "losses": 24,
@@ -970,7 +970,7 @@
   {
     "rank": 89,
     "team": "Idaho St.",
-    "rating": 1.98,
+    "raa": 1.98,
     "games_played": 54,
     "wins": 34,
     "losses": 20,
@@ -981,7 +981,7 @@
   {
     "rank": 90,
     "team": "UNC Greensboro",
-    "rating": 1.97,
+    "raa": 1.97,
     "games_played": 59,
     "wins": 40,
     "losses": 19,
@@ -992,7 +992,7 @@
   {
     "rank": 91,
     "team": "San Diego St.",
-    "rating": 1.87,
+    "raa": 1.87,
     "games_played": 50,
     "wins": 24,
     "losses": 26,
@@ -1003,7 +1003,7 @@
   {
     "rank": 92,
     "team": "North Texas",
-    "rating": 1.85,
+    "raa": 1.85,
     "games_played": 54,
     "wins": 27,
     "losses": 27,
@@ -1014,7 +1014,7 @@
   {
     "rank": 93,
     "team": "Fresno St.",
-    "rating": 1.67,
+    "raa": 1.67,
     "games_played": 47,
     "wins": 23,
     "losses": 24,
@@ -1025,7 +1025,7 @@
   {
     "rank": 94,
     "team": "Nicholls",
-    "rating": 1.66,
+    "raa": 1.66,
     "games_played": 53,
     "wins": 30,
     "losses": 23,
@@ -1036,7 +1036,7 @@
   {
     "rank": 95,
     "team": "East Carolina",
-    "rating": 1.6,
+    "raa": 1.6,
     "games_played": 56,
     "wins": 32,
     "losses": 24,
@@ -1047,7 +1047,7 @@
   {
     "rank": 96,
     "team": "Campbell",
-    "rating": 1.57,
+    "raa": 1.57,
     "games_played": 55,
     "wins": 33,
     "losses": 22,
@@ -1058,7 +1058,7 @@
   {
     "rank": 97,
     "team": "Sacramento St.",
-    "rating": 1.57,
+    "raa": 1.57,
     "games_played": 49,
     "wins": 31,
     "losses": 18,
@@ -1069,7 +1069,7 @@
   {
     "rank": 98,
     "team": "UAB",
-    "rating": 1.54,
+    "raa": 1.54,
     "games_played": 54,
     "wins": 21,
     "losses": 33,
@@ -1080,7 +1080,7 @@
   {
     "rank": 99,
     "team": "BYU",
-    "rating": 1.52,
+    "raa": 1.52,
     "games_played": 50,
     "wins": 17,
     "losses": 33,
@@ -1091,7 +1091,7 @@
   {
     "rank": 100,
     "team": "Southern Miss.",
-    "rating": 1.48,
+    "raa": 1.48,
     "games_played": 57,
     "wins": 33,
     "losses": 24,
@@ -1102,7 +1102,7 @@
   {
     "rank": 101,
     "team": "Maryland",
-    "rating": 1.47,
+    "raa": 1.47,
     "games_played": 47,
     "wins": 18,
     "losses": 29,
@@ -1113,7 +1113,7 @@
   {
     "rank": 102,
     "team": "Hawaii",
-    "rating": 1.46,
+    "raa": 1.46,
     "games_played": 48,
     "wins": 29,
     "losses": 19,
@@ -1124,7 +1124,7 @@
   {
     "rank": 103,
     "team": "Samford",
-    "rating": 1.44,
+    "raa": 1.44,
     "games_played": 55,
     "wins": 26,
     "losses": 29,
@@ -1135,7 +1135,7 @@
   {
     "rank": 104,
     "team": "Creighton",
-    "rating": 1.43,
+    "raa": 1.43,
     "games_played": 57,
     "wins": 30,
     "losses": 27,
@@ -1146,7 +1146,7 @@
   {
     "rank": 105,
     "team": "North Dakota St.",
-    "rating": 1.41,
+    "raa": 1.41,
     "games_played": 50,
     "wins": 27,
     "losses": 23,
@@ -1157,7 +1157,7 @@
   {
     "rank": 106,
     "team": "UNI",
-    "rating": 1.41,
+    "raa": 1.41,
     "games_played": 51,
     "wins": 28,
     "losses": 23,
@@ -1168,7 +1168,7 @@
   {
     "rank": 107,
     "team": "Sam Houston",
-    "rating": 1.34,
+    "raa": 1.34,
     "games_played": 56,
     "wins": 29,
     "losses": 27,
@@ -1179,7 +1179,7 @@
   {
     "rank": 108,
     "team": "Tulsa",
-    "rating": 1.34,
+    "raa": 1.34,
     "games_played": 52,
     "wins": 20,
     "losses": 32,
@@ -1190,7 +1190,7 @@
   {
     "rank": 109,
     "team": "Santa Clara",
-    "rating": 1.32,
+    "raa": 1.32,
     "games_played": 51,
     "wins": 26,
     "losses": 25,
@@ -1201,7 +1201,7 @@
   {
     "rank": 110,
     "team": "Seattle U",
-    "rating": 1.27,
+    "raa": 1.27,
     "games_played": 50,
     "wins": 19,
     "losses": 31,
@@ -1212,7 +1212,7 @@
   {
     "rank": 111,
     "team": "UC Santa Barbara",
-    "rating": 1.24,
+    "raa": 1.24,
     "games_played": 51,
     "wins": 29,
     "losses": 22,
@@ -1223,7 +1223,7 @@
   {
     "rank": 112,
     "team": "Ga. Southern",
-    "rating": 1.22,
+    "raa": 1.22,
     "games_played": 53,
     "wins": 24,
     "losses": 29,
@@ -1234,7 +1234,7 @@
   {
     "rank": 113,
     "team": "UNLV",
-    "rating": 1.22,
+    "raa": 1.22,
     "games_played": 51,
     "wins": 31,
     "losses": 20,
@@ -1245,7 +1245,7 @@
   {
     "rank": 114,
     "team": "California",
-    "rating": 1.21,
+    "raa": 1.21,
     "games_played": 52,
     "wins": 15,
     "losses": 37,
@@ -1256,7 +1256,7 @@
   {
     "rank": 115,
     "team": "SFA",
-    "rating": 1.2,
+    "raa": 1.2,
     "games_played": 54,
     "wins": 29,
     "losses": 25,
@@ -1267,7 +1267,7 @@
   {
     "rank": 116,
     "team": "Coastal Carolina",
-    "rating": 1.19,
+    "raa": 1.19,
     "games_played": 55,
     "wins": 25,
     "losses": 30,
@@ -1278,7 +1278,7 @@
   {
     "rank": 117,
     "team": "Lamar University",
-    "rating": 1.19,
+    "raa": 1.19,
     "games_played": 56,
     "wins": 32,
     "losses": 24,
@@ -1289,7 +1289,7 @@
   {
     "rank": 118,
     "team": "Oregon St.",
-    "rating": 1.19,
+    "raa": 1.19,
     "games_played": 53,
     "wins": 21,
     "losses": 32,
@@ -1300,7 +1300,7 @@
   {
     "rank": 119,
     "team": "Akron",
-    "rating": 1.16,
+    "raa": 1.16,
     "games_played": 57,
     "wins": 33,
     "losses": 24,
@@ -1311,7 +1311,7 @@
   {
     "rank": 120,
     "team": "Austin Peay",
-    "rating": 1.12,
+    "raa": 1.12,
     "games_played": 54,
     "wins": 30,
     "losses": 24,
@@ -1322,7 +1322,7 @@
   {
     "rank": 121,
     "team": "Houston",
-    "rating": 1.12,
+    "raa": 1.12,
     "games_played": 51,
     "wins": 20,
     "losses": 31,
@@ -1333,7 +1333,7 @@
   {
     "rank": 122,
     "team": "Georgia St.",
-    "rating": 1.1,
+    "raa": 1.1,
     "games_played": 56,
     "wins": 25,
     "losses": 31,
@@ -1344,7 +1344,7 @@
   {
     "rank": 123,
     "team": "Minnesota",
-    "rating": 1.04,
+    "raa": 1.04,
     "games_played": 52,
     "wins": 16,
     "losses": 36,
@@ -1355,7 +1355,7 @@
   {
     "rank": 124,
     "team": "New Mexico St.",
-    "rating": 1.04,
+    "raa": 1.04,
     "games_played": 51,
     "wins": 26,
     "losses": 25,
@@ -1366,7 +1366,7 @@
   {
     "rank": 125,
     "team": "Jacksonville",
-    "rating": 1.02,
+    "raa": 1.02,
     "games_played": 52,
     "wins": 33,
     "losses": 19,
@@ -1377,7 +1377,7 @@
   {
     "rank": 126,
     "team": "Utah Valley",
-    "rating": 0.95,
+    "raa": 0.95,
     "games_played": 51,
     "wins": 30,
     "losses": 21,
@@ -1388,7 +1388,7 @@
   {
     "rank": 127,
     "team": "Princeton",
-    "rating": 0.94,
+    "raa": 0.94,
     "games_played": 47,
     "wins": 32,
     "losses": 15,
@@ -1399,7 +1399,7 @@
   {
     "rank": 128,
     "team": "Illinois St.",
-    "rating": 0.86,
+    "raa": 0.86,
     "games_played": 47,
     "wins": 28,
     "losses": 19,
@@ -1410,7 +1410,7 @@
   {
     "rank": 129,
     "team": "Delaware",
-    "rating": 0.84,
+    "raa": 0.84,
     "games_played": 53,
     "wins": 30,
     "losses": 23,
@@ -1421,7 +1421,7 @@
   {
     "rank": 130,
     "team": "South Dakota St.",
-    "rating": 0.83,
+    "raa": 0.83,
     "games_played": 55,
     "wins": 23,
     "losses": 32,
@@ -1432,7 +1432,7 @@
   {
     "rank": 131,
     "team": "Long Beach St.",
-    "rating": 0.78,
+    "raa": 0.78,
     "games_played": 50,
     "wins": 28,
     "losses": 22,
@@ -1443,7 +1443,7 @@
   {
     "rank": 132,
     "team": "Michigan St.",
-    "rating": 0.74,
+    "raa": 0.74,
     "games_played": 51,
     "wins": 17,
     "losses": 34,
@@ -1454,7 +1454,7 @@
   {
     "rank": 133,
     "team": "Tarleton St.",
-    "rating": 0.61,
+    "raa": 0.61,
     "games_played": 57,
     "wins": 35,
     "losses": 22,
@@ -1465,7 +1465,7 @@
   {
     "rank": 134,
     "team": "Wofford",
-    "rating": 0.58,
+    "raa": 0.58,
     "games_played": 48,
     "wins": 31,
     "losses": 17,
@@ -1476,7 +1476,7 @@
   {
     "rank": 135,
     "team": "Western Caro.",
-    "rating": 0.54,
+    "raa": 0.54,
     "games_played": 55,
     "wins": 33,
     "losses": 22,
@@ -1487,7 +1487,7 @@
   {
     "rank": 136,
     "team": "Murray St.",
-    "rating": 0.53,
+    "raa": 0.53,
     "games_played": 50,
     "wins": 27,
     "losses": 23,
@@ -1498,7 +1498,7 @@
   {
     "rank": 137,
     "team": "Central Mich.",
-    "rating": 0.5,
+    "raa": 0.5,
     "games_played": 47,
     "wins": 24,
     "losses": 23,
@@ -1509,7 +1509,7 @@
   {
     "rank": 138,
     "team": "Providence",
-    "rating": 0.42,
+    "raa": 0.42,
     "games_played": 46,
     "wins": 28,
     "losses": 18,
@@ -1520,7 +1520,7 @@
   {
     "rank": 139,
     "team": "NIU",
-    "rating": 0.42,
+    "raa": 0.42,
     "games_played": 40,
     "wins": 23,
     "losses": 17,
@@ -1531,7 +1531,7 @@
   {
     "rank": 140,
     "team": "Colorado St.",
-    "rating": 0.41,
+    "raa": 0.41,
     "games_played": 51,
     "wins": 23,
     "losses": 28,
@@ -1542,7 +1542,7 @@
   {
     "rank": 141,
     "team": "Boston College",
-    "rating": 0.4,
+    "raa": 0.4,
     "games_played": 51,
     "wins": 13,
     "losses": 38,
@@ -1553,7 +1553,7 @@
   {
     "rank": 142,
     "team": "Ball St.",
-    "rating": 0.33,
+    "raa": 0.33,
     "games_played": 48,
     "wins": 23,
     "losses": 25,
@@ -1564,7 +1564,7 @@
   {
     "rank": 143,
     "team": "FGCU",
-    "rating": 0.32,
+    "raa": 0.32,
     "games_played": 52,
     "wins": 21,
     "losses": 31,
@@ -1575,7 +1575,7 @@
   {
     "rank": 144,
     "team": "Army West Point",
-    "rating": 0.24,
+    "raa": 0.24,
     "games_played": 56,
     "wins": 32,
     "losses": 24,
@@ -1586,7 +1586,7 @@
   {
     "rank": 145,
     "team": "Western Mich.",
-    "rating": 0.14,
+    "raa": 0.14,
     "games_played": 52,
     "wins": 27,
     "losses": 25,
@@ -1597,7 +1597,7 @@
   {
     "rank": 146,
     "team": "UNCW",
-    "rating": 0.14,
+    "raa": 0.14,
     "games_played": 48,
     "wins": 30,
     "losses": 18,
@@ -1608,7 +1608,7 @@
   {
     "rank": 147,
     "team": "USC Upstate",
-    "rating": 0.11,
+    "raa": 0.11,
     "games_played": 59,
     "wins": 36,
     "losses": 23,
@@ -1619,7 +1619,7 @@
   {
     "rank": 148,
     "team": "Pittsburgh",
-    "rating": 0.06,
+    "raa": 0.06,
     "games_played": 52,
     "wins": 25,
     "losses": 27,
@@ -1630,7 +1630,7 @@
   {
     "rank": 149,
     "team": "Missouri St.",
-    "rating": 0.06,
+    "raa": 0.06,
     "games_played": 50,
     "wins": 22,
     "losses": 28,
@@ -1641,7 +1641,7 @@
   {
     "rank": 150,
     "team": "UTSA",
-    "rating": 0.02,
+    "raa": 0.02,
     "games_played": 56,
     "wins": 24,
     "losses": 32,
@@ -1652,7 +1652,7 @@
   {
     "rank": 151,
     "team": "San Jose St.",
-    "rating": -0.02,
+    "raa": -0.02,
     "games_played": 48,
     "wins": 15,
     "losses": 33,
@@ -1663,7 +1663,7 @@
   {
     "rank": 152,
     "team": "UT Arlington",
-    "rating": -0.08,
+    "raa": -0.08,
     "games_played": 46,
     "wins": 24,
     "losses": 22,
@@ -1674,7 +1674,7 @@
   {
     "rank": 153,
     "team": "Radford",
-    "rating": -0.12,
+    "raa": -0.12,
     "games_played": 49,
     "wins": 23,
     "losses": 26,
@@ -1685,7 +1685,7 @@
   {
     "rank": 154,
     "team": "Northwestern St.",
-    "rating": -0.13,
+    "raa": -0.13,
     "games_played": 52,
     "wins": 24,
     "losses": 28,
@@ -1696,7 +1696,7 @@
   {
     "rank": 155,
     "team": "Middle Tenn.",
-    "rating": -0.16,
+    "raa": -0.16,
     "games_played": 51,
     "wins": 21,
     "losses": 30,
@@ -1707,7 +1707,7 @@
   {
     "rank": 156,
     "team": "Southern Utah",
-    "rating": -0.2,
+    "raa": -0.2,
     "games_played": 50,
     "wins": 20,
     "losses": 30,
@@ -1718,7 +1718,7 @@
   {
     "rank": 157,
     "team": "St. John's (NY)",
-    "rating": -0.22,
+    "raa": -0.22,
     "games_played": 55,
     "wins": 32,
     "losses": 23,
@@ -1729,7 +1729,7 @@
   {
     "rank": 158,
     "team": "UC San Diego",
-    "rating": -0.23,
+    "raa": -0.23,
     "games_played": 51,
     "wins": 23,
     "losses": 28,
@@ -1740,7 +1740,7 @@
   {
     "rank": 159,
     "team": "Eastern Ill.",
-    "rating": -0.24,
+    "raa": -0.24,
     "games_played": 56,
     "wins": 34,
     "losses": 22,
@@ -1751,7 +1751,7 @@
   {
     "rank": 160,
     "team": "UC Davis",
-    "rating": -0.25,
+    "raa": -0.25,
     "games_played": 52,
     "wins": 29,
     "losses": 23,
@@ -1762,7 +1762,7 @@
   {
     "rank": 161,
     "team": "South Dakota",
-    "rating": -0.25,
+    "raa": -0.25,
     "games_played": 54,
     "wins": 18,
     "losses": 35,
@@ -1773,7 +1773,7 @@
   {
     "rank": 162,
     "team": "Fordham",
-    "rating": -0.35,
+    "raa": -0.35,
     "games_played": 53,
     "wins": 25,
     "losses": 28,
@@ -1784,7 +1784,7 @@
   {
     "rank": 163,
     "team": "Pacific",
-    "rating": -0.35,
+    "raa": -0.35,
     "games_played": 52,
     "wins": 18,
     "losses": 34,
@@ -1795,7 +1795,7 @@
   {
     "rank": 164,
     "team": "Illinois",
-    "rating": -0.35,
+    "raa": -0.35,
     "games_played": 54,
     "wins": 15,
     "losses": 39,
@@ -1806,7 +1806,7 @@
   {
     "rank": 165,
     "team": "Robert Morris",
-    "rating": -0.59,
+    "raa": -0.59,
     "games_played": 43,
     "wins": 26,
     "losses": 17,
@@ -1817,7 +1817,7 @@
   {
     "rank": 166,
     "team": "San Diego",
-    "rating": -0.59,
+    "raa": -0.59,
     "games_played": 51,
     "wins": 21,
     "losses": 30,
@@ -1828,7 +1828,7 @@
   {
     "rank": 167,
     "team": "Butler",
-    "rating": -0.67,
+    "raa": -0.67,
     "games_played": 45,
     "wins": 25,
     "losses": 20,
@@ -1839,7 +1839,7 @@
   {
     "rank": 168,
     "team": "Eastern Ky.",
-    "rating": -0.72,
+    "raa": -0.72,
     "games_played": 52,
     "wins": 27,
     "losses": 24,
@@ -1850,7 +1850,7 @@
   {
     "rank": 169,
     "team": "Northern Colo.",
-    "rating": -0.76,
+    "raa": -0.76,
     "games_played": 48,
     "wins": 23,
     "losses": 25,
@@ -1861,7 +1861,7 @@
   {
     "rank": 170,
     "team": "Columbia",
-    "rating": -0.78,
+    "raa": -0.78,
     "games_played": 40,
     "wins": 19,
     "losses": 21,
@@ -1872,7 +1872,7 @@
   {
     "rank": 171,
     "team": "UT Martin",
-    "rating": -0.79,
+    "raa": -0.79,
     "games_played": 52,
     "wins": 33,
     "losses": 19,
@@ -1883,7 +1883,7 @@
   {
     "rank": 172,
     "team": "Hofstra",
-    "rating": -0.8,
+    "raa": -0.8,
     "games_played": 51,
     "wins": 30,
     "losses": 21,
@@ -1894,7 +1894,7 @@
   {
     "rank": 173,
     "team": "Prairie View",
-    "rating": -0.83,
+    "raa": -0.83,
     "games_played": 45,
     "wins": 27,
     "losses": 18,
@@ -1905,7 +1905,7 @@
   {
     "rank": 174,
     "team": "Syracuse",
-    "rating": -0.84,
+    "raa": -0.84,
     "games_played": 43,
     "wins": 17,
     "losses": 26,
@@ -1916,7 +1916,7 @@
   {
     "rank": 175,
     "team": "North Dakota",
-    "rating": -0.9,
+    "raa": -0.9,
     "games_played": 49,
     "wins": 25,
     "losses": 24,
@@ -1927,7 +1927,7 @@
   {
     "rank": 176,
     "team": "Lehigh",
-    "rating": -0.96,
+    "raa": -0.96,
     "games_played": 51,
     "wins": 24,
     "losses": 27,
@@ -1938,7 +1938,7 @@
   {
     "rank": 177,
     "team": "Saint Joseph's",
-    "rating": -1.01,
+    "raa": -1.01,
     "games_played": 49,
     "wins": 24,
     "losses": 25,
@@ -1949,7 +1949,7 @@
   {
     "rank": 178,
     "team": "Harvard",
-    "rating": -1.1,
+    "raa": -1.1,
     "games_played": 44,
     "wins": 21,
     "losses": 22,
@@ -1960,7 +1960,7 @@
   {
     "rank": 179,
     "team": "Montana",
-    "rating": -1.12,
+    "raa": -1.12,
     "games_played": 48,
     "wins": 18,
     "losses": 30,
@@ -1971,7 +1971,7 @@
   {
     "rank": 180,
     "team": "Toledo",
-    "rating": -1.16,
+    "raa": -1.16,
     "games_played": 50,
     "wins": 15,
     "losses": 35,
@@ -1982,7 +1982,7 @@
   {
     "rank": 181,
     "team": "Evansville",
-    "rating": -1.17,
+    "raa": -1.17,
     "games_played": 49,
     "wins": 20,
     "losses": 29,
@@ -1993,7 +1993,7 @@
   {
     "rank": 182,
     "team": "Youngstown St.",
-    "rating": -1.26,
+    "raa": -1.26,
     "games_played": 50,
     "wins": 31,
     "losses": 19,
@@ -2004,7 +2004,7 @@
   {
     "rank": 183,
     "team": "Memphis",
-    "rating": -1.32,
+    "raa": -1.32,
     "games_played": 57,
     "wins": 18,
     "losses": 39,
@@ -2015,7 +2015,7 @@
   {
     "rank": 184,
     "team": "Colgate",
-    "rating": -1.34,
+    "raa": -1.34,
     "games_played": 52,
     "wins": 28,
     "losses": 24,
@@ -2026,7 +2026,7 @@
   {
     "rank": 185,
     "team": "Indiana St.",
-    "rating": -1.35,
+    "raa": -1.35,
     "games_played": 50,
     "wins": 22,
     "losses": 28,
@@ -2037,7 +2037,7 @@
   {
     "rank": 186,
     "team": "Lindenwood",
-    "rating": -1.41,
+    "raa": -1.41,
     "games_played": 52,
     "wins": 29,
     "losses": 23,
@@ -2048,7 +2048,7 @@
   {
     "rank": 187,
     "team": "Loyola Chicago",
-    "rating": -1.41,
+    "raa": -1.41,
     "games_played": 49,
     "wins": 27,
     "losses": 22,
@@ -2059,7 +2059,7 @@
   {
     "rank": 188,
     "team": "Winthrop",
-    "rating": -1.41,
+    "raa": -1.41,
     "games_played": 49,
     "wins": 28,
     "losses": 21,
@@ -2070,7 +2070,7 @@
   {
     "rank": 189,
     "team": "Saint Louis",
-    "rating": -1.46,
+    "raa": -1.46,
     "games_played": 48,
     "wins": 22,
     "losses": 26,
@@ -2081,7 +2081,7 @@
   {
     "rank": 190,
     "team": "Portland St.",
-    "rating": -1.46,
+    "raa": -1.46,
     "games_played": 45,
     "wins": 14,
     "losses": 31,
@@ -2092,7 +2092,7 @@
   {
     "rank": 191,
     "team": "Marist",
-    "rating": -1.49,
+    "raa": -1.49,
     "games_played": 56,
     "wins": 35,
     "losses": 21,
@@ -2103,7 +2103,7 @@
   {
     "rank": 192,
     "team": "Chattanooga",
-    "rating": -1.54,
+    "raa": -1.54,
     "games_played": 51,
     "wins": 23,
     "losses": 27,
@@ -2114,7 +2114,7 @@
   {
     "rank": 193,
     "team": "Dayton",
-    "rating": -1.55,
+    "raa": -1.55,
     "games_played": 48,
     "wins": 25,
     "losses": 23,
@@ -2125,7 +2125,7 @@
   {
     "rank": 194,
     "team": "Gardner-Webb",
-    "rating": -1.58,
+    "raa": -1.58,
     "games_played": 54,
     "wins": 32,
     "losses": 22,
@@ -2136,7 +2136,7 @@
   {
     "rank": 195,
     "team": "Kansas City",
-    "rating": -1.59,
+    "raa": -1.59,
     "games_played": 48,
     "wins": 16,
     "losses": 32,
@@ -2147,7 +2147,7 @@
   {
     "rank": 196,
     "team": "Georgetown",
-    "rating": -1.62,
+    "raa": -1.62,
     "games_played": 42,
     "wins": 16,
     "losses": 26,
@@ -2158,7 +2158,7 @@
   {
     "rank": 197,
     "team": "Bowling Green",
-    "rating": -1.63,
+    "raa": -1.63,
     "games_played": 48,
     "wins": 19,
     "losses": 29,
@@ -2169,7 +2169,7 @@
   {
     "rank": 198,
     "team": "Southeast Mo. St.",
-    "rating": -1.63,
+    "raa": -1.63,
     "games_played": 50,
     "wins": 21,
     "losses": 29,
@@ -2180,7 +2180,7 @@
   {
     "rank": 199,
     "team": "Utah St.",
-    "rating": -1.64,
+    "raa": -1.64,
     "games_played": 54,
     "wins": 19,
     "losses": 35,
@@ -2191,7 +2191,7 @@
   {
     "rank": 200,
     "team": "Howard",
-    "rating": -1.65,
+    "raa": -1.65,
     "games_played": 45,
     "wins": 26,
     "losses": 19,
@@ -2202,7 +2202,7 @@
   {
     "rank": 201,
     "team": "Buffalo",
-    "rating": -1.66,
+    "raa": -1.66,
     "games_played": 56,
     "wins": 24,
     "losses": 32,
@@ -2213,7 +2213,7 @@
   {
     "rank": 202,
     "team": "Valparaiso",
-    "rating": -1.76,
+    "raa": -1.76,
     "games_played": 52,
     "wins": 22,
     "losses": 30,
@@ -2224,7 +2224,7 @@
   {
     "rank": 203,
     "team": "George Washington",
-    "rating": -1.82,
+    "raa": -1.82,
     "games_played": 44,
     "wins": 23,
     "losses": 21,
@@ -2235,7 +2235,7 @@
   {
     "rank": 204,
     "team": "Villanova",
-    "rating": -1.86,
+    "raa": -1.86,
     "games_played": 53,
     "wins": 14,
     "losses": 39,
@@ -2246,7 +2246,7 @@
   {
     "rank": 205,
     "team": "Binghamton",
-    "rating": -1.88,
+    "raa": -1.88,
     "games_played": 44,
     "wins": 18,
     "losses": 26,
@@ -2257,7 +2257,7 @@
   {
     "rank": 206,
     "team": "Col. of Charleston",
-    "rating": -1.91,
+    "raa": -1.91,
     "games_played": 58,
     "wins": 28,
     "losses": 30,
@@ -2268,7 +2268,7 @@
   {
     "rank": 207,
     "team": "Massachusetts",
-    "rating": -1.92,
+    "raa": -1.92,
     "games_played": 48,
     "wins": 19,
     "losses": 29,
@@ -2279,7 +2279,7 @@
   {
     "rank": 208,
     "team": "Drake",
-    "rating": -1.97,
+    "raa": -1.97,
     "games_played": 51,
     "wins": 13,
     "losses": 38,
@@ -2290,7 +2290,7 @@
   {
     "rank": 209,
     "team": "CSUN",
-    "rating": -1.98,
+    "raa": -1.98,
     "games_played": 46,
     "wins": 14,
     "losses": 32,
@@ -2301,7 +2301,7 @@
   {
     "rank": 210,
     "team": "Bryant",
-    "rating": -1.98,
+    "raa": -1.98,
     "games_played": 40,
     "wins": 20,
     "losses": 20,
@@ -2312,7 +2312,7 @@
   {
     "rank": 211,
     "team": "Lipscomb",
-    "rating": -2.01,
+    "raa": -2.01,
     "games_played": 50,
     "wins": 12,
     "losses": 38,
@@ -2323,7 +2323,7 @@
   {
     "rank": 212,
     "team": "Fairfield",
-    "rating": -2.02,
+    "raa": -2.02,
     "games_played": 49,
     "wins": 27,
     "losses": 22,
@@ -2334,7 +2334,7 @@
   {
     "rank": 213,
     "team": "ETSU",
-    "rating": -2.06,
+    "raa": -2.06,
     "games_played": 49,
     "wins": 21,
     "losses": 28,
@@ -2345,7 +2345,7 @@
   {
     "rank": 214,
     "team": "DePaul",
-    "rating": -2.08,
+    "raa": -2.08,
     "games_played": 50,
     "wins": 20,
     "losses": 30,
@@ -2356,7 +2356,7 @@
   {
     "rank": 215,
     "team": "Queens (NC)",
-    "rating": -2.15,
+    "raa": -2.15,
     "games_played": 48,
     "wins": 14,
     "losses": 34,
@@ -2367,7 +2367,7 @@
   {
     "rank": 216,
     "team": "George Mason",
-    "rating": -2.15,
+    "raa": -2.15,
     "games_played": 51,
     "wins": 26,
     "losses": 25,
@@ -2378,7 +2378,7 @@
   {
     "rank": 217,
     "team": "UAlbany",
-    "rating": -2.18,
+    "raa": -2.18,
     "games_played": 43,
     "wins": 24,
     "losses": 19,
@@ -2389,7 +2389,7 @@
   {
     "rank": 218,
     "team": "SIUE",
-    "rating": -2.19,
+    "raa": -2.19,
     "games_played": 54,
     "wins": 27,
     "losses": 27,
@@ -2400,7 +2400,7 @@
   {
     "rank": 219,
     "team": "Utah Tech",
-    "rating": -2.22,
+    "raa": -2.22,
     "games_played": 51,
     "wins": 19,
     "losses": 32,
@@ -2411,7 +2411,7 @@
   {
     "rank": 220,
     "team": "Brown",
-    "rating": -2.23,
+    "raa": -2.23,
     "games_played": 43,
     "wins": 20,
     "losses": 23,
@@ -2422,7 +2422,7 @@
   {
     "rank": 221,
     "team": "Tennessee Tech",
-    "rating": -2.32,
+    "raa": -2.32,
     "games_played": 50,
     "wins": 16,
     "losses": 34,
@@ -2433,7 +2433,7 @@
   {
     "rank": 222,
     "team": "UMass Lowell",
-    "rating": -2.34,
+    "raa": -2.34,
     "games_played": 51,
     "wins": 25,
     "losses": 26,
@@ -2444,7 +2444,7 @@
   {
     "rank": 223,
     "team": "Iona",
-    "rating": -2.5,
+    "raa": -2.5,
     "games_played": 50,
     "wins": 25,
     "losses": 25,
@@ -2455,7 +2455,7 @@
   {
     "rank": 224,
     "team": "Cal Poly",
-    "rating": -2.54,
+    "raa": -2.54,
     "games_played": 46,
     "wins": 11,
     "losses": 35,
@@ -2466,7 +2466,7 @@
   {
     "rank": 225,
     "team": "Seton Hall",
-    "rating": -2.54,
+    "raa": -2.54,
     "games_played": 49,
     "wins": 19,
     "losses": 30,
@@ -2477,7 +2477,7 @@
   {
     "rank": 226,
     "team": "Oakland",
-    "rating": -2.57,
+    "raa": -2.57,
     "games_played": 35,
     "wins": 12,
     "losses": 23,
@@ -2488,7 +2488,7 @@
   {
     "rank": 227,
     "team": "Yale",
-    "rating": -2.59,
+    "raa": -2.59,
     "games_played": 45,
     "wins": 17,
     "losses": 28,
@@ -2499,7 +2499,7 @@
   {
     "rank": 228,
     "team": "Kent St.",
-    "rating": -2.67,
+    "raa": -2.67,
     "games_played": 47,
     "wins": 19,
     "losses": 28,
@@ -2510,7 +2510,7 @@
   {
     "rank": 229,
     "team": "Elon",
-    "rating": -2.67,
+    "raa": -2.67,
     "games_played": 50,
     "wins": 18,
     "losses": 32,
@@ -2521,7 +2521,7 @@
   {
     "rank": 230,
     "team": "Weber St.",
-    "rating": -2.68,
+    "raa": -2.68,
     "games_played": 55,
     "wins": 14,
     "losses": 41,
@@ -2532,7 +2532,7 @@
   {
     "rank": 231,
     "team": "Longwood",
-    "rating": -2.74,
+    "raa": -2.74,
     "games_played": 53,
     "wins": 21,
     "losses": 32,
@@ -2543,7 +2543,7 @@
   {
     "rank": 232,
     "team": "Presbyterian",
-    "rating": -2.76,
+    "raa": -2.76,
     "games_played": 51,
     "wins": 20,
     "losses": 31,
@@ -2554,7 +2554,7 @@
   {
     "rank": 233,
     "team": "Texas Southern",
-    "rating": -2.77,
+    "raa": -2.77,
     "games_played": 37,
     "wins": 26,
     "losses": 11,
@@ -2565,7 +2565,7 @@
   {
     "rank": 234,
     "team": "Florida A&M",
-    "rating": -2.79,
+    "raa": -2.79,
     "games_played": 50,
     "wins": 29,
     "losses": 21,
@@ -2576,7 +2576,7 @@
   {
     "rank": 235,
     "team": "West Ga.",
-    "rating": -2.85,
+    "raa": -2.85,
     "games_played": 54,
     "wins": 14,
     "losses": 40,
@@ -2587,7 +2587,7 @@
   {
     "rank": 236,
     "team": "UTEP",
-    "rating": -2.88,
+    "raa": -2.88,
     "games_played": 49,
     "wins": 12,
     "losses": 37,
@@ -2598,7 +2598,7 @@
   {
     "rank": 237,
     "team": "Kennesaw St.",
-    "rating": -2.89,
+    "raa": -2.89,
     "games_played": 50,
     "wins": 7,
     "losses": 43,
@@ -2609,7 +2609,7 @@
   {
     "rank": 238,
     "team": "Rider",
-    "rating": -2.89,
+    "raa": -2.89,
     "games_played": 49,
     "wins": 25,
     "losses": 24,
@@ -2620,7 +2620,7 @@
   {
     "rank": 239,
     "team": "Abilene Christian",
-    "rating": -2.92,
+    "raa": -2.92,
     "games_played": 47,
     "wins": 7,
     "losses": 40,
@@ -2631,7 +2631,7 @@
   {
     "rank": 240,
     "team": "Green Bay",
-    "rating": -2.92,
+    "raa": -2.92,
     "games_played": 42,
     "wins": 13,
     "losses": 29,
@@ -2642,7 +2642,7 @@
   {
     "rank": 241,
     "team": "Bradley",
-    "rating": -2.97,
+    "raa": -2.97,
     "games_played": 53,
     "wins": 16,
     "losses": 37,
@@ -2653,7 +2653,7 @@
   {
     "rank": 242,
     "team": "Southern U.",
-    "rating": -3.07,
+    "raa": -3.07,
     "games_played": 40,
     "wins": 26,
     "losses": 14,
@@ -2664,7 +2664,7 @@
   {
     "rank": 243,
     "team": "Quinnipiac",
-    "rating": -3.08,
+    "raa": -3.08,
     "games_played": 42,
     "wins": 22,
     "losses": 20,
@@ -2675,7 +2675,7 @@
   {
     "rank": 244,
     "team": "Rhode Island",
-    "rating": -3.09,
+    "raa": -3.09,
     "games_played": 47,
     "wins": 21,
     "losses": 26,
@@ -2686,7 +2686,7 @@
   {
     "rank": 245,
     "team": "A&M-Corpus Christi",
-    "rating": -3.12,
+    "raa": -3.12,
     "games_played": 52,
     "wins": 14,
     "losses": 38,
@@ -2697,7 +2697,7 @@
   {
     "rank": 246,
     "team": "Northern Ky.",
-    "rating": -3.21,
+    "raa": -3.21,
     "games_played": 48,
     "wins": 23,
     "losses": 25,
@@ -2708,7 +2708,7 @@
   {
     "rank": 247,
     "team": "Sacred Heart",
-    "rating": -3.3,
+    "raa": -3.3,
     "games_played": 52,
     "wins": 23,
     "losses": 29,
@@ -2719,7 +2719,7 @@
   {
     "rank": 248,
     "team": "Southern Ind.",
-    "rating": -3.38,
+    "raa": -3.38,
     "games_played": 45,
     "wins": 15,
     "losses": 30,
@@ -2730,7 +2730,7 @@
   {
     "rank": 249,
     "team": "Towson",
-    "rating": -3.38,
+    "raa": -3.38,
     "games_played": 49,
     "wins": 25,
     "losses": 24,
@@ -2741,7 +2741,7 @@
   {
     "rank": 250,
     "team": "Mercer",
-    "rating": -3.39,
+    "raa": -3.39,
     "games_played": 47,
     "wins": 19,
     "losses": 28,
@@ -2752,7 +2752,7 @@
   {
     "rank": 251,
     "team": "Siena",
-    "rating": -3.43,
+    "raa": -3.43,
     "games_played": 46,
     "wins": 25,
     "losses": 21,
@@ -2763,7 +2763,7 @@
   {
     "rank": 252,
     "team": "UC Riverside",
-    "rating": -3.44,
+    "raa": -3.44,
     "games_played": 44,
     "wins": 6,
     "losses": 38,
@@ -2774,7 +2774,7 @@
   {
     "rank": 253,
     "team": "Cornell",
-    "rating": -3.44,
+    "raa": -3.44,
     "games_played": 41,
     "wins": 20,
     "losses": 21,
@@ -2785,7 +2785,7 @@
   {
     "rank": 254,
     "team": "Penn",
-    "rating": -3.46,
+    "raa": -3.46,
     "games_played": 44,
     "wins": 17,
     "losses": 27,
@@ -2796,7 +2796,7 @@
   {
     "rank": 255,
     "team": "UIC",
-    "rating": -3.48,
+    "raa": -3.48,
     "games_played": 53,
     "wins": 21,
     "losses": 31,
@@ -2807,7 +2807,7 @@
   {
     "rank": 256,
     "team": "Stony Brook",
-    "rating": -3.48,
+    "raa": -3.48,
     "games_played": 48,
     "wins": 20,
     "losses": 28,
@@ -2818,7 +2818,7 @@
   {
     "rank": 257,
     "team": "Dartmouth",
-    "rating": -3.51,
+    "raa": -3.51,
     "games_played": 33,
     "wins": 10,
     "losses": 23,
@@ -2829,7 +2829,7 @@
   {
     "rank": 258,
     "team": "LIU",
-    "rating": -3.53,
+    "raa": -3.53,
     "games_played": 55,
     "wins": 24,
     "losses": 31,
@@ -2840,7 +2840,7 @@
   {
     "rank": 259,
     "team": "Drexel",
-    "rating": -3.69,
+    "raa": -3.69,
     "games_played": 45,
     "wins": 22,
     "losses": 23,
@@ -2851,7 +2851,7 @@
   {
     "rank": 260,
     "team": "Detroit Mercy",
-    "rating": -4.09,
+    "raa": -4.09,
     "games_played": 44,
     "wins": 14,
     "losses": 30,
@@ -2862,7 +2862,7 @@
   {
     "rank": 261,
     "team": "Houston Christian",
-    "rating": -4.1,
+    "raa": -4.1,
     "games_played": 47,
     "wins": 11,
     "losses": 36,
@@ -2873,7 +2873,7 @@
   {
     "rank": 262,
     "team": "Central Conn. St.",
-    "rating": -4.1,
+    "raa": -4.1,
     "games_played": 45,
     "wins": 27,
     "losses": 18,
@@ -2884,7 +2884,7 @@
   {
     "rank": 263,
     "team": "Lafayette",
-    "rating": -4.18,
+    "raa": -4.18,
     "games_played": 51,
     "wins": 16,
     "losses": 35,
@@ -2895,7 +2895,7 @@
   {
     "rank": 264,
     "team": "Monmouth",
-    "rating": -4.29,
+    "raa": -4.29,
     "games_played": 50,
     "wins": 19,
     "losses": 31,
@@ -2906,7 +2906,7 @@
   {
     "rank": 265,
     "team": "Canisius",
-    "rating": -4.3,
+    "raa": -4.3,
     "games_played": 42,
     "wins": 16,
     "losses": 26,
@@ -2917,7 +2917,7 @@
   {
     "rank": 266,
     "team": "CSU Bakersfield",
-    "rating": -4.43,
+    "raa": -4.43,
     "games_played": 50,
     "wins": 10,
     "losses": 40,
@@ -2928,7 +2928,7 @@
   {
     "rank": 267,
     "team": "Wagner",
-    "rating": -4.51,
+    "raa": -4.51,
     "games_played": 49,
     "wins": 21,
     "losses": 28,
@@ -2939,7 +2939,7 @@
   {
     "rank": 268,
     "team": "Bethune-Cookman",
-    "rating": -4.58,
+    "raa": -4.58,
     "games_played": 47,
     "wins": 20,
     "losses": 27,
@@ -2950,7 +2950,7 @@
   {
     "rank": 269,
     "team": "N.C. A&T",
-    "rating": -4.65,
+    "raa": -4.65,
     "games_played": 52,
     "wins": 19,
     "losses": 33,
@@ -2961,7 +2961,7 @@
   {
     "rank": 270,
     "team": "Charleston So.",
-    "rating": -4.76,
+    "raa": -4.76,
     "games_played": 51,
     "wins": 10,
     "losses": 41,
@@ -2972,7 +2972,7 @@
   {
     "rank": 271,
     "team": "Mount St. Mary's",
-    "rating": -4.78,
+    "raa": -4.78,
     "games_played": 48,
     "wins": 20,
     "losses": 28,
@@ -2983,7 +2983,7 @@
   {
     "rank": 272,
     "team": "Maine",
-    "rating": -4.93,
+    "raa": -4.93,
     "games_played": 46,
     "wins": 11,
     "losses": 35,
@@ -2994,7 +2994,7 @@
   {
     "rank": 273,
     "team": "Manhattan",
-    "rating": -5.04,
+    "raa": -5.04,
     "games_played": 52,
     "wins": 15,
     "losses": 37,
@@ -3005,7 +3005,7 @@
   {
     "rank": 274,
     "team": "Alabama St.",
-    "rating": -5.05,
+    "raa": -5.05,
     "games_played": 53,
     "wins": 22,
     "losses": 31,
@@ -3016,7 +3016,7 @@
   {
     "rank": 275,
     "team": "IU Indy",
-    "rating": -5.13,
+    "raa": -5.13,
     "games_played": 47,
     "wins": 7,
     "losses": 40,
@@ -3027,7 +3027,7 @@
   {
     "rank": 276,
     "team": "Morehead St.",
-    "rating": -5.17,
+    "raa": -5.17,
     "games_played": 45,
     "wins": 7,
     "losses": 38,
@@ -3038,7 +3038,7 @@
   {
     "rank": 277,
     "team": "Jackson St.",
-    "rating": -5.25,
+    "raa": -5.25,
     "games_played": 40,
     "wins": 20,
     "losses": 20,
@@ -3049,7 +3049,7 @@
   {
     "rank": 278,
     "team": "Bellarmine",
-    "rating": -5.26,
+    "raa": -5.26,
     "games_played": 50,
     "wins": 12,
     "losses": 38,
@@ -3060,7 +3060,7 @@
   {
     "rank": 279,
     "team": "Furman",
-    "rating": -5.4,
+    "raa": -5.4,
     "games_played": 53,
     "wins": 13,
     "losses": 40,
@@ -3071,7 +3071,7 @@
   {
     "rank": 280,
     "team": "Bucknell",
-    "rating": -5.62,
+    "raa": -5.62,
     "games_played": 45,
     "wins": 9,
     "losses": 35,
@@ -3082,7 +3082,7 @@
   {
     "rank": 281,
     "team": "Western Ill.",
-    "rating": -5.62,
+    "raa": -5.62,
     "games_played": 46,
     "wins": 14,
     "losses": 32,
@@ -3093,7 +3093,7 @@
   {
     "rank": 282,
     "team": "Delaware St.",
-    "rating": -6.15,
+    "raa": -6.15,
     "games_played": 34,
     "wins": 18,
     "losses": 16,
@@ -3104,7 +3104,7 @@
   {
     "rank": 283,
     "team": "Merrimack",
-    "rating": -6.15,
+    "raa": -6.15,
     "games_played": 41,
     "wins": 12,
     "losses": 29,
@@ -3115,7 +3115,7 @@
   {
     "rank": 284,
     "team": "South Carolina St.",
-    "rating": -6.18,
+    "raa": -6.18,
     "games_played": 37,
     "wins": 18,
     "losses": 19,
@@ -3126,7 +3126,7 @@
   {
     "rank": 285,
     "team": "East Texas A&M",
-    "rating": -6.18,
+    "raa": -6.18,
     "games_played": 52,
     "wins": 6,
     "losses": 46,
@@ -3137,7 +3137,7 @@
   {
     "rank": 286,
     "team": "St. Bonaventure",
-    "rating": -6.36,
+    "raa": -6.36,
     "games_played": 52,
     "wins": 9,
     "losses": 43,
@@ -3148,7 +3148,7 @@
   {
     "rank": 287,
     "team": "Ark.-Pine Bluff",
-    "rating": -6.6,
+    "raa": -6.6,
     "games_played": 40,
     "wins": 13,
     "losses": 27,
@@ -3159,7 +3159,7 @@
   {
     "rank": 288,
     "team": "FDU",
-    "rating": -6.61,
+    "raa": -6.61,
     "games_played": 52,
     "wins": 20,
     "losses": 32,
@@ -3170,7 +3170,7 @@
   {
     "rank": 289,
     "team": "Holy Cross",
-    "rating": -6.77,
+    "raa": -6.77,
     "games_played": 40,
     "wins": 10,
     "losses": 30,
@@ -3181,7 +3181,7 @@
   {
     "rank": 290,
     "team": "Norfolk St.",
-    "rating": -6.93,
+    "raa": -6.93,
     "games_played": 40,
     "wins": 20,
     "losses": 20,
@@ -3192,7 +3192,7 @@
   {
     "rank": 291,
     "team": "Le Moyne",
-    "rating": -6.95,
+    "raa": -6.95,
     "games_played": 51,
     "wins": 16,
     "losses": 35,
@@ -3203,7 +3203,7 @@
   {
     "rank": 292,
     "team": "Stonehill",
-    "rating": -7.08,
+    "raa": -7.08,
     "games_played": 50,
     "wins": 13,
     "losses": 37,
@@ -3214,7 +3214,7 @@
   {
     "rank": 293,
     "team": "Hampton",
-    "rating": -7.18,
+    "raa": -7.18,
     "games_played": 43,
     "wins": 10,
     "losses": 33,
@@ -3225,7 +3225,7 @@
   {
     "rank": 294,
     "team": "Tennessee St.",
-    "rating": -7.57,
+    "raa": -7.57,
     "games_played": 39,
     "wins": 2,
     "losses": 37,
@@ -3236,7 +3236,7 @@
   {
     "rank": 295,
     "team": "New Haven",
-    "rating": -7.72,
+    "raa": -7.72,
     "games_played": 45,
     "wins": 10,
     "losses": 35,
@@ -3247,7 +3247,7 @@
   {
     "rank": 296,
     "team": "Grambling",
-    "rating": -7.78,
+    "raa": -7.78,
     "games_played": 38,
     "wins": 12,
     "losses": 25,
@@ -3258,7 +3258,7 @@
   {
     "rank": 297,
     "team": "Alcorn",
-    "rating": -7.78,
+    "raa": -7.78,
     "games_played": 39,
     "wins": 7,
     "losses": 31,
@@ -3269,7 +3269,7 @@
   {
     "rank": 298,
     "team": "Morgan St.",
-    "rating": -7.99,
+    "raa": -7.99,
     "games_played": 36,
     "wins": 12,
     "losses": 24,
@@ -3280,7 +3280,7 @@
   {
     "rank": 299,
     "team": "Saint Peter's",
-    "rating": -7.99,
+    "raa": -7.99,
     "games_played": 51,
     "wins": 7,
     "losses": 44,
@@ -3291,7 +3291,7 @@
   {
     "rank": 300,
     "team": "Niagara",
-    "rating": -8.01,
+    "raa": -8.01,
     "games_played": 42,
     "wins": 8,
     "losses": 34,
@@ -3302,7 +3302,7 @@
   {
     "rank": 301,
     "team": "N.C. Central",
-    "rating": -8.02,
+    "raa": -8.02,
     "games_played": 47,
     "wins": 7,
     "losses": 40,
@@ -3313,7 +3313,7 @@
   {
     "rank": 302,
     "team": "Mercyhurst",
-    "rating": -8.02,
+    "raa": -8.02,
     "games_played": 43,
     "wins": 9,
     "losses": 34,
@@ -3324,7 +3324,7 @@
   {
     "rank": 303,
     "team": "Coppin St.",
-    "rating": -8.44,
+    "raa": -8.44,
     "games_played": 34,
     "wins": 8,
     "losses": 26,
@@ -3335,7 +3335,7 @@
   {
     "rank": 304,
     "team": "Saint Francis",
-    "rating": -9.15,
+    "raa": -9.15,
     "games_played": 48,
     "wins": 5,
     "losses": 42,
@@ -3346,7 +3346,7 @@
   {
     "rank": 305,
     "team": "UMES",
-    "rating": -9.71,
+    "raa": -9.71,
     "games_played": 41,
     "wins": 9,
     "losses": 32,
@@ -3357,7 +3357,7 @@
   {
     "rank": 306,
     "team": "Alabama A&M",
-    "rating": -9.97,
+    "raa": -9.97,
     "games_played": 39,
     "wins": 10,
     "losses": 29,
@@ -3368,7 +3368,7 @@
   {
     "rank": 307,
     "team": "Mississippi Val.",
-    "rating": -14.93,
+    "raa": -14.93,
     "games_played": 35,
     "wins": 0,
     "losses": 35,
