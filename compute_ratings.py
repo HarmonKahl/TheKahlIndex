@@ -71,32 +71,32 @@ def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
 
     # Step 3: Iterative SOS loop (centered every pass)
     net_adj = season.set_index("team")["net_adj"].to_dict()
-    rating = dict(net_adj)
+    raa = dict(net_adj)
 
     for n in range(1, max_iters + 1):
-        new_rating = {}
+        new_raa = {}
         for team, opp_list in opponents.items():
-            if team not in rating:
+            if team not in raa:
                 continue
-            opp_ratings = [rating[o] for o in opp_list if o in rating]
-            sos = np.mean(opp_ratings) if opp_ratings else 0.0
-            new_rating[team] = net_adj[team] + sos
+            opp_raa = [raa[o] for o in opp_list if o in raa]
+            sos = np.mean(opp_raa) if opp_raa else 0.0
+            new_raa[team] = net_adj[team] + sos
 
-        mean_now = np.mean(list(new_rating.values()))
-        new_rating = {t: r - mean_now for t, r in new_rating.items()}
+        mean_now = np.mean(list(new_raa.values()))
+        new_raa = {t: r - mean_now for t, r in new_raa.items()}
 
-        max_change = max(abs(new_rating[t] - rating[t]) for t in new_rating)
-        rating = new_rating
+        max_change = max(abs(new_raa[t] - raa[t]) for t in new_raa)
+        raa = new_raa
 
         if max_change < tol:
             print(f"Converged after {n} iterations (largest change: {max_change:.6f})")
             break
 
-    # Step 4: Map final rating & calculate exact SoS
-    season["adj_rating"] = season["team"].map(rating)
-    season["sos"] = season["adj_rating"] - season["net_adj"]
+    # Step 4: Map final RAA & calculate exact SoS
+    season["raa"] = season["team"].map(raa)
+    season["sos"] = season["raa"] - season["net_adj"]
 
-    season = season.sort_values("adj_rating", ascending=False).reset_index(drop=True)
+    season = season.sort_values("raa", ascending=False).reset_index(drop=True)
     season["rank"] = range(1, len(season) + 1)
 
     return season
@@ -115,7 +115,7 @@ def save_ratings_json(final_df, output_path="ratings.json"):
             {
                 "rank": int(row["rank"]),
                 "team": row["team"],
-                "rating": round(float(row["adj_rating"]), 2),
+                "raa": round(float(row["raa"]), 2),
                 "games_played": int(row["games"]),
                 "wins": int(row["wins"]),
                 "losses": int(row["losses"]),
