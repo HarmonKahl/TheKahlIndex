@@ -318,19 +318,6 @@ def games_to_team_rows(games):
     return rows
 
 
-def filter_min_games(team_df, min_games=20):
-    """Filters out any team that has played fewer than min_games."""
-    if team_df.empty or "team" not in team_df.columns:
-        return team_df
-    
-    counts = team_df.groupby("team")["date"].count()
-    valid_teams = counts[counts >= min_games].index
-    
-    filtered_df = team_df[team_df["team"].isin(valid_teams)].copy()
-    print(f"Filtered out {len(counts) - len(valid_teams)} teams with fewer than {min_games} games.")
-    return filtered_df
-
-
 def _daterange(start, end):
     d = start
     while d <= end:
@@ -345,7 +332,6 @@ def pull_season(
     fetch_innings=True,
     debug=False,
     max_retries=2,
-    min_games=20,
 ):
     os.makedirs(out_dir, exist_ok=True)
     games_path = os.path.join(out_dir, "games_season.csv")
@@ -377,6 +363,7 @@ def pull_season(
     for i, d in enumerate(dates, 1):
         date_str = d.isoformat()
         if date_str in completed:
+            print(f"Skipping {date_str} (already logged in _completed_dates.txt)")
             continue
 
         day_games, attempt = None, 0
@@ -402,32 +389,33 @@ def pull_season(
         all_team_rows.extend(games_to_team_rows(day_games))
         completed.add(date_str)
 
-        # Convert to DataFrame to apply min_games threshold filter
-        team_df = pd.DataFrame(all_team_rows)
-        team_df = filter_min_games(team_df, min_games=min_games)
-
         pd.DataFrame(all_games).to_csv(games_path, index=False)
-        team_df.to_csv(team_path, index=False)
+        pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
         with open(progress_path, "w") as f:
             f.write("\n".join(sorted(completed)))
 
         print(
             f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games "
-            f"(running total: {len(all_games)} games, {len(team_df)} team-rows)"
+            f"(running total: {len(all_games)} games, {len(all_team_rows)} team-rows)"
         )
 
-    final_team_df = filter_min_games(pd.DataFrame(all_team_rows), min_games=min_games)
-    return pd.DataFrame(all_games), final_team_df
+    return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
 
 
 if __name__ == "__main__":
     if len(sys.argv) >= 3:
+        # Range mode: explicit start and end dates passed (e.g. python pull_season.py 2026-02-05 2026-06-04)
         start_date = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
         end_date = datetime.strptime(sys.argv[2], "%Y-%m-%d").date()
+    elif len(sys.argv) == 2:
+        # Single-day mode: explicit single date passed (e.g. python pull_season.py 2026-03-15)
+        start_date = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
+        end_date = start_date
     else:
+        # Daily cron mode: default to pulling yesterday and today to ensure late west coast boxscores are included
         today = date.today()
-        current_year = today.year
-        start_date = date(current_year, 2, 1)
-        end_date = min(today, date(current_year, 6, 30))
+        start_date = today - timedelta(days=1)
+        end_date = today
 
-    pull_season(start=start_date, end=end_date, out_dir=".", min_games=20)
+    print(f"Running scraper for date range: {start_date} to {end_date}")
+    pull_season(start=start_date, end=end_date, out_dir=".")
