@@ -30,7 +30,7 @@
 
     header {
       text-align: center;
-      margin-bottom: 2.5rem;
+      margin-bottom: 2rem;
     }
     header h1 {
       font-size: 2.5rem;
@@ -46,12 +46,48 @@
       font-size: 1rem;
     }
 
+    /* Tab Navigation */
+    .tab-navigation {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .tab-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover {
+      color: var(--text-main);
+      border-color: var(--accent-blue);
+    }
+    .tab-btn.active {
+      background: var(--accent-blue);
+      color: #0f172a;
+      border-color: var(--accent-blue);
+    }
+
+    /* Tab Content Display */
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
     /* Top 3 Podium Cards */
     .top-three {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 1.5rem;
-      margin-bottom: 3rem;
+      margin-bottom: 2.5rem;
     }
     .podium-card {
       background: var(--card-bg);
@@ -175,43 +211,82 @@
     <p>NCAA Division I Softball Power Rankings (Runs Above Average)</p>
   </header>
 
-  <!-- Top 3 Featured Cards -->
-  <div class="top-three" id="topThree"></div>
-
-  <!-- Search & Filter Controls -->
-  <div class="controls">
-    <input type="text" id="searchInput" class="search-input" placeholder="Search team or conference..." onkeyup="filterTable()" />
+  <!-- Navigation Tabs -->
+  <div class="tab-navigation">
+    <button class="tab-btn active" onclick="switchTab('teamsTab', this)">Team Rankings</button>
+    <button class="tab-btn" onclick="switchTab('conferencesTab', this)">Conference Rankings</button>
   </div>
 
-  <!-- Main Rankings Table -->
-  <div class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th>Rank</th>
-          <th>Team</th>
-          <th>Conference</th>
-          <th>RAA</th>
-          <th>Record</th>
-          <th>Runs/7</th>
-          <th>RA/7</th>
-          <th>SoS</th>
-        </tr>
-      </thead>
-      <tbody id="rankingsBody">
-        <tr>
-          <td colspan="8" style="text-align: center; color: var(--text-muted);">Loading ratings...</td>
-        </tr>
-      </tbody>
-    </table>
+  <!-- TAB 1: TEAM RANKINGS -->
+  <div id="teamsTab" class="tab-content active">
+    <div class="top-three" id="topThree"></div>
+    <div class="controls">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search team or conference..." onkeyup="filterTable()" />
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Team</th>
+            <th>Conference</th>
+            <th>RAA</th>
+            <th>Record</th>
+            <th>Runs/7</th>
+            <th>RA/7</th>
+            <th>SoS</th>
+          </tr>
+        </thead>
+        <tbody id="rankingsBody">
+          <tr>
+            <td colspan="8" style="text-align: center; color: var(--text-muted);">Loading ratings...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 2: CONFERENCE RANKINGS -->
+  <div id="conferencesTab" class="tab-content">
+    <div class="controls">
+      <input type="text" id="confSearchInput" class="search-input" placeholder="Search conference..." onkeyup="filterConfTable()" />
+    </div>
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Conference</th>
+            <th>Avg RAA</th>
+            <th>Teams</th>
+            <th>Top 25 Teams</th>
+            <th>Top Ranked Team</th>
+          </tr>
+        </thead>
+        <tbody id="confRankingsBody">
+          <tr>
+            <td colspan="6" style="text-align: center; color: var(--text-muted);">Loading conference ratings...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <script>
     var rawRatings = [];
+    var conferenceRatings = [];
 
     function numFix(val) {
       var n = Number(val);
       return isNaN(n) ? '0.00' : n.toFixed(2);
+    }
+
+    function switchTab(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
     }
 
     async function loadRatings() {
@@ -235,6 +310,7 @@
 
         renderTopThree(rawRatings.slice(0, 3));
         renderTable(rawRatings);
+        computeAndRenderConferences(rawRatings);
       } catch (error) {
         console.error('Error loading ratings.json:', error);
         tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--red-text);">' +
@@ -304,6 +380,72 @@
       tbody.innerHTML = html;
     }
 
+    function computeAndRenderConferences(data) {
+      var groups = {};
+
+      data.forEach(function(item) {
+        var conf = item.conference || 'Independent / Other';
+        if (conf === 'Independent / Other') return;
+
+        if (!groups[conf]) {
+          groups[conf] = {
+            name: conf,
+            teams: [],
+            totalRAA: 0,
+            top25Count: 0
+          };
+        }
+
+        groups[conf].teams.push(item);
+        groups[conf].totalRAA += (Number(item.raa) || 0);
+        if (item.rank <= 25) {
+          groups[conf].top25Count++;
+        }
+      });
+
+      conferenceRatings = Object.values(groups).map(function(g) {
+        g.teams.sort((a, b) => a.rank - b.rank);
+        return {
+          conference: g.name,
+          avgRAA: g.totalRAA / g.teams.length,
+          teamCount: g.teams.length,
+          top25Count: g.top25Count,
+          topTeam: g.teams[0].team,
+          topTeamRank: g.teams[0].rank
+        };
+      });
+
+      // Sort by Average RAA descending
+      conferenceRatings.sort((a, b) => b.avgRAA - a.avgRAA);
+      
+      renderConferenceTable(conferenceRatings);
+    }
+
+    function renderConferenceTable(data) {
+      var tbody = document.getElementById('confRankingsBody');
+      if (!tbody) return;
+
+      var html = '';
+
+      for (var i = 0; i < data.length; i++) {
+        var row = data[i];
+        var avgRaaVal = Number(row.avgRAA) || 0;
+        var raaClass = avgRaaVal >= 0 ? 'raa-positive' : 'raa-negative';
+        var raaFormatted = (avgRaaVal > 0 ? '+' : '') + numFix(avgRaaVal);
+
+        html += '<tr>' +
+                  '<td style="font-weight: 700; color: var(--text-muted);">#' + (i + 1) + '</td>' +
+                  '<td style="font-weight: 600;">' + row.conference + '</td>' +
+                  '<td><span class="raa-badge ' + raaClass + '">' + raaFormatted + '</span></td>' +
+                  '<td>' + row.teamCount + '</td>' +
+                  '<td>' + row.top25Count + '</td>' +
+                  '<td>' + row.topTeam + ' <small style="color: var(--text-muted);">(' + '#' + row.topTeamRank + ')' + '</small></td>' +
+                '</tr>';
+      }
+
+      tbody.innerHTML = html;
+    }
+
     function filterTable() {
       var query = document.getElementById('searchInput').value.toLowerCase();
       var filtered = rawRatings.filter(function(item) {
@@ -312,6 +454,14 @@
         return t.includes(query) || c.includes(query);
       });
       renderTable(filtered);
+    }
+
+    function filterConfTable() {
+      var query = document.getElementById('confSearchInput').value.toLowerCase();
+      var filtered = conferenceRatings.filter(function(item) {
+        return (item.conference || '').toLowerCase().includes(query);
+      });
+      renderConferenceTable(filtered);
     }
 
     if (document.readyState === 'loading') {
