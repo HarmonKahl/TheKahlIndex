@@ -2,6 +2,7 @@
   {
     "rank": 1,
     "team": "Oklahoma",
+    "slug": "oklahoma",
     "raa": 12.22,
     "games_played": 61,
     "wins": 52,
@@ -13,6 +14,7 @@
   {
     "rank": 2,
     "team": "UCLA",
+    "slug": "ucla",
     "raa": 11.38,
     "games_played": 61,
     "wins": 52,
@@ -24,6 +26,7 @@
   {
     "rank": 3,
     "team": "Texas Tech",
+    "slug": "texas-tech",
     "raa": 11.06,
     "games_played": 69,
     "wins": 60,
@@ -35,6 +38,7 @@
   {
     "rank": 4,
     "team": "Arkansas",
+    "slug": "arkansas",
     "raa": 10.91,
     "games_played": 58,
     "wins": 46,
@@ -46,6 +50,7 @@
   {
     "rank": 5,
     "team": "Texas",
+    "slug": "texas",
     "raa": 10.39,
     "games_played": 63,
     "wins": 51,
@@ -57,6 +62,7 @@
   {
     "rank": 6,
     "team": "Nebraska",
+    "slug": "nebraska",
     "raa": 9.93,
     "games_played": 58,
     "wins": 50,
@@ -68,6 +74,7 @@
   {
     "rank": 7,
     "team": "Alabama",
+    "slug": "alabama",
     "raa": 9.82,
     "games_played": 63,
     "wins": 55,
@@ -79,6 +86,7 @@
   {
     "rank": 8,
     "team": "Florida",
+    "slug": "florida",
     "raa": 9.67,
     "games_played": 63,
     "wins": 51,
@@ -90,6 +98,7 @@
   {
     "rank": 9,
     "team": "Georgia",
+    "slug": "georgia",
     "raa": 8.97,
     "games_played": 60,
     "wins": 40,
@@ -101,6 +110,7 @@
   {
     "rank": 10,
     "team": "Texas A&M",
+    "slug": "texas-a-m",
     "raa": 8.74,
     "games_played": 55,
     "wins": 37,
@@ -112,6 +122,7 @@
   {
     "rank": 11,
     "team": "Tennessee",
+    "slug": "tennessee",
     "raa": 8.69,
     "games_played": 60,
     "wins": 49,
@@ -123,6 +134,7 @@
   {
     "rank": 12,
     "team": "LSU",
+    "slug": "lsu",
     "raa": 8.55,
     "games_played": 58,
     "wins": 39,
@@ -134,6 +146,7 @@
   {
     "rank": 13,
     "team": "Florida St.",
+    "slug": "florida-st",
     "raa": 8.4,
     "games_played": 59,
     "wins": 50,
@@ -145,6 +158,7 @@
   {
     "rank": 14,
     "team": "Virginia Tech",
+    "slug": "virginia-tech",
     "raa": 7.87,
     "games_played": 58,
     "wins": 47,
@@ -156,6 +170,7 @@
   {
     "rank": 15,
     "team": "Oklahoma St.",
+    "slug": "oklahoma-st",
     "raa": 7.58,
     "games_played": 59,
     "wins": 41,
@@ -167,6 +182,7 @@
   {
     "rank": 16,
     "team": "Duke",
+    "slug": "duke",
     "raa": 7.49,
     "games_played": 62,
     "wins": 45,
@@ -178,6 +194,7 @@
   {
     "rank": 17,
     "team": "Oregon",
+    "slug": "oregon",
     "raa": 7.48,
     "games_played": 54,
     "wins": 41,
@@ -189,6 +206,7 @@
   {
     "rank": 18,
     "team": "Mississippi St.",
+    "slug": "mississippi-st",
     "raa": 7.47,
     "games_played": 63,
     "wins": 43,
@@ -200,6 +218,7 @@
   {
     "rank": 19,
     "team": "Arizona",
+    "slug": "arizona",
     "raa": 7.47,
     "games_played": 57,
     "wins": 37,
@@ -211,6 +230,7 @@
   {
     "rank": 20,
     "team": "Arizona St.",
+    "slug": "arizona-st",
     "raa": 7.19,
     "games_played": 61,
     "wins": 44,
@@ -222,6 +242,7 @@
   {
     "rank": 21,
     "team": "Washington",
+    "slug": "washington",
     "raa": 6.92,
     "games_played": 56,
     "wins": 37,
@@ -233,6 +254,7 @@
   {
     "rank": 22,
     "team": "UCF",
+    "slug": "ucf",
     "raa": 6.89,
     "games_played": 59,
     "wins": 40,
@@ -244,6 +266,7 @@
   {
     "rank": 23,
     "team": "South Carolina",
+    "slug": "south-carolina",
     "raa": 6.88,
     "games_played": 60,
     "wins": 32,
@@ -255,6 +278,7 @@
   {
     "rank": 24,
     "team": "Indiana",
+    "slug": "indiana",
     "raa": 6.67,
     "games_played": 57,
     "wins": 42,
@@ -266,6 +290,7 @@
   {
     "rank": 25,
     "team": "Stanford",
+    "slug": "stanford",
     "raa": 6.6,
     "games_played": 52,
     "wins": 37,
@@ -277,6 +302,7 @@
   {
     "rank": 26,
     "team": "Ole Miss",
+    "slug": "ole-miss",
     "raa": 6.24,
     "games_played": 61,
     "wins": 36,
@@ -288,6 +314,7 @@
   {
     "rank": 27,
     "team": "Northwestern",
+    "slug": "northwestern",
     "raa": 5.91,
     "games_played": 50,
     "wins": 29,
@@ -299,6 +326,7 @@
   {
     "rank": 28,
     "team": "Omaha",
+    "slug": "omaha",
     "raa": 5.75,
     "games_played": 45,
     "wins": 34,
@@ -310,6 +338,7 @@
   {
     "rank": 29,
     "team": "Kansas",
+    "slug": "kansas",
     "raa": 5.54,
     "games_played": 56,
     "wins": 35,
@@ -321,6 +350,7 @@
   {
     "rank": 30,
     "team": "Georgia Tech",
+    "slug": "georgia-tech",
     "raa": 5.54,
     "games_played": 60,
     "wins": 32,
@@ -332,6 +362,7 @@
   {
     "rank": 31,
     "team": "Grand Canyon",
+    "slug": "grand-canyon",
     "raa": 5.43,
     "games_played": 60,
     "wins": 51,
@@ -343,6 +374,7 @@
   {
     "rank": 32,
     "team": "Virginia",
+    "slug": "virginia",
     "raa": 5.35,
     "games_played": 54,
     "wins": 40,
@@ -354,6 +386,7 @@
   {
     "rank": 33,
     "team": "Michigan",
+    "slug": "michigan",
     "raa": 5.33,
     "games_played": 57,
     "wins": 36,
@@ -365,6 +398,7 @@
   {
     "rank": 34,
     "team": "Missouri",
+    "slug": "missouri",
     "raa": 5.31,
     "games_played": 57,
     "wins": 28,
@@ -376,6 +410,7 @@
   {
     "rank": 35,
     "team": "Clemson",
+    "slug": "clemson",
     "raa": 5.29,
     "games_played": 56,
     "wins": 34,
@@ -387,6 +422,7 @@
   {
     "rank": 36,
     "team": "Utah",
+    "slug": "utah",
     "raa": 5.18,
     "games_played": 56,
     "wins": 35,
@@ -398,6 +434,7 @@
   {
     "rank": 37,
     "team": "Southeastern La.",
+    "slug": "southeastern-la",
     "raa": 5.08,
     "games_played": 59,
     "wins": 45,
@@ -409,6 +446,7 @@
   {
     "rank": 38,
     "team": "Penn St.",
+    "slug": "penn-st",
     "raa": 4.99,
     "games_played": 53,
     "wins": 33,
@@ -420,6 +458,7 @@
   {
     "rank": 39,
     "team": "Louisville",
+    "slug": "louisville",
     "raa": 4.97,
     "games_played": 57,
     "wins": 44,
@@ -431,6 +470,7 @@
   {
     "rank": 40,
     "team": "North Carolina",
+    "slug": "north-carolina",
     "raa": 4.93,
     "games_played": 50,
     "wins": 32,
@@ -442,6 +482,7 @@
   {
     "rank": 41,
     "team": "Auburn",
+    "slug": "auburn",
     "raa": 4.89,
     "games_played": 53,
     "wins": 26,
@@ -453,6 +494,7 @@
   {
     "rank": 42,
     "team": "Nevada",
+    "slug": "nevada",
     "raa": 4.82,
     "games_played": 56,
     "wins": 37,
@@ -464,6 +506,7 @@
   {
     "rank": 43,
     "team": "Purdue",
+    "slug": "purdue",
     "raa": 4.61,
     "games_played": 54,
     "wins": 34,
@@ -475,6 +518,7 @@
   {
     "rank": 44,
     "team": "Fla. Atlantic",
+    "slug": "fla-atlantic",
     "raa": 4.49,
     "games_played": 52,
     "wins": 33,
@@ -486,6 +530,7 @@
   {
     "rank": 45,
     "team": "Wichita St.",
+    "slug": "wichita-st",
     "raa": 4.36,
     "games_played": 51,
     "wins": 35,
@@ -497,6 +542,7 @@
   {
     "rank": 46,
     "team": "Jacksonville St.",
+    "slug": "jacksonville-st",
     "raa": 4.29,
     "games_played": 58,
     "wins": 42,
@@ -508,6 +554,7 @@
   {
     "rank": 47,
     "team": "Texas St.",
+    "slug": "texas-st",
     "raa": 4.27,
     "games_played": 59,
     "wins": 38,
@@ -519,6 +566,7 @@
   {
     "rank": 48,
     "team": "Baylor",
+    "slug": "baylor",
     "raa": 4.21,
     "games_played": 58,
     "wins": 30,
@@ -530,6 +578,7 @@
   {
     "rank": 49,
     "team": "Iowa St.",
+    "slug": "iowa-st",
     "raa": 4.13,
     "games_played": 55,
     "wins": 32,
@@ -541,6 +590,7 @@
   {
     "rank": 50,
     "team": "Ohio St.",
+    "slug": "ohio-st",
     "raa": 4.04,
     "games_played": 53,
     "wins": 26,
@@ -552,6 +602,7 @@
   {
     "rank": 51,
     "team": "Cal St. Fullerton",
+    "slug": "cal-st-fullerton",
     "raa": 3.98,
     "games_played": 54,
     "wins": 39,
@@ -563,6 +614,7 @@
   {
     "rank": 52,
     "team": "St. Thomas (MN)",
+    "slug": "st-thomas-mn",
     "raa": 3.88,
     "games_played": 51,
     "wins": 34,
@@ -574,6 +626,7 @@
   {
     "rank": 53,
     "team": "Louisiana",
+    "slug": "louisiana",
     "raa": 3.86,
     "games_played": 55,
     "wins": 29,
@@ -585,6 +638,7 @@
   {
     "rank": 54,
     "team": "Kentucky",
+    "slug": "kentucky",
     "raa": 3.83,
     "games_played": 54,
     "wins": 25,
@@ -596,6 +650,7 @@
   {
     "rank": 55,
     "team": "South Fla.",
+    "slug": "south-fla",
     "raa": 3.78,
     "games_played": 59,
     "wins": 42,
@@ -607,6 +662,7 @@
   {
     "rank": 56,
     "team": "Marshall",
+    "slug": "marshall",
     "raa": 3.68,
     "games_played": 56,
     "wins": 37,
@@ -618,6 +674,7 @@
   {
     "rank": 57,
     "team": "Wisconsin",
+    "slug": "wisconsin",
     "raa": 3.64,
     "games_played": 53,
     "wins": 32,
@@ -629,6 +686,7 @@
   {
     "rank": 58,
     "team": "Boston U.",
+    "slug": "boston-u",
     "raa": 3.43,
     "games_played": 61,
     "wins": 45,
@@ -640,6 +698,7 @@
   {
     "rank": 59,
     "team": "NC State",
+    "slug": "nc-state",
     "raa": 3.31,
     "games_played": 53,
     "wins": 27,
@@ -651,6 +710,7 @@
   {
     "rank": 60,
     "team": "Rutgers",
+    "slug": "rutgers",
     "raa": 3.22,
     "games_played": 54,
     "wins": 27,
@@ -662,6 +722,7 @@
   {
     "rank": 61,
     "team": "Belmont",
+    "slug": "belmont",
     "raa": 3.2,
     "games_played": 53,
     "wins": 40,
@@ -673,6 +734,7 @@
   {
     "rank": 62,
     "team": "Western Ky.",
+    "slug": "western-ky",
     "raa": 3.13,
     "games_played": 50,
     "wins": 38,
@@ -684,6 +746,7 @@
   {
     "rank": 63,
     "team": "Saint Mary's (CA)",
+    "slug": "saint-marys-ca",
     "raa": 3.11,
     "games_played": 57,
     "wins": 41,
@@ -695,6 +758,7 @@
   {
     "rank": 64,
     "team": "Iowa",
+    "slug": "iowa",
     "raa": 3.11,
     "games_played": 53,
     "wins": 27,
@@ -706,6 +770,7 @@
   {
     "rank": 65,
     "team": "South Alabama",
+    "slug": "south-alabama",
     "raa": 2.84,
     "games_played": 58,
     "wins": 31,
@@ -717,6 +782,7 @@
   {
     "rank": 66,
     "team": "App State",
+    "slug": "app-state",
     "raa": 2.76,
     "games_played": 50,
     "wins": 29,
@@ -728,6 +794,7 @@
   {
     "rank": 67,
     "team": "Central Ark.",
+    "slug": "central-ark",
     "raa": 2.71,
     "games_played": 52,
     "wins": 34,
@@ -739,6 +806,7 @@
   {
     "rank": 68,
     "team": "Charlotte",
+    "slug": "charlotte",
     "raa": 2.71,
     "games_played": 56,
     "wins": 31,
@@ -750,6 +818,7 @@
   {
     "rank": 69,
     "team": "Stetson",
+    "slug": "stetson",
     "raa": 2.7,
     "games_played": 56,
     "wins": 34,
@@ -761,6 +830,7 @@
   {
     "rank": 70,
     "team": "FIU",
+    "slug": "fiu",
     "raa": 2.65,
     "games_played": 52,
     "wins": 34,
@@ -772,6 +842,7 @@
   {
     "rank": 71,
     "team": "Troy",
+    "slug": "troy",
     "raa": 2.64,
     "games_played": 54,
     "wins": 32,
@@ -783,6 +854,7 @@
   {
     "rank": 72,
     "team": "McNeese",
+    "slug": "mcneese",
     "raa": 2.56,
     "games_played": 62,
     "wins": 40,
@@ -794,6 +866,7 @@
   {
     "rank": 73,
     "team": "Notre Dame",
+    "slug": "notre-dame",
     "raa": 2.54,
     "games_played": 53,
     "wins": 25,
@@ -805,6 +878,7 @@
   {
     "rank": 74,
     "team": "Miami (OH)",
+    "slug": "miami-oh",
     "raa": 2.53,
     "games_played": 55,
     "wins": 38,
@@ -816,6 +890,7 @@
   {
     "rank": 75,
     "team": "ULM",
+    "slug": "ulm",
     "raa": 2.49,
     "games_played": 57,
     "wins": 37,
@@ -827,6 +902,7 @@
   {
     "rank": 76,
     "team": "California Baptist",
+    "slug": "california-baptist",
     "raa": 2.48,
     "games_played": 59,
     "wins": 41,
@@ -838,6 +914,7 @@
   {
     "rank": 77,
     "team": "LMU (CA)",
+    "slug": "lmu-ca",
     "raa": 2.44,
     "games_played": 52,
     "wins": 33,
@@ -849,6 +926,7 @@
   {
     "rank": 78,
     "team": "Southern Ill.",
+    "slug": "southern-ill",
     "raa": 2.37,
     "games_played": 48,
     "wins": 33,
@@ -860,6 +938,7 @@
   {
     "rank": 79,
     "team": "North Florida",
+    "slug": "north-florida",
     "raa": 2.34,
     "games_played": 58,
     "wins": 37,
@@ -871,6 +950,7 @@
   {
     "rank": 80,
     "team": "James Madison",
+    "slug": "james-madison",
     "raa": 2.28,
     "games_played": 51,
     "wins": 27,
@@ -882,6 +962,7 @@
   {
     "rank": 81,
     "team": "North Ala.",
+    "slug": "north-ala",
     "raa": 2.26,
     "games_played": 49,
     "wins": 35,
@@ -893,6 +974,7 @@
   {
     "rank": 82,
     "team": "Louisiana Tech",
+    "slug": "louisiana-tech",
     "raa": 2.22,
     "games_played": 53,
     "wins": 30,
@@ -904,6 +986,7 @@
   {
     "rank": 83,
     "team": "Boise St.",
+    "slug": "boise-st",
     "raa": 2.21,
     "games_played": 55,
     "wins": 25,
@@ -915,6 +998,7 @@
   {
     "rank": 84,
     "team": "Liberty",
+    "slug": "liberty",
     "raa": 2.14,
     "games_played": 54,
     "wins": 27,
@@ -926,6 +1010,7 @@
   {
     "rank": 85,
     "team": "Ohio",
+    "slug": "ohio",
     "raa": 2.13,
     "games_played": 55,
     "wins": 37,
@@ -937,6 +1022,7 @@
   {
     "rank": 86,
     "team": "UConn",
+    "slug": "uconn",
     "raa": 2.12,
     "games_played": 59,
     "wins": 32,
@@ -948,6 +1034,7 @@
   {
     "rank": 87,
     "team": "UIW",
+    "slug": "uiw",
     "raa": 2.05,
     "games_played": 52,
     "wins": 32,
@@ -959,6 +1046,7 @@
   {
     "rank": 88,
     "team": "New Mexico",
+    "slug": "new-mexico",
     "raa": 2.05,
     "games_played": 51,
     "wins": 27,
@@ -970,6 +1058,7 @@
   {
     "rank": 89,
     "team": "Idaho St.",
+    "slug": "idaho-st",
     "raa": 1.98,
     "games_played": 54,
     "wins": 34,
@@ -981,6 +1070,7 @@
   {
     "rank": 90,
     "team": "UNC Greensboro",
+    "slug": "unc-greensboro",
     "raa": 1.97,
     "games_played": 59,
     "wins": 40,
@@ -992,6 +1082,7 @@
   {
     "rank": 91,
     "team": "San Diego St.",
+    "slug": "san-diego-st",
     "raa": 1.87,
     "games_played": 50,
     "wins": 24,
@@ -1003,6 +1094,7 @@
   {
     "rank": 92,
     "team": "North Texas",
+    "slug": "north-texas",
     "raa": 1.85,
     "games_played": 54,
     "wins": 27,
@@ -1014,6 +1106,7 @@
   {
     "rank": 93,
     "team": "Fresno St.",
+    "slug": "fresno-st",
     "raa": 1.67,
     "games_played": 47,
     "wins": 23,
@@ -1025,6 +1118,7 @@
   {
     "rank": 94,
     "team": "Nicholls",
+    "slug": "nicholls",
     "raa": 1.66,
     "games_played": 53,
     "wins": 30,
@@ -1036,6 +1130,7 @@
   {
     "rank": 95,
     "team": "East Carolina",
+    "slug": "east-carolina",
     "raa": 1.6,
     "games_played": 56,
     "wins": 32,
@@ -1047,6 +1142,7 @@
   {
     "rank": 96,
     "team": "Campbell",
+    "slug": "campbell",
     "raa": 1.57,
     "games_played": 55,
     "wins": 33,
@@ -1058,6 +1154,7 @@
   {
     "rank": 97,
     "team": "Sacramento St.",
+    "slug": "sacramento-st",
     "raa": 1.57,
     "games_played": 49,
     "wins": 31,
@@ -1069,6 +1166,7 @@
   {
     "rank": 98,
     "team": "UAB",
+    "slug": "uab",
     "raa": 1.54,
     "games_played": 54,
     "wins": 21,
@@ -1080,6 +1178,7 @@
   {
     "rank": 99,
     "team": "BYU",
+    "slug": "byu",
     "raa": 1.52,
     "games_played": 50,
     "wins": 17,
@@ -1091,6 +1190,7 @@
   {
     "rank": 100,
     "team": "Southern Miss.",
+    "slug": "southern-miss",
     "raa": 1.48,
     "games_played": 57,
     "wins": 33,
@@ -1102,6 +1202,7 @@
   {
     "rank": 101,
     "team": "Maryland",
+    "slug": "maryland",
     "raa": 1.47,
     "games_played": 47,
     "wins": 18,
@@ -1113,6 +1214,7 @@
   {
     "rank": 102,
     "team": "Hawaii",
+    "slug": "hawaii",
     "raa": 1.46,
     "games_played": 48,
     "wins": 29,
@@ -1124,6 +1226,7 @@
   {
     "rank": 103,
     "team": "Samford",
+    "slug": "samford",
     "raa": 1.44,
     "games_played": 55,
     "wins": 26,
@@ -1135,6 +1238,7 @@
   {
     "rank": 104,
     "team": "Creighton",
+    "slug": "creighton",
     "raa": 1.43,
     "games_played": 57,
     "wins": 30,
@@ -1146,6 +1250,7 @@
   {
     "rank": 105,
     "team": "North Dakota St.",
+    "slug": "north-dakota-st",
     "raa": 1.41,
     "games_played": 50,
     "wins": 27,
@@ -1157,6 +1262,7 @@
   {
     "rank": 106,
     "team": "UNI",
+    "slug": "uni",
     "raa": 1.41,
     "games_played": 51,
     "wins": 28,
@@ -1168,6 +1274,7 @@
   {
     "rank": 107,
     "team": "Sam Houston",
+    "slug": "sam-houston",
     "raa": 1.34,
     "games_played": 56,
     "wins": 29,
@@ -1179,6 +1286,7 @@
   {
     "rank": 108,
     "team": "Tulsa",
+    "slug": "tulsa",
     "raa": 1.34,
     "games_played": 52,
     "wins": 20,
@@ -1190,6 +1298,7 @@
   {
     "rank": 109,
     "team": "Santa Clara",
+    "slug": "santa-clara",
     "raa": 1.32,
     "games_played": 51,
     "wins": 26,
@@ -1201,6 +1310,7 @@
   {
     "rank": 110,
     "team": "Seattle U",
+    "slug": "seattle-u",
     "raa": 1.27,
     "games_played": 50,
     "wins": 19,
@@ -1212,6 +1322,7 @@
   {
     "rank": 111,
     "team": "UC Santa Barbara",
+    "slug": "uc-santa-barbara",
     "raa": 1.24,
     "games_played": 51,
     "wins": 29,
@@ -1223,6 +1334,7 @@
   {
     "rank": 112,
     "team": "Ga. Southern",
+    "slug": "ga-southern",
     "raa": 1.22,
     "games_played": 53,
     "wins": 24,
@@ -1234,6 +1346,7 @@
   {
     "rank": 113,
     "team": "UNLV",
+    "slug": "unlv",
     "raa": 1.22,
     "games_played": 51,
     "wins": 31,
@@ -1245,6 +1358,7 @@
   {
     "rank": 114,
     "team": "California",
+    "slug": "california",
     "raa": 1.21,
     "games_played": 52,
     "wins": 15,
@@ -1256,6 +1370,7 @@
   {
     "rank": 115,
     "team": "SFA",
+    "slug": "sfa",
     "raa": 1.2,
     "games_played": 54,
     "wins": 29,
@@ -1267,6 +1382,7 @@
   {
     "rank": 116,
     "team": "Coastal Carolina",
+    "slug": "coastal-carolina",
     "raa": 1.19,
     "games_played": 55,
     "wins": 25,
@@ -1278,6 +1394,7 @@
   {
     "rank": 117,
     "team": "Lamar University",
+    "slug": "lamar-university",
     "raa": 1.19,
     "games_played": 56,
     "wins": 32,
@@ -1289,6 +1406,7 @@
   {
     "rank": 118,
     "team": "Oregon St.",
+    "slug": "oregon-st",
     "raa": 1.19,
     "games_played": 53,
     "wins": 21,
@@ -1300,6 +1418,7 @@
   {
     "rank": 119,
     "team": "Akron",
+    "slug": "akron",
     "raa": 1.16,
     "games_played": 57,
     "wins": 33,
@@ -1311,6 +1430,7 @@
   {
     "rank": 120,
     "team": "Austin Peay",
+    "slug": "austin-peay",
     "raa": 1.12,
     "games_played": 54,
     "wins": 30,
@@ -1322,6 +1442,7 @@
   {
     "rank": 121,
     "team": "Houston",
+    "slug": "houston",
     "raa": 1.12,
     "games_played": 51,
     "wins": 20,
@@ -1333,6 +1454,7 @@
   {
     "rank": 122,
     "team": "Georgia St.",
+    "slug": "georgia-st",
     "raa": 1.1,
     "games_played": 56,
     "wins": 25,
@@ -1344,6 +1466,7 @@
   {
     "rank": 123,
     "team": "Minnesota",
+    "slug": "minnesota",
     "raa": 1.04,
     "games_played": 52,
     "wins": 16,
@@ -1355,6 +1478,7 @@
   {
     "rank": 124,
     "team": "New Mexico St.",
+    "slug": "new-mexico-st",
     "raa": 1.04,
     "games_played": 51,
     "wins": 26,
@@ -1366,6 +1490,7 @@
   {
     "rank": 125,
     "team": "Jacksonville",
+    "slug": "jacksonville",
     "raa": 1.02,
     "games_played": 52,
     "wins": 33,
@@ -1377,6 +1502,7 @@
   {
     "rank": 126,
     "team": "Utah Valley",
+    "slug": "utah-valley",
     "raa": 0.95,
     "games_played": 51,
     "wins": 30,
@@ -1388,6 +1514,7 @@
   {
     "rank": 127,
     "team": "Princeton",
+    "slug": "princeton",
     "raa": 0.94,
     "games_played": 47,
     "wins": 32,
@@ -1399,6 +1526,7 @@
   {
     "rank": 128,
     "team": "Illinois St.",
+    "slug": "illinois-st",
     "raa": 0.86,
     "games_played": 47,
     "wins": 28,
@@ -1410,6 +1538,7 @@
   {
     "rank": 129,
     "team": "Delaware",
+    "slug": "delaware",
     "raa": 0.84,
     "games_played": 53,
     "wins": 30,
@@ -1421,6 +1550,7 @@
   {
     "rank": 130,
     "team": "South Dakota St.",
+    "slug": "south-dakota-st",
     "raa": 0.83,
     "games_played": 55,
     "wins": 23,
@@ -1432,6 +1562,7 @@
   {
     "rank": 131,
     "team": "Long Beach St.",
+    "slug": "long-beach-st",
     "raa": 0.78,
     "games_played": 50,
     "wins": 28,
@@ -1443,6 +1574,7 @@
   {
     "rank": 132,
     "team": "Michigan St.",
+    "slug": "michigan-st",
     "raa": 0.74,
     "games_played": 51,
     "wins": 17,
@@ -1454,6 +1586,7 @@
   {
     "rank": 133,
     "team": "Tarleton St.",
+    "slug": "tarleton-st",
     "raa": 0.61,
     "games_played": 57,
     "wins": 35,
@@ -1465,6 +1598,7 @@
   {
     "rank": 134,
     "team": "Wofford",
+    "slug": "wofford",
     "raa": 0.58,
     "games_played": 48,
     "wins": 31,
@@ -1476,6 +1610,7 @@
   {
     "rank": 135,
     "team": "Western Caro.",
+    "slug": "western-caro",
     "raa": 0.54,
     "games_played": 55,
     "wins": 33,
@@ -1487,6 +1622,7 @@
   {
     "rank": 136,
     "team": "Murray St.",
+    "slug": "murray-st",
     "raa": 0.53,
     "games_played": 50,
     "wins": 27,
@@ -1498,6 +1634,7 @@
   {
     "rank": 137,
     "team": "Central Mich.",
+    "slug": "central-mich",
     "raa": 0.5,
     "games_played": 47,
     "wins": 24,
@@ -1509,6 +1646,7 @@
   {
     "rank": 138,
     "team": "Providence",
+    "slug": "providence",
     "raa": 0.42,
     "games_played": 46,
     "wins": 28,
@@ -1520,6 +1658,7 @@
   {
     "rank": 139,
     "team": "NIU",
+    "slug": "niu",
     "raa": 0.42,
     "games_played": 40,
     "wins": 23,
@@ -1531,6 +1670,7 @@
   {
     "rank": 140,
     "team": "Colorado St.",
+    "slug": "colorado-st",
     "raa": 0.41,
     "games_played": 51,
     "wins": 23,
@@ -1542,6 +1682,7 @@
   {
     "rank": 141,
     "team": "Boston College",
+    "slug": "boston-college",
     "raa": 0.4,
     "games_played": 51,
     "wins": 13,
@@ -1553,6 +1694,7 @@
   {
     "rank": 142,
     "team": "Ball St.",
+    "slug": "ball-st",
     "raa": 0.33,
     "games_played": 48,
     "wins": 23,
@@ -1564,6 +1706,7 @@
   {
     "rank": 143,
     "team": "FGCU",
+    "slug": "fgcu",
     "raa": 0.32,
     "games_played": 52,
     "wins": 21,
@@ -1575,6 +1718,7 @@
   {
     "rank": 144,
     "team": "Army West Point",
+    "slug": "army-west-point",
     "raa": 0.24,
     "games_played": 56,
     "wins": 32,
@@ -1586,6 +1730,7 @@
   {
     "rank": 145,
     "team": "Western Mich.",
+    "slug": "western-mich",
     "raa": 0.14,
     "games_played": 52,
     "wins": 27,
@@ -1597,6 +1742,7 @@
   {
     "rank": 146,
     "team": "UNCW",
+    "slug": "uncw",
     "raa": 0.14,
     "games_played": 48,
     "wins": 30,
@@ -1608,6 +1754,7 @@
   {
     "rank": 147,
     "team": "USC Upstate",
+    "slug": "usc-upstate",
     "raa": 0.11,
     "games_played": 59,
     "wins": 36,
@@ -1619,6 +1766,7 @@
   {
     "rank": 148,
     "team": "Pittsburgh",
+    "slug": "pittsburgh",
     "raa": 0.06,
     "games_played": 52,
     "wins": 25,
@@ -1630,6 +1778,7 @@
   {
     "rank": 149,
     "team": "Missouri St.",
+    "slug": "missouri-st",
     "raa": 0.06,
     "games_played": 50,
     "wins": 22,
@@ -1641,6 +1790,7 @@
   {
     "rank": 150,
     "team": "UTSA",
+    "slug": "utsa",
     "raa": 0.02,
     "games_played": 56,
     "wins": 24,
@@ -1652,6 +1802,7 @@
   {
     "rank": 151,
     "team": "San Jose St.",
+    "slug": "san-jose-st",
     "raa": -0.02,
     "games_played": 48,
     "wins": 15,
@@ -1663,6 +1814,7 @@
   {
     "rank": 152,
     "team": "UT Arlington",
+    "slug": "ut-arlington",
     "raa": -0.08,
     "games_played": 46,
     "wins": 24,
@@ -1674,6 +1826,7 @@
   {
     "rank": 153,
     "team": "Radford",
+    "slug": "radford",
     "raa": -0.12,
     "games_played": 49,
     "wins": 23,
@@ -1685,6 +1838,7 @@
   {
     "rank": 154,
     "team": "Northwestern St.",
+    "slug": "northwestern-st",
     "raa": -0.13,
     "games_played": 52,
     "wins": 24,
@@ -1696,6 +1850,7 @@
   {
     "rank": 155,
     "team": "Middle Tenn.",
+    "slug": "middle-tenn",
     "raa": -0.16,
     "games_played": 51,
     "wins": 21,
@@ -1707,6 +1862,7 @@
   {
     "rank": 156,
     "team": "Southern Utah",
+    "slug": "southern-utah",
     "raa": -0.2,
     "games_played": 50,
     "wins": 20,
@@ -1718,6 +1874,7 @@
   {
     "rank": 157,
     "team": "St. John's (NY)",
+    "slug": "st-johns-ny",
     "raa": -0.22,
     "games_played": 55,
     "wins": 32,
@@ -1729,6 +1886,7 @@
   {
     "rank": 158,
     "team": "UC San Diego",
+    "slug": "uc-san-diego",
     "raa": -0.23,
     "games_played": 51,
     "wins": 23,
@@ -1740,6 +1898,7 @@
   {
     "rank": 159,
     "team": "Eastern Ill.",
+    "slug": "eastern-ill",
     "raa": -0.24,
     "games_played": 56,
     "wins": 34,
@@ -1751,6 +1910,7 @@
   {
     "rank": 160,
     "team": "UC Davis",
+    "slug": "uc-davis",
     "raa": -0.25,
     "games_played": 52,
     "wins": 29,
@@ -1762,6 +1922,7 @@
   {
     "rank": 161,
     "team": "South Dakota",
+    "slug": "south-dakota",
     "raa": -0.25,
     "games_played": 54,
     "wins": 18,
@@ -1773,6 +1934,7 @@
   {
     "rank": 162,
     "team": "Fordham",
+    "slug": "fordham",
     "raa": -0.35,
     "games_played": 53,
     "wins": 25,
@@ -1784,6 +1946,7 @@
   {
     "rank": 163,
     "team": "Pacific",
+    "slug": "pacific",
     "raa": -0.35,
     "games_played": 52,
     "wins": 18,
@@ -1795,6 +1958,7 @@
   {
     "rank": 164,
     "team": "Illinois",
+    "slug": "illinois",
     "raa": -0.35,
     "games_played": 54,
     "wins": 15,
@@ -1806,6 +1970,7 @@
   {
     "rank": 165,
     "team": "Robert Morris",
+    "slug": "robert-morris",
     "raa": -0.59,
     "games_played": 43,
     "wins": 26,
@@ -1817,6 +1982,7 @@
   {
     "rank": 166,
     "team": "San Diego",
+    "slug": "san-diego",
     "raa": -0.59,
     "games_played": 51,
     "wins": 21,
@@ -1828,6 +1994,7 @@
   {
     "rank": 167,
     "team": "Butler",
+    "slug": "butler",
     "raa": -0.67,
     "games_played": 45,
     "wins": 25,
@@ -1839,6 +2006,7 @@
   {
     "rank": 168,
     "team": "Eastern Ky.",
+    "slug": "eastern-ky",
     "raa": -0.72,
     "games_played": 52,
     "wins": 27,
@@ -1850,6 +2018,7 @@
   {
     "rank": 169,
     "team": "Northern Colo.",
+    "slug": "northern-colo",
     "raa": -0.76,
     "games_played": 48,
     "wins": 23,
@@ -1861,6 +2030,7 @@
   {
     "rank": 170,
     "team": "Columbia",
+    "slug": "columbia",
     "raa": -0.78,
     "games_played": 40,
     "wins": 19,
@@ -1872,6 +2042,7 @@
   {
     "rank": 171,
     "team": "UT Martin",
+    "slug": "ut-martin",
     "raa": -0.79,
     "games_played": 52,
     "wins": 33,
@@ -1883,6 +2054,7 @@
   {
     "rank": 172,
     "team": "Hofstra",
+    "slug": "hofstra",
     "raa": -0.8,
     "games_played": 51,
     "wins": 30,
@@ -1894,6 +2066,7 @@
   {
     "rank": 173,
     "team": "Prairie View",
+    "slug": "prairie-view",
     "raa": -0.83,
     "games_played": 45,
     "wins": 27,
@@ -1905,6 +2078,7 @@
   {
     "rank": 174,
     "team": "Syracuse",
+    "slug": "syracuse",
     "raa": -0.84,
     "games_played": 43,
     "wins": 17,
@@ -1916,6 +2090,7 @@
   {
     "rank": 175,
     "team": "North Dakota",
+    "slug": "north-dakota",
     "raa": -0.9,
     "games_played": 49,
     "wins": 25,
@@ -1927,6 +2102,7 @@
   {
     "rank": 176,
     "team": "Lehigh",
+    "slug": "lehigh",
     "raa": -0.96,
     "games_played": 51,
     "wins": 24,
@@ -1938,6 +2114,7 @@
   {
     "rank": 177,
     "team": "Saint Joseph's",
+    "slug": "saint-josephs",
     "raa": -1.01,
     "games_played": 49,
     "wins": 24,
@@ -1949,6 +2126,7 @@
   {
     "rank": 178,
     "team": "Harvard",
+    "slug": "harvard",
     "raa": -1.1,
     "games_played": 44,
     "wins": 21,
@@ -1960,6 +2138,7 @@
   {
     "rank": 179,
     "team": "Montana",
+    "slug": "montana",
     "raa": -1.12,
     "games_played": 48,
     "wins": 18,
@@ -1971,6 +2150,7 @@
   {
     "rank": 180,
     "team": "Toledo",
+    "slug": "toledo",
     "raa": -1.16,
     "games_played": 50,
     "wins": 15,
@@ -1982,6 +2162,7 @@
   {
     "rank": 181,
     "team": "Evansville",
+    "slug": "evansville",
     "raa": -1.17,
     "games_played": 49,
     "wins": 20,
@@ -1993,6 +2174,7 @@
   {
     "rank": 182,
     "team": "Youngstown St.",
+    "slug": "youngstown-st",
     "raa": -1.26,
     "games_played": 50,
     "wins": 31,
@@ -2004,6 +2186,7 @@
   {
     "rank": 183,
     "team": "Memphis",
+    "slug": "memphis",
     "raa": -1.32,
     "games_played": 57,
     "wins": 18,
@@ -2015,6 +2198,7 @@
   {
     "rank": 184,
     "team": "Colgate",
+    "slug": "colgate",
     "raa": -1.34,
     "games_played": 52,
     "wins": 28,
@@ -2026,6 +2210,7 @@
   {
     "rank": 185,
     "team": "Indiana St.",
+    "slug": "indiana-st",
     "raa": -1.35,
     "games_played": 50,
     "wins": 22,
@@ -2037,6 +2222,7 @@
   {
     "rank": 186,
     "team": "Lindenwood",
+    "slug": "lindenwood",
     "raa": -1.41,
     "games_played": 52,
     "wins": 29,
@@ -2048,6 +2234,7 @@
   {
     "rank": 187,
     "team": "Loyola Chicago",
+    "slug": "loyola-chicago",
     "raa": -1.41,
     "games_played": 49,
     "wins": 27,
@@ -2059,6 +2246,7 @@
   {
     "rank": 188,
     "team": "Winthrop",
+    "slug": "winthrop",
     "raa": -1.41,
     "games_played": 49,
     "wins": 28,
@@ -2070,6 +2258,7 @@
   {
     "rank": 189,
     "team": "Saint Louis",
+    "slug": "saint-louis",
     "raa": -1.46,
     "games_played": 48,
     "wins": 22,
@@ -2081,6 +2270,7 @@
   {
     "rank": 190,
     "team": "Portland St.",
+    "slug": "portland-st",
     "raa": -1.46,
     "games_played": 45,
     "wins": 14,
@@ -2092,6 +2282,7 @@
   {
     "rank": 191,
     "team": "Marist",
+    "slug": "marist",
     "raa": -1.49,
     "games_played": 56,
     "wins": 35,
@@ -2103,6 +2294,7 @@
   {
     "rank": 192,
     "team": "Chattanooga",
+    "slug": "chattanooga",
     "raa": -1.54,
     "games_played": 51,
     "wins": 23,
@@ -2114,6 +2306,7 @@
   {
     "rank": 193,
     "team": "Dayton",
+    "slug": "dayton",
     "raa": -1.55,
     "games_played": 48,
     "wins": 25,
@@ -2125,6 +2318,7 @@
   {
     "rank": 194,
     "team": "Gardner-Webb",
+    "slug": "gardner-webb",
     "raa": -1.58,
     "games_played": 54,
     "wins": 32,
@@ -2136,6 +2330,7 @@
   {
     "rank": 195,
     "team": "Kansas City",
+    "slug": "kansas-city",
     "raa": -1.59,
     "games_played": 48,
     "wins": 16,
@@ -2147,6 +2342,7 @@
   {
     "rank": 196,
     "team": "Georgetown",
+    "slug": "georgetown",
     "raa": -1.62,
     "games_played": 42,
     "wins": 16,
@@ -2158,6 +2354,7 @@
   {
     "rank": 197,
     "team": "Bowling Green",
+    "slug": "bowling-green",
     "raa": -1.63,
     "games_played": 48,
     "wins": 19,
@@ -2169,6 +2366,7 @@
   {
     "rank": 198,
     "team": "Southeast Mo. St.",
+    "slug": "southeast-mo-st",
     "raa": -1.63,
     "games_played": 50,
     "wins": 21,
@@ -2180,6 +2378,7 @@
   {
     "rank": 199,
     "team": "Utah St.",
+    "slug": "utah-st",
     "raa": -1.64,
     "games_played": 54,
     "wins": 19,
@@ -2191,6 +2390,7 @@
   {
     "rank": 200,
     "team": "Howard",
+    "slug": "howard",
     "raa": -1.65,
     "games_played": 45,
     "wins": 26,
@@ -2202,6 +2402,7 @@
   {
     "rank": 201,
     "team": "Buffalo",
+    "slug": "buffalo",
     "raa": -1.66,
     "games_played": 56,
     "wins": 24,
@@ -2213,6 +2414,7 @@
   {
     "rank": 202,
     "team": "Valparaiso",
+    "slug": "valparaiso",
     "raa": -1.76,
     "games_played": 52,
     "wins": 22,
@@ -2224,6 +2426,7 @@
   {
     "rank": 203,
     "team": "George Washington",
+    "slug": "george-washington",
     "raa": -1.82,
     "games_played": 44,
     "wins": 23,
@@ -2235,6 +2438,7 @@
   {
     "rank": 204,
     "team": "Villanova",
+    "slug": "villanova",
     "raa": -1.86,
     "games_played": 53,
     "wins": 14,
@@ -2246,6 +2450,7 @@
   {
     "rank": 205,
     "team": "Binghamton",
+    "slug": "binghamton",
     "raa": -1.88,
     "games_played": 44,
     "wins": 18,
@@ -2257,6 +2462,7 @@
   {
     "rank": 206,
     "team": "Col. of Charleston",
+    "slug": "col-of-charleston",
     "raa": -1.91,
     "games_played": 58,
     "wins": 28,
@@ -2268,6 +2474,7 @@
   {
     "rank": 207,
     "team": "Massachusetts",
+    "slug": "massachusetts",
     "raa": -1.92,
     "games_played": 48,
     "wins": 19,
@@ -2279,6 +2486,7 @@
   {
     "rank": 208,
     "team": "Drake",
+    "slug": "drake",
     "raa": -1.97,
     "games_played": 51,
     "wins": 13,
@@ -2290,6 +2498,7 @@
   {
     "rank": 209,
     "team": "CSUN",
+    "slug": "csun",
     "raa": -1.98,
     "games_played": 46,
     "wins": 14,
@@ -2301,6 +2510,7 @@
   {
     "rank": 210,
     "team": "Bryant",
+    "slug": "bryant",
     "raa": -1.98,
     "games_played": 40,
     "wins": 20,
@@ -2312,6 +2522,7 @@
   {
     "rank": 211,
     "team": "Lipscomb",
+    "slug": "lipscomb",
     "raa": -2.01,
     "games_played": 50,
     "wins": 12,
@@ -2323,6 +2534,7 @@
   {
     "rank": 212,
     "team": "Fairfield",
+    "slug": "fairfield",
     "raa": -2.02,
     "games_played": 49,
     "wins": 27,
@@ -2334,6 +2546,7 @@
   {
     "rank": 213,
     "team": "ETSU",
+    "slug": "etsu",
     "raa": -2.06,
     "games_played": 49,
     "wins": 21,
@@ -2345,6 +2558,7 @@
   {
     "rank": 214,
     "team": "DePaul",
+    "slug": "depaul",
     "raa": -2.08,
     "games_played": 50,
     "wins": 20,
@@ -2356,6 +2570,7 @@
   {
     "rank": 215,
     "team": "Queens (NC)",
+    "slug": "queens-nc",
     "raa": -2.15,
     "games_played": 48,
     "wins": 14,
@@ -2367,6 +2582,7 @@
   {
     "rank": 216,
     "team": "George Mason",
+    "slug": "george-mason",
     "raa": -2.15,
     "games_played": 51,
     "wins": 26,
@@ -2378,6 +2594,7 @@
   {
     "rank": 217,
     "team": "UAlbany",
+    "slug": "ualbany",
     "raa": -2.18,
     "games_played": 43,
     "wins": 24,
@@ -2389,6 +2606,7 @@
   {
     "rank": 218,
     "team": "SIUE",
+    "slug": "siue",
     "raa": -2.19,
     "games_played": 54,
     "wins": 27,
@@ -2400,6 +2618,7 @@
   {
     "rank": 219,
     "team": "Utah Tech",
+    "slug": "utah-tech",
     "raa": -2.22,
     "games_played": 51,
     "wins": 19,
@@ -2411,6 +2630,7 @@
   {
     "rank": 220,
     "team": "Brown",
+    "slug": "brown",
     "raa": -2.23,
     "games_played": 43,
     "wins": 20,
@@ -2422,6 +2642,7 @@
   {
     "rank": 221,
     "team": "Tennessee Tech",
+    "slug": "tennessee-tech",
     "raa": -2.32,
     "games_played": 50,
     "wins": 16,
@@ -2433,6 +2654,7 @@
   {
     "rank": 222,
     "team": "UMass Lowell",
+    "slug": "umass-lowell",
     "raa": -2.34,
     "games_played": 51,
     "wins": 25,
@@ -2444,6 +2666,7 @@
   {
     "rank": 223,
     "team": "Iona",
+    "slug": "iona",
     "raa": -2.5,
     "games_played": 50,
     "wins": 25,
@@ -2455,6 +2678,7 @@
   {
     "rank": 224,
     "team": "Cal Poly",
+    "slug": "cal-poly",
     "raa": -2.54,
     "games_played": 46,
     "wins": 11,
@@ -2466,6 +2690,7 @@
   {
     "rank": 225,
     "team": "Seton Hall",
+    "slug": "seton-hall",
     "raa": -2.54,
     "games_played": 49,
     "wins": 19,
@@ -2477,6 +2702,7 @@
   {
     "rank": 226,
     "team": "Oakland",
+    "slug": "oakland",
     "raa": -2.57,
     "games_played": 35,
     "wins": 12,
@@ -2488,6 +2714,7 @@
   {
     "rank": 227,
     "team": "Yale",
+    "slug": "yale",
     "raa": -2.59,
     "games_played": 45,
     "wins": 17,
@@ -2499,6 +2726,7 @@
   {
     "rank": 228,
     "team": "Kent St.",
+    "slug": "kent-st",
     "raa": -2.67,
     "games_played": 47,
     "wins": 19,
@@ -2510,6 +2738,7 @@
   {
     "rank": 229,
     "team": "Elon",
+    "slug": "elon",
     "raa": -2.67,
     "games_played": 50,
     "wins": 18,
@@ -2521,6 +2750,7 @@
   {
     "rank": 230,
     "team": "Weber St.",
+    "slug": "weber-st",
     "raa": -2.68,
     "games_played": 55,
     "wins": 14,
@@ -2532,6 +2762,7 @@
   {
     "rank": 231,
     "team": "Longwood",
+    "slug": "longwood",
     "raa": -2.74,
     "games_played": 53,
     "wins": 21,
@@ -2543,6 +2774,7 @@
   {
     "rank": 232,
     "team": "Presbyterian",
+    "slug": "presbyterian",
     "raa": -2.76,
     "games_played": 51,
     "wins": 20,
@@ -2554,6 +2786,7 @@
   {
     "rank": 233,
     "team": "Texas Southern",
+    "slug": "texas-southern",
     "raa": -2.77,
     "games_played": 37,
     "wins": 26,
@@ -2565,6 +2798,7 @@
   {
     "rank": 234,
     "team": "Florida A&M",
+    "slug": "florida-a-m",
     "raa": -2.79,
     "games_played": 50,
     "wins": 29,
@@ -2576,6 +2810,7 @@
   {
     "rank": 235,
     "team": "West Ga.",
+    "slug": "west-ga",
     "raa": -2.85,
     "games_played": 54,
     "wins": 14,
@@ -2587,6 +2822,7 @@
   {
     "rank": 236,
     "team": "UTEP",
+    "slug": "utep",
     "raa": -2.88,
     "games_played": 49,
     "wins": 12,
@@ -2598,6 +2834,7 @@
   {
     "rank": 237,
     "team": "Kennesaw St.",
+    "slug": "kennesaw-st",
     "raa": -2.89,
     "games_played": 50,
     "wins": 7,
@@ -2609,6 +2846,7 @@
   {
     "rank": 238,
     "team": "Rider",
+    "slug": "rider",
     "raa": -2.89,
     "games_played": 49,
     "wins": 25,
@@ -2620,6 +2858,7 @@
   {
     "rank": 239,
     "team": "Abilene Christian",
+    "slug": "abilene-christian",
     "raa": -2.92,
     "games_played": 47,
     "wins": 7,
@@ -2631,6 +2870,7 @@
   {
     "rank": 240,
     "team": "Green Bay",
+    "slug": "green-bay",
     "raa": -2.92,
     "games_played": 42,
     "wins": 13,
@@ -2642,6 +2882,7 @@
   {
     "rank": 241,
     "team": "Bradley",
+    "slug": "bradley",
     "raa": -2.97,
     "games_played": 53,
     "wins": 16,
@@ -2653,6 +2894,7 @@
   {
     "rank": 242,
     "team": "Southern U.",
+    "slug": "southern-u",
     "raa": -3.07,
     "games_played": 40,
     "wins": 26,
@@ -2664,6 +2906,7 @@
   {
     "rank": 243,
     "team": "Quinnipiac",
+    "slug": "quinnipiac",
     "raa": -3.08,
     "games_played": 42,
     "wins": 22,
@@ -2675,6 +2918,7 @@
   {
     "rank": 244,
     "team": "Rhode Island",
+    "slug": "rhode-island",
     "raa": -3.09,
     "games_played": 47,
     "wins": 21,
@@ -2686,6 +2930,7 @@
   {
     "rank": 245,
     "team": "A&M-Corpus Christi",
+    "slug": "a-m-corpus-christi",
     "raa": -3.12,
     "games_played": 52,
     "wins": 14,
@@ -2697,6 +2942,7 @@
   {
     "rank": 246,
     "team": "Northern Ky.",
+    "slug": "northern-ky",
     "raa": -3.21,
     "games_played": 48,
     "wins": 23,
@@ -2708,6 +2954,7 @@
   {
     "rank": 247,
     "team": "Sacred Heart",
+    "slug": "sacred-heart",
     "raa": -3.3,
     "games_played": 52,
     "wins": 23,
@@ -2719,6 +2966,7 @@
   {
     "rank": 248,
     "team": "Southern Ind.",
+    "slug": "southern-ind",
     "raa": -3.38,
     "games_played": 45,
     "wins": 15,
@@ -2730,6 +2978,7 @@
   {
     "rank": 249,
     "team": "Towson",
+    "slug": "towson",
     "raa": -3.38,
     "games_played": 49,
     "wins": 25,
@@ -2741,6 +2990,7 @@
   {
     "rank": 250,
     "team": "Mercer",
+    "slug": "mercer",
     "raa": -3.39,
     "games_played": 47,
     "wins": 19,
@@ -2752,6 +3002,7 @@
   {
     "rank": 251,
     "team": "Siena",
+    "slug": "siena",
     "raa": -3.43,
     "games_played": 46,
     "wins": 25,
@@ -2763,6 +3014,7 @@
   {
     "rank": 252,
     "team": "UC Riverside",
+    "slug": "uc-riverside",
     "raa": -3.44,
     "games_played": 44,
     "wins": 6,
@@ -2774,6 +3026,7 @@
   {
     "rank": 253,
     "team": "Cornell",
+    "slug": "cornell",
     "raa": -3.44,
     "games_played": 41,
     "wins": 20,
@@ -2785,6 +3038,7 @@
   {
     "rank": 254,
     "team": "Penn",
+    "slug": "penn",
     "raa": -3.46,
     "games_played": 44,
     "wins": 17,
@@ -2796,6 +3050,7 @@
   {
     "rank": 255,
     "team": "UIC",
+    "slug": "uic",
     "raa": -3.48,
     "games_played": 53,
     "wins": 21,
@@ -2807,6 +3062,7 @@
   {
     "rank": 256,
     "team": "Stony Brook",
+    "slug": "stony-brook",
     "raa": -3.48,
     "games_played": 48,
     "wins": 20,
@@ -2818,6 +3074,7 @@
   {
     "rank": 257,
     "team": "Dartmouth",
+    "slug": "dartmouth",
     "raa": -3.51,
     "games_played": 33,
     "wins": 10,
@@ -2829,6 +3086,7 @@
   {
     "rank": 258,
     "team": "LIU",
+    "slug": "liu",
     "raa": -3.53,
     "games_played": 55,
     "wins": 24,
@@ -2840,6 +3098,7 @@
   {
     "rank": 259,
     "team": "Drexel",
+    "slug": "drexel",
     "raa": -3.69,
     "games_played": 45,
     "wins": 22,
@@ -2851,6 +3110,7 @@
   {
     "rank": 260,
     "team": "Detroit Mercy",
+    "slug": "detroit-mercy",
     "raa": -4.09,
     "games_played": 44,
     "wins": 14,
@@ -2862,6 +3122,7 @@
   {
     "rank": 261,
     "team": "Houston Christian",
+    "slug": "houston-christian",
     "raa": -4.1,
     "games_played": 47,
     "wins": 11,
@@ -2873,6 +3134,7 @@
   {
     "rank": 262,
     "team": "Central Conn. St.",
+    "slug": "central-conn-st",
     "raa": -4.1,
     "games_played": 45,
     "wins": 27,
@@ -2884,6 +3146,7 @@
   {
     "rank": 263,
     "team": "Lafayette",
+    "slug": "lafayette",
     "raa": -4.18,
     "games_played": 51,
     "wins": 16,
@@ -2895,6 +3158,7 @@
   {
     "rank": 264,
     "team": "Monmouth",
+    "slug": "monmouth",
     "raa": -4.29,
     "games_played": 50,
     "wins": 19,
@@ -2906,6 +3170,7 @@
   {
     "rank": 265,
     "team": "Canisius",
+    "slug": "canisius",
     "raa": -4.3,
     "games_played": 42,
     "wins": 16,
@@ -2917,6 +3182,7 @@
   {
     "rank": 266,
     "team": "CSU Bakersfield",
+    "slug": "csu-bakersfield",
     "raa": -4.43,
     "games_played": 50,
     "wins": 10,
@@ -2928,6 +3194,7 @@
   {
     "rank": 267,
     "team": "Wagner",
+    "slug": "wagner",
     "raa": -4.51,
     "games_played": 49,
     "wins": 21,
@@ -2939,6 +3206,7 @@
   {
     "rank": 268,
     "team": "Bethune-Cookman",
+    "slug": "bethune-cookman",
     "raa": -4.58,
     "games_played": 47,
     "wins": 20,
@@ -2950,6 +3218,7 @@
   {
     "rank": 269,
     "team": "N.C. A&T",
+    "slug": "nc-a-t",
     "raa": -4.65,
     "games_played": 52,
     "wins": 19,
@@ -2961,6 +3230,7 @@
   {
     "rank": 270,
     "team": "Charleston So.",
+    "slug": "charleston-so",
     "raa": -4.76,
     "games_played": 51,
     "wins": 10,
@@ -2972,6 +3242,7 @@
   {
     "rank": 271,
     "team": "Mount St. Mary's",
+    "slug": "mount-st-marys",
     "raa": -4.78,
     "games_played": 48,
     "wins": 20,
@@ -2983,6 +3254,7 @@
   {
     "rank": 272,
     "team": "Maine",
+    "slug": "maine",
     "raa": -4.93,
     "games_played": 46,
     "wins": 11,
@@ -2994,6 +3266,7 @@
   {
     "rank": 273,
     "team": "Manhattan",
+    "slug": "manhattan",
     "raa": -5.04,
     "games_played": 52,
     "wins": 15,
@@ -3005,6 +3278,7 @@
   {
     "rank": 274,
     "team": "Alabama St.",
+    "slug": "alabama-st",
     "raa": -5.05,
     "games_played": 53,
     "wins": 22,
@@ -3016,6 +3290,7 @@
   {
     "rank": 275,
     "team": "IU Indy",
+    "slug": "iu-indy",
     "raa": -5.13,
     "games_played": 47,
     "wins": 7,
@@ -3027,6 +3302,7 @@
   {
     "rank": 276,
     "team": "Morehead St.",
+    "slug": "morehead-st",
     "raa": -5.17,
     "games_played": 45,
     "wins": 7,
@@ -3038,6 +3314,7 @@
   {
     "rank": 277,
     "team": "Jackson St.",
+    "slug": "jackson-st",
     "raa": -5.25,
     "games_played": 40,
     "wins": 20,
@@ -3049,6 +3326,7 @@
   {
     "rank": 278,
     "team": "Bellarmine",
+    "slug": "bellarmine",
     "raa": -5.26,
     "games_played": 50,
     "wins": 12,
@@ -3060,6 +3338,7 @@
   {
     "rank": 279,
     "team": "Furman",
+    "slug": "furman",
     "raa": -5.4,
     "games_played": 53,
     "wins": 13,
@@ -3071,6 +3350,7 @@
   {
     "rank": 280,
     "team": "Bucknell",
+    "slug": "bucknell",
     "raa": -5.62,
     "games_played": 45,
     "wins": 9,
@@ -3082,6 +3362,7 @@
   {
     "rank": 281,
     "team": "Western Ill.",
+    "slug": "western-ill",
     "raa": -5.62,
     "games_played": 46,
     "wins": 14,
@@ -3093,6 +3374,7 @@
   {
     "rank": 282,
     "team": "Delaware St.",
+    "slug": "delaware-st",
     "raa": -6.15,
     "games_played": 34,
     "wins": 18,
@@ -3104,6 +3386,7 @@
   {
     "rank": 283,
     "team": "Merrimack",
+    "slug": "merrimack",
     "raa": -6.15,
     "games_played": 41,
     "wins": 12,
@@ -3115,6 +3398,7 @@
   {
     "rank": 284,
     "team": "South Carolina St.",
+    "slug": "south-carolina-st",
     "raa": -6.18,
     "games_played": 37,
     "wins": 18,
@@ -3126,6 +3410,7 @@
   {
     "rank": 285,
     "team": "East Texas A&M",
+    "slug": "east-texas-a-m",
     "raa": -6.18,
     "games_played": 52,
     "wins": 6,
@@ -3137,6 +3422,7 @@
   {
     "rank": 286,
     "team": "St. Bonaventure",
+    "slug": "st-bonaventure",
     "raa": -6.36,
     "games_played": 52,
     "wins": 9,
@@ -3148,6 +3434,7 @@
   {
     "rank": 287,
     "team": "Ark.-Pine Bluff",
+    "slug": "ark-pine-bluff",
     "raa": -6.6,
     "games_played": 40,
     "wins": 13,
@@ -3159,6 +3446,7 @@
   {
     "rank": 288,
     "team": "FDU",
+    "slug": "fdu",
     "raa": -6.61,
     "games_played": 52,
     "wins": 20,
@@ -3170,6 +3458,7 @@
   {
     "rank": 289,
     "team": "Holy Cross",
+    "slug": "holy-cross",
     "raa": -6.77,
     "games_played": 40,
     "wins": 10,
@@ -3181,6 +3470,7 @@
   {
     "rank": 290,
     "team": "Norfolk St.",
+    "slug": "norfolk-st",
     "raa": -6.93,
     "games_played": 40,
     "wins": 20,
@@ -3192,6 +3482,7 @@
   {
     "rank": 291,
     "team": "Le Moyne",
+    "slug": "le-moyne",
     "raa": -6.95,
     "games_played": 51,
     "wins": 16,
@@ -3203,6 +3494,7 @@
   {
     "rank": 292,
     "team": "Stonehill",
+    "slug": "stonehill",
     "raa": -7.08,
     "games_played": 50,
     "wins": 13,
@@ -3214,6 +3506,7 @@
   {
     "rank": 293,
     "team": "Hampton",
+    "slug": "hampton",
     "raa": -7.18,
     "games_played": 43,
     "wins": 10,
@@ -3225,6 +3518,7 @@
   {
     "rank": 294,
     "team": "Tennessee St.",
+    "slug": "tennessee-st",
     "raa": -7.57,
     "games_played": 39,
     "wins": 2,
@@ -3236,6 +3530,7 @@
   {
     "rank": 295,
     "team": "New Haven",
+    "slug": "new-haven",
     "raa": -7.72,
     "games_played": 45,
     "wins": 10,
@@ -3247,6 +3542,7 @@
   {
     "rank": 296,
     "team": "Grambling",
+    "slug": "grambling",
     "raa": -7.78,
     "games_played": 38,
     "wins": 12,
@@ -3258,6 +3554,7 @@
   {
     "rank": 297,
     "team": "Alcorn",
+    "slug": "alcorn",
     "raa": -7.78,
     "games_played": 39,
     "wins": 7,
@@ -3269,6 +3566,7 @@
   {
     "rank": 298,
     "team": "Morgan St.",
+    "slug": "morgan-st",
     "raa": -7.99,
     "games_played": 36,
     "wins": 12,
@@ -3280,6 +3578,7 @@
   {
     "rank": 299,
     "team": "Saint Peter's",
+    "slug": "saint-peters",
     "raa": -7.99,
     "games_played": 51,
     "wins": 7,
@@ -3291,6 +3590,7 @@
   {
     "rank": 300,
     "team": "Niagara",
+    "slug": "niagara",
     "raa": -8.01,
     "games_played": 42,
     "wins": 8,
@@ -3302,6 +3602,7 @@
   {
     "rank": 301,
     "team": "N.C. Central",
+    "slug": "nc-central",
     "raa": -8.02,
     "games_played": 47,
     "wins": 7,
@@ -3313,6 +3614,7 @@
   {
     "rank": 302,
     "team": "Mercyhurst",
+    "slug": "mercyhurst",
     "raa": -8.02,
     "games_played": 43,
     "wins": 9,
@@ -3324,6 +3626,7 @@
   {
     "rank": 303,
     "team": "Coppin St.",
+    "slug": "coppin-st",
     "raa": -8.44,
     "games_played": 34,
     "wins": 8,
@@ -3335,6 +3638,7 @@
   {
     "rank": 304,
     "team": "Saint Francis",
+    "slug": "saint-francis",
     "raa": -9.15,
     "games_played": 48,
     "wins": 5,
@@ -3346,6 +3650,7 @@
   {
     "rank": 305,
     "team": "UMES",
+    "slug": "umes",
     "raa": -9.71,
     "games_played": 41,
     "wins": 9,
@@ -3357,6 +3662,7 @@
   {
     "rank": 306,
     "team": "Alabama A&M",
+    "slug": "alabama-a-m",
     "raa": -9.97,
     "games_played": 39,
     "wins": 10,
@@ -3368,6 +3674,7 @@
   {
     "rank": 307,
     "team": "Mississippi Val.",
+    "slug": "mississippi-val",
     "raa": -14.93,
     "games_played": 35,
     "wins": 0,
