@@ -210,4 +210,77 @@
           <th>Record</th>
           <th>Runs/7</th>
           <th>RA/7</th>
-          <th>So
+          <th>SoS</th>
+        </tr>
+      </thead>
+      <tbody id="rankingsBody">
+        <tr>
+          <td colspan="7" style="text-align: center; color: var(--text-muted);">Loading ratings...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    var rawRatings = [];
+
+    var SLUG_OVERRIDES = {
+      'ucla': 'ucla',
+      'ole miss': 'ole-miss',
+      'smu': 'smu',
+      'byu': 'byu',
+      'lsu': 'lsu',
+      'unc': 'north-carolina'
+    };
+
+    function numFix(val) {
+      var n = Number(val);
+      return isNaN(n) ? '0.00' : n.toFixed(2);
+    }
+
+    function getLogoUrl(teamObj) {
+      if (!teamObj) return '';
+      var slug = teamObj.slug;
+
+      if (!slug && teamObj.team) {
+        var cleanName = String(teamObj.team).toLowerCase().trim();
+        if (SLUG_OVERRIDES[cleanName]) {
+          slug = SLUG_OVERRIDES[cleanName];
+        } else {
+          slug = cleanName
+            .replace(/&/g, '-')
+            .replace(/['.]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9\-]/g, '');
+        }
+      }
+
+      return slug ? 'https://ncaa-api.henrygd.me/logo/' + slug + '.svg?dark=true' : '';
+    }
+
+    async function loadRatings() {
+      var tbody = document.getElementById('rankingsBody');
+      if (!tbody) return;
+
+      try {
+        var response = await fetch('ratings.json');
+        
+        if (!response.ok) {
+          throw new Error('HTTP status ' + response.status + ' (' + response.statusText + ')');
+        }
+
+        rawRatings = await response.json();
+
+        if (!rawRatings || !Array.isArray(rawRatings) || rawRatings.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">' +
+            'ratings.json is empty or invalid. Run compute_ratings.py to populate data.</td></tr>';
+          return;
+        }
+
+        renderTopThree(rawRatings.slice(0, 3));
+        renderTable(rawRatings);
+      } catch (error) {
+        console.error('Error loading ratings.json:', error);
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--red-text);">' +
+          'Could not load ratings.json: ' + error.message + '<br><small style="color: var(--text-muted);">' +
+          'Check that ratings.json is committed in the root directory of your repository.</
