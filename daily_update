@@ -32,6 +32,5 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add ratings.json bracketology.json _completed_dates.txt games_season.csv team_games_season.csv
-          git diff --quiet && git diff --staged --quiet || git commit -m "Auto-update Kahl Index ratings [skip ci]"
-          git push
+          git add -A
+          git diff --staged --quiet || (git commit -m "Auto-update Kahl Index ratings and bracketology [skip ci]" && git push)
