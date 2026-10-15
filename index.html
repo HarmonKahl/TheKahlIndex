@@ -1,133 +1,213 @@
-<script>
-  var rawRatings = [];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Kahl Index | NCAA Softball Power Rankings</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-blue: #38bdf8;
+      --green-bg: rgba(34, 197, 94, 0.15);
+      --green-text: #4ade80;
+      --red-bg: rgba(239, 68, 68, 0.15);
+      --red-text: #f87171;
+      --border-color: #334155;
+    }
 
-  // Map special-case team names directly to exact NCAA API slugs
-  var SLUG_OVERRIDES = {
-    'ucla': 'ucla',
-    'ole miss': 'ole-miss',
-    'smu': 'smu',
-    'byu': 'byu',
-    'lsu': 'lsu',
-    'unc': 'north-carolina',
-    'penn': 'pennsylvania'
-  };
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 2rem 1rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
 
-  function getLogoUrl(teamObj) {
-    if (!teamObj) return '';
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    header h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      background: linear-gradient(to right, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    header p {
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+      font-size: 1rem;
+    }
+
+    /* Top 3 Podium Cards */
+    .top-three {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+    .podium-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+    .podium-card.rank-1 { border-color: #eab308; }
+    .podium-card.rank-2 { border-color: #94a3b8; }
+    .podium-card.rank-3 { border-color: #b45309; }
     
-    // 1. Use explicit slug from ratings.json if present
-    var slug = teamObj.slug;
-
-    // 2. Fallback: generate slug dynamically from team name if slug is missing
-    if (!slug && teamObj.team) {
-      var cleanName = teamObj.team.toLowerCase().trim();
-      
-      if (SLUG_OVERRIDES[cleanName]) {
-        slug = SLUG_OVERRIDES[cleanName];
-      } else {
-        slug = cleanName
-          .replace(/&/g, '-')
-          .replace(/['.]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/[^a-z0-9\-]/g, '');
-      }
+    .podium-logo {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+      margin: 0.5rem auto;
+      display: block;
     }
 
-    return slug ? 'https://ncaa-api.henrygd.me/logo/' + slug + '.svg?dark=true' : '';
-  }
-
-  async function loadRatings() {
-    var tbody = document.getElementById('rankingsBody');
-    if (!tbody) return;
-
-    try {
-      var response = await fetch('ratings.json');
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-
-      rawRatings = await response.json();
-
-      if (!rawRatings || rawRatings.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">ratings.json is empty.</td></tr>';
-        return;
-      }
-
-      renderTopThree(rawRatings.slice(0, 3));
-      renderTable(rawRatings);
-    } catch (error) {
-      console.error('Error loading ratings:', error);
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--red-text);">Could not load ratings.json: ' + error.message + '</td></tr>';
+    .podium-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
     }
-  }
-
-  function renderTopThree(top3) {
-    var container = document.getElementById('topThree');
-    if (!container || !top3 || top3.length === 0) return;
-
-    var classes = ['rank-1', 'rank-2', 'rank-3'];
-    var labels = ['#1 Ranked', '#2 Ranked', '#3 Ranked'];
-    var html = '';
-
-    for (var i = 0; i < top3.length; i++) {
-      var team = top3[i];
-      var raaPrefix = team.raa > 0 ? '+' : '';
-      var sosPrefix = team.sos > 0 ? '+' : '';
-      var logoUrl = getLogoUrl(team);
-
-      html += '<div class="podium-card ' + classes[i] + '">' +
-                '<div class="podium-badge">' + labels[i] + '</div>' +
-                '<img class="podium-logo" src="' + logoUrl + '" alt="" onerror="this.style.visibility=\'hidden\'" />' +
-                '<div class="podium-team">' + team.team + '</div>' +
-                '<div class="podium-raa">' + raaPrefix + team.raa.toFixed(2) + '</div>' +
-                '<div class="record-text" style="margin-top:0.4rem;">' + team.wins + '-' + team.losses + ' | SoS: ' + sosPrefix + team.sos.toFixed(2) + '</div>' +
-              '</div>';
+    .podium-team {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .podium-raa {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent-blue);
     }
 
-    container.innerHTML = html;
-  }
-
-  function renderTable(data) {
-    var tbody = document.getElementById('rankingsBody');
-    if (!tbody) return;
-
-    var html = '';
-
-    for (var i = 0; i < data.length; i++) {
-      var row = data[i];
-      var raaClass = row.raa >= 0 ? 'raa-positive' : 'raa-negative';
-      var raaFormatted = (row.raa > 0 ? '+' : '') + row.raa.toFixed(2);
-      var sosFormatted = (row.sos > 0 ? '+' : '') + row.sos.toFixed(2);
-      var logoUrl = getLogoUrl(row);
-
-      html += '<tr>' +
-                '<td style="font-weight: 700; color: var(--text-muted);">#' + row.rank + '</td>' +
-                '<td>' +
-                  '<div class="team-cell">' +
-                    '<img class="table-logo" src="' + logoUrl + '" alt="" onerror="this.style.visibility=\'hidden\'" />' +
-                    '<span>' + row.team + '</span>' +
-                  '</div>' +
-                '</td>' +
-                '<td><span class="raa-badge ' + raaClass + '">' + raaFormatted + '</span></td>' +
-                '<td>' + row.wins + '-' + row.losses + '</td>' +
-                '<td>' + row.r_per_7.toFixed(2) + '</td>' +
-                '<td>' + row.ra_per_7.toFixed(2) + '</td>' +
-                '<td style="color: var(--text-muted);">' + sosFormatted + '</td>' +
-              '</tr>';
+    /* Controls Bar */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      width: 100%;
+      max-width: 320px;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
     }
 
-    tbody.innerHTML = html;
-  }
+    /* Table Design */
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow-x: auto;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+    th {
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
 
-  function filterTable() {
-    var query = document.getElementById('searchInput').value.toLowerCase();
-    var filtered = rawRatings.filter(function(item) {
-      return item.team.toLowerCase().includes(query);
-    });
-    renderTable(filtered);
-  }
+    .team-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+    .table-logo {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', loadRatings);
-  } else {
-    loadRatings();
-  }
-</script>
+    /* Badges */
+    .raa-badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+    .raa-positive {
+      background: var(--green-bg);
+      color: var(--green-text);
+    }
+    .raa-negative {
+      background: var(--red-bg);
+      color: var(--red-text);
+    }
+
+    .record-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>THE KAHL INDEX</h1>
+    <p>NCAA Division I Softball Power Rankings (Runs Above Average)</p>
+  </header>
+
+  <!-- Top 3 Featured Cards -->
+  <div class="top-three" id="topThree"></div>
+
+  <!-- Search & Filter Controls -->
+  <div class="controls">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search team..." onkeyup="filterTable()" />
+  </div>
+
+  <!-- Main Rankings Table -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Team</th>
+          <th>RAA</th>
+          <th>Record</th>
+          <th>Runs/7</th>
+          <th>RA/7</th>
+          <th>So
