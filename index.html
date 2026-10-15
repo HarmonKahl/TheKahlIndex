@@ -203,4 +203,120 @@
     </div>
 
     <!-- Bracketology Tab -->
-    <div
+    <div id="bracketology" class="tab-content">
+        <div id="bracket-loading" class="loading">Loading Bracketology Projection...</div>
+        <div id="bracket-container" class="regionals-grid"></div>
+    </div>
+</div>
+
+<script>
+    // Tab Switcher
+    function switchTab(evt, tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        document.getElementById(tabId).classList.add('active');
+        if (evt && evt.currentTarget) {
+            evt.currentTarget.classList.add('active');
+        }
+    }
+
+    // Load Rankings JSON Data
+    async function loadRankings() {
+        const loadingEl = document.getElementById('rankings-loading');
+        const tableEl = document.getElementById('rankings-table');
+        const tbodyEl = document.getElementById('rankings-body');
+
+        try {
+            const response = await fetch(`ratings.json?v=${Date.now()}`);
+            if (!response.ok) throw new Error('Ratings file HTTP ' + response.status);
+
+            const ratings = await response.json();
+            loadingEl.style.display = 'none';
+            tableEl.style.display = 'table';
+
+            const teamList = Array.isArray(ratings) ? ratings : (ratings.teams || ratings.data || []);
+
+            teamList.forEach((team, index) => {
+                const row = document.createElement('tr');
+                const name = typeof team === 'string' ? team : (team.Team || team.team || team.name || 'N/A');
+                const conf = typeof team === 'object' ? (team.Conference || team.conference || team.conf || 'N/A') : 'N/A';
+                
+                let rawRating = typeof team === 'object' ? (team.Rating ?? team.rating ?? team.score) : team;
+                let ratingVal = typeof rawRating === 'number' ? rawRating.toFixed(2) : (rawRating || 'N/A');
+
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><strong>${name}</strong></td>
+                    <td>${conf}</td>
+                    <td>${ratingVal}</td>
+                `;
+                tbodyEl.appendChild(row);
+            });
+        } catch (err) {
+            console.error('Rankings Fetch Error:', err);
+            loadingEl.innerHTML = `<p style="color: #ef4444;">Unable to load ratings data (${err.message}).</p>`;
+        }
+    }
+
+    // Load Bracketology JSON Data
+    async function loadBracketology() {
+        const loadingEl = document.getElementById('bracket-loading');
+        const containerEl = document.getElementById('bracket-container');
+
+        try {
+            const response = await fetch(`bracketology.json?v=${Date.now()}`);
+            if (!response.ok) throw new Error('Bracketology file HTTP ' + response.status);
+            
+            const data = await response.json();
+            loadingEl.style.display = 'none';
+
+            const regionals = Array.isArray(data) ? data : (data.regionals || data.bracket || []);
+
+            regionals.forEach((regional, index) => {
+                const card = document.createElement('div');
+                card.className = 'regional-card';
+
+                let teamsHTML = '';
+                const teams = regional.teams || regional.seeds || [];
+
+                teams.forEach((team, idx) => {
+                    const teamName = typeof team === 'string' ? team : (team.Team || team.team || team.name || 'TBD');
+                    const conf = typeof team === 'object' ? (team.Conference || team.conference || team.conf || '') : '';
+                    const seed = typeof team === 'object' && team.seed ? team.seed : (idx + 1);
+
+                    teamsHTML += `
+                        <li class="team-item">
+                            <span class="seed-num">#${seed}</span>
+                            <span class="team-name">${teamName}</span>
+                            <span class="conf-tag">${conf}</span>
+                        </li>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="regional-header">
+                        <span class="regional-title">${regional.name || regional.regional || 'Regional ' + (index + 1)}</span>
+                    </div>
+                    <ul class="team-list">
+                        ${teamsHTML}
+                    </ul>
+                `;
+
+                containerEl.appendChild(card);
+            });
+        } catch (err) {
+            console.error('Bracketology Fetch Error:', err);
+            loadingEl.innerHTML = `<p style="color: #ef4444;">Unable to load bracketology projection (${err.message}).</p>`;
+        }
+    }
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+        loadRankings();
+        loadBracketology();
+    });
+</script>
+
+</body>
+</html>
