@@ -60,19 +60,10 @@
       padding: 1.5rem;
       text-align: center;
       box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-      position: relative;
     }
     .podium-card.rank-1 { border-color: #eab308; }
     .podium-card.rank-2 { border-color: #94a3b8; }
     .podium-card.rank-3 { border-color: #b45309; }
-    
-    .podium-logo {
-      width: 56px;
-      height: 56px;
-      object-fit: contain;
-      margin: 0.5rem auto;
-      display: block;
-    }
 
     .podium-badge {
       font-size: 0.85rem;
@@ -83,17 +74,18 @@
       margin-bottom: 0.25rem;
     }
     .podium-team {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      margin-bottom: 0.25rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.15rem;
     }
     .podium-conf {
       font-size: 0.85rem;
       color: var(--text-muted);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.75rem;
     }
     .podium-raa {
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 800;
       color: var(--accent-blue);
     }
@@ -151,19 +143,6 @@
     }
     tbody tr:hover {
       background: rgba(255, 255, 255, 0.02);
-    }
-
-    .team-cell {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      font-weight: 600;
-    }
-    .table-logo {
-      width: 28px;
-      height: 28px;
-      object-fit: contain;
-      flex-shrink: 0;
     }
 
     /* Badges */
@@ -230,38 +209,9 @@
   <script>
     var rawRatings = [];
 
-    var SLUG_OVERRIDES = {
-      'ucla': 'ucla',
-      'ole miss': 'ole-miss',
-      'smu': 'smu',
-      'byu': 'byu',
-      'lsu': 'lsu',
-      'unc': 'north-carolina'
-    };
-
     function numFix(val) {
       var n = Number(val);
       return isNaN(n) ? '0.00' : n.toFixed(2);
-    }
-
-    function getLogoUrl(teamObj) {
-      if (!teamObj) return '';
-      var slug = teamObj.slug;
-
-      if (!slug && teamObj.team) {
-        var cleanName = String(teamObj.team).toLowerCase().trim();
-        if (SLUG_OVERRIDES[cleanName]) {
-          slug = SLUG_OVERRIDES[cleanName];
-        } else {
-          slug = cleanName
-            .replace(/&/g, '-')
-            .replace(/['.]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/[^a-z0-9\-]/g, '');
-        }
-      }
-
-      return slug ? 'https://ncaa-api.henrygd.me/logo/' + slug + '.svg?dark=true' : '';
     }
 
     async function loadRatings() {
@@ -288,8 +238,7 @@
       } catch (error) {
         console.error('Error loading ratings.json:', error);
         tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--red-text);">' +
-          'Could not load ratings.json: ' + error.message + '<br><small style="color: var(--text-muted);">' +
-          'Check that ratings.json is committed in the root directory of your repository.</small></td></tr>';
+          'Could not load ratings.json: ' + error.message + '</td></tr>';
       }
     }
 
@@ -307,14 +256,12 @@
         var sosVal = Number(team.sos) || 0;
         var raaPrefix = raaVal > 0 ? '+' : '';
         var sosPrefix = sosVal > 0 ? '+' : '';
-        var logoUrl = getLogoUrl(team);
         var wins = team.wins !== undefined ? team.wins : '-';
         var losses = team.losses !== undefined ? team.losses : '-';
-        var conf = team.conference || 'N/A';
+        var conf = team.conference || 'Independent / Other';
 
         html += '<div class="podium-card ' + classes[i] + '">' +
                   '<div class="podium-badge">' + labels[i] + '</div>' +
-                  '<img class="podium-logo" src="' + logoUrl + '" alt="" onerror="this.style.display=\'none\'" />' +
                   '<div class="podium-team">' + (team.team || 'Unknown') + '</div>' +
                   '<div class="podium-conf">' + conf + '</div>' +
                   '<div class="podium-raa">' + raaPrefix + numFix(raaVal) + '</div>' +
@@ -338,19 +285,13 @@
         var raaClass = raaVal >= 0 ? 'raa-positive' : 'raa-negative';
         var raaFormatted = (raaVal > 0 ? '+' : '') + numFix(raaVal);
         var sosFormatted = (sosVal > 0 ? '+' : '') + numFix(sosVal);
-        var logoUrl = getLogoUrl(row);
         var wins = row.wins !== undefined ? row.wins : '-';
         var losses = row.losses !== undefined ? row.losses : '-';
-        var conf = row.conference || 'Independent';
+        var conf = row.conference || 'Independent / Other';
 
         html += '<tr>' +
                   '<td style="font-weight: 700; color: var(--text-muted);">#' + (row.rank || (i + 1)) + '</td>' +
-                  '<td>' +
-                    '<div class="team-cell">' +
-                      '<img class="table-logo" src="' + logoUrl + '" alt="" onerror="this.style.display=\'none\'" />' +
-                      '<span>' + (row.team || 'Unknown') + '</span>' +
-                    '</div>' +
-                  '</td>' +
+                  '<td style="font-weight: 600;">' + (row.team || 'Unknown') + '</td>' +
                   '<td style="color: var(--text-muted); font-size: 0.85rem;">' + conf + '</td>' +
                   '<td><span class="raa-badge ' + raaClass + '">' + raaFormatted + '</span></td>' +
                   '<td>' + wins + '-' + losses + '</td>' +
