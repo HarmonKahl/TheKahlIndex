@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Kahl Index | Ratings & Bracketology</title>
+    <title>The Kahl Index | NCAA Softball Ratings & Bracketology</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -49,16 +49,17 @@
         .tabs {
             display: flex;
             justify-content: center;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 30px;
+            flex-wrap: wrap;
         }
 
         .tab-btn {
             background-color: var(--card-bg);
             color: var(--text-main);
             border: 1px solid var(--border-color);
-            padding: 10px 24px;
-            font-size: 1rem;
+            padding: 10px 20px;
+            font-size: 0.95rem;
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
@@ -117,7 +118,7 @@
 
         .team-item {
             display: flex;
-            justify-content: space-between;
+            align-items: center;
             padding: 8px 10px;
             margin-bottom: 4px;
             background-color: rgba(255, 255, 255, 0.03);
@@ -128,7 +129,7 @@
         .seed-num {
             font-weight: 700;
             color: var(--text-muted);
-            width: 30px;
+            width: 35px;
         }
 
         .team-name {
@@ -136,18 +137,14 @@
             font-weight: 500;
         }
 
-        .conf-tag {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-        }
-
-        /* Ratings Table Styling */
+        /* Table Styling for Rankings */
         table {
             width: 100%;
             border-collapse: collapse;
             background-color: var(--card-bg);
             border-radius: 10px;
             overflow: hidden;
+            margin-bottom: 20px;
         }
 
         th, td {
@@ -182,11 +179,12 @@
     </header>
 
     <div class="tabs">
-        <button id="btn-rankings" class="tab-btn active" onclick="switchTab(event, 'rankings')">Kahl Index Rankings</button>
-        <button id="btn-bracketology" class="tab-btn" onclick="switchTab(event, 'bracketology')">Bracketology (64-Team)</button>
+        <button class="tab-btn active" onclick="switchTab(event, 'rankings')">Kahl Index Rankings</button>
+        <button class="tab-btn" onclick="switchTab(event, 'conferences')">Conference Rankings</button>
+        <button class="tab-btn" onclick="switchTab(event, 'bracketology')">Bracketology (64-Team)</button>
     </div>
 
-    <!-- Rankings Tab (Default Active) -->
+    <!-- Overall Rankings Tab (Default Active) -->
     <div id="rankings" class="tab-content active">
         <div id="rankings-loading" class="loading">Loading Kahl Index Rankings...</div>
         <table id="rankings-table" style="display:none;">
@@ -202,6 +200,22 @@
         </table>
     </div>
 
+    <!-- Conference Rankings Tab -->
+    <div id="conferences" class="tab-content">
+        <div id="conferences-loading" class="loading">Loading Conference Rankings...</div>
+        <table id="conferences-table" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Conference</th>
+                    <th>Average Rating</th>
+                    <th>Teams</th>
+                </tr>
+            </thead>
+            <tbody id="conferences-body"></tbody>
+        </table>
+    </div>
+
     <!-- Bracketology Tab -->
     <div id="bracketology" class="tab-content">
         <div id="bracket-loading" class="loading">Loading Bracketology Projection...</div>
@@ -210,6 +224,8 @@
 </div>
 
 <script>
+    let cachedRatingsData = null;
+
     // Tab Switcher
     function switchTab(evt, tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -221,7 +237,7 @@
         }
     }
 
-    // Load Rankings JSON Data
+    // Load Overall Ratings
     async function loadRankings() {
         const loadingEl = document.getElementById('rankings-loading');
         const tableEl = document.getElementById('rankings-table');
@@ -229,15 +245,16 @@
 
         try {
             const response = await fetch(`ratings.json?v=${Date.now()}`);
-            if (!response.ok) throw new Error('Ratings file HTTP ' + response.status);
+            if (!response.ok) throw new Error('HTTP ' + response.status);
 
             const ratings = await response.json();
+            cachedRatingsData = Array.isArray(ratings) ? ratings : (ratings.teams || ratings.data || []);
+
             loadingEl.style.display = 'none';
             tableEl.style.display = 'table';
+            tbodyEl.innerHTML = '';
 
-            const teamList = Array.isArray(ratings) ? ratings : (ratings.teams || ratings.data || []);
-
-            teamList.forEach((team, index) => {
+            cachedRatingsData.forEach((team, index) => {
                 const row = document.createElement('tr');
                 const name = typeof team === 'string' ? team : (team.Team || team.team || team.name || 'N/A');
                 const conf = typeof team === 'object' ? (team.Conference || team.conference || team.conf || 'N/A') : 'N/A';
@@ -253,20 +270,67 @@
                 `;
                 tbodyEl.appendChild(row);
             });
+
+            // Calculate & render Conference Rankings once team ratings are loaded
+            renderConferenceRankings(cachedRatingsData);
+
         } catch (err) {
             console.error('Rankings Fetch Error:', err);
             loadingEl.innerHTML = `<p style="color: #ef4444;">Unable to load ratings data (${err.message}).</p>`;
         }
     }
 
-    // Load Bracketology JSON Data
+    // Render Conference Rankings dynamically
+    function renderConferenceRankings(teamList) {
+        const loadingEl = document.getElementById('conferences-loading');
+        const tableEl = document.getElementById('conferences-table');
+        const tbodyEl = document.getElementById('conferences-body');
+
+        const confMap = {};
+
+        teamList.forEach(team => {
+            const conf = typeof team === 'object' ? (team.Conference || team.conference || team.conf) : null;
+            let rawRating = typeof team === 'object' ? (team.Rating ?? team.rating ?? team.score) : null;
+
+            if (conf && typeof rawRating === 'number') {
+                if (!confMap[conf]) {
+                    confMap[conf] = { total: 0, count: 0 };
+                }
+                confMap[conf].total += rawRating;
+                confMap[conf].count += 1;
+            }
+        });
+
+        const confList = Object.keys(confMap).map(conf => ({
+            name: conf,
+            avgRating: confMap[conf].total / confMap[conf].count,
+            count: confMap[conf].count
+        })).sort((a, b) => b.avgRating - a.avgRating);
+
+        loadingEl.style.display = 'none';
+        tableEl.style.display = 'table';
+        tbodyEl.innerHTML = '';
+
+        confList.forEach((conf, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td>
+                <td><strong>${conf.name}</strong></td>
+                <td>${conf.avgRating.toFixed(2)}</td>
+                <td>${conf.count}</td>
+            `;
+            tbodyEl.appendChild(row);
+        });
+    }
+
+    // Load Bracketology Data (Conferences Omitted)
     async function loadBracketology() {
         const loadingEl = document.getElementById('bracket-loading');
         const containerEl = document.getElementById('bracket-container');
 
         try {
             const response = await fetch(`bracketology.json?v=${Date.now()}`);
-            if (!response.ok) throw new Error('Bracketology file HTTP ' + response.status);
+            if (!response.ok) throw new Error('HTTP ' + response.status);
             
             const data = await response.json();
             loadingEl.style.display = 'none';
@@ -282,14 +346,12 @@
 
                 teams.forEach((team, idx) => {
                     const teamName = typeof team === 'string' ? team : (team.Team || team.team || team.name || 'TBD');
-                    const conf = typeof team === 'object' ? (team.Conference || team.conference || team.conf || '') : '';
                     const seed = typeof team === 'object' && team.seed ? team.seed : (idx + 1);
 
                     teamsHTML += `
                         <li class="team-item">
                             <span class="seed-num">#${seed}</span>
                             <span class="team-name">${teamName}</span>
-                            <span class="conf-tag">${conf}</span>
                         </li>
                     `;
                 });
