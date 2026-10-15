@@ -79,7 +79,7 @@
             display: block;
         }
 
-        /* Bracketology Grid */
+        /* Bracketology Grid Styling */
         .regionals-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -180,7 +180,7 @@
         <button class="tab-btn" onclick="switchTab(event, 'bracketology')">Bracketology (64-Team)</button>
     </div>
 
-    <!-- Overall Rankings Tab -->
+    <!-- Kahl Index Rankings Tab (Default Active) -->
     <div id="rankings" class="tab-content active">
         <div id="rankings-loading" class="loading">Loading Kahl Index Rankings...</div>
         <table id="rankings-table" style="display:none;">
@@ -189,9 +189,9 @@
                     <th>Rank</th>
                     <th>Team</th>
                     <th>Conference</th>
+                    <th>Record</th>
                     <th>SOS</th>
                     <th>RAA</th>
-                    <th>Rating</th>
                 </tr>
             </thead>
             <tbody id="rankings-body"></tbody>
@@ -206,7 +206,7 @@
                 <tr>
                     <th>Rank</th>
                     <th>Conference</th>
-                    <th>Average Rating</th>
+                    <th>Average RAA</th>
                     <th>Teams</th>
                 </tr>
             </thead>
@@ -222,36 +222,16 @@
 </div>
 
 <script>
-    function switchTab(evt, tabId) {
+    // Tab Navigation
+    function switchTab(e, tabId) {
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         
         document.getElementById(tabId).classList.add('active');
-        if (evt && evt.currentTarget) {
-            evt.currentTarget.classList.add('active');
-        }
+        if (e && e.target) e.target.classList.add('active');
     }
 
-    // Extract property value safely regardless of key casing/formatting
-    function findVal(item, keys) {
-        if (!item || typeof item !== 'object') return null;
-        for (let k of Object.keys(item)) {
-            let cleanK = k.toLowerCase().replace(/[^a-z0-9]/g, '');
-            for (let target of keys) {
-                if (cleanK === target.toLowerCase().replace(/[^a-z0-9]/g, '')) {
-                    return item[k];
-                }
-            }
-        }
-        return null;
-    }
-
-    function formatVal(v) {
-        if (v === null || v === undefined) return 'N/A';
-        let n = parseFloat(v);
-        return isNaN(n) ? v : n.toFixed(2);
-    }
-
+    // Load Ratings & Conference Calculations
     async function loadRatings() {
         const loadingEl = document.getElementById('rankings-loading');
         const tableEl = document.getElementById('rankings-table');
@@ -259,30 +239,28 @@
 
         try {
             const res = await fetch(`ratings.json?v=\${Date.now()}`);
-            if (!res.ok) throw new Error('HTTP ' + res.status);
+            if (!res.ok) throw new Error(`HTTP \${res.status}`);
 
-            const json = await res.json();
-            
-            // Normalize JSON structure (array or dictionary)
-            let teams = Array.isArray(json) ? json : (json.teams || json.data || Object.values(json));
-
+            const teams = await res.json();
             tbodyEl.innerHTML = '';
 
-            teams.forEach((team, i) => {
-                const name = findVal(team, ['team', 'name', 'school']) || 'N/A';
-                const conf = findVal(team, ['conference', 'conf']) || 'N/A';
-                const sos = findVal(team, ['sos', 'strengthofschedule']);
-                const raa = findVal(team, ['raa', 'runsaboveavg', 'runsaboveaverage']);
-                const rating = findVal(team, ['rating', 'kahlindex', 'index', 'score', 'rpi']);
+            teams.forEach(t => {
+                const rank = t.rank ?? 'N/A';
+                const teamName = t.team ?? 'N/A';
+                const conf = t.conference ?? 'N/A';
+                const wins = t.wins ?? 0;
+                const losses = t.losses ?? 0;
+                const sos = typeof t.sos === 'number' ? t.sos.toFixed(2) : (t.sos ?? 'N/A');
+                const raa = typeof t.raa === 'number' ? t.raa.toFixed(2) : (t.raa ?? 'N/A');
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>\${i + 1}</td>
-                    <td><strong>\${name}</strong></td>
+                    <td>\${rank}</td>
+                    <td><strong>\${teamName}</strong></td>
                     <td>\${conf}</td>
-                    <td>\${formatVal(sos)}</td>
-                    <td>\${formatVal(raa)}</td>
-                    <td>\${formatVal(rating)}</td>
+                    <td>${wins}-${losses}</td>
+                    <td>\${sos}</td>
+                    <td>\${raa}</td>
                 `;
                 tbodyEl.appendChild(row);
             });
@@ -290,9 +268,53 @@
             loadingEl.style.display = 'none';
             tableEl.style.display = 'table';
 
-            // Generate Conference Rankings
-            loadConferences(teams);
+            renderConferences(teams);
 
         } catch (err) {
-            console.error('Ratings Error:', err);
-            loadingEl.innerHTML = `<p style="color: #ef4444;">Failed to
+            console.error('Ratings Fetch Error:', err);
+            loadingEl.innerHTML = `<p style="color: #ef4444;">Failed to load ratings.json (\${err.message})</p>`;
+        }
+    }
+
+    // Compute Conference Rankings based on average RAA
+    function renderConferences(teams) {
+        const loadingEl = document.getElementById('conferences-loading');
+        const tableEl = document.getElementById('conferences-table');
+        const tbodyEl = document.getElementById('conferences-body');
+
+        try {
+            const confMap = {};
+            teams.forEach(t => {
+                const conf = t.conference;
+                const raa = typeof t.raa === 'number' ? t.raa : parseFloat(t.raa);
+
+                if (conf && !isNaN(raa)) {
+                    if (!confMap[conf]) confMap[conf] = { total: 0, count: 0 };
+                    confMap[conf].total += raa;
+                    confMap[conf].count += 1;
+                }
+            });
+
+            const sortedConfs = Object.keys(confMap).map(c => ({
+                name: c,
+                avg: confMap[c].total / confMap[c].count,
+                count: confMap[c].count
+            })).sort((a, b) => b.avg - a.avg);
+
+            tbodyEl.innerHTML = '';
+            sortedConfs.forEach((c, i) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>\${i + 1}</td>
+                    <td><strong>\${c.name}</strong></td>
+                    <td>\${c.avg.toFixed(2)}</td>
+                    <td>\${c.count}</td>
+                `;
+                tbodyEl.appendChild(row);
+            });
+
+            loadingEl.style.display = 'none';
+            tableEl.style.display = 'table';
+        } catch (err) {
+            console.error('Conference Error:', err);
+            loadingEl.innerHTML = `<p style="color: #ef44
