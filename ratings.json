@@ -145,7 +145,7 @@
   },
   {
     "rank": 13,
-    "team": "Florida State",
+    "team": "Florida St.",
     "conference": "Atlantic Coast Conference",
     "raa": 8.4,
     "games_played": 59,
@@ -169,7 +169,7 @@
   },
   {
     "rank": 15,
-    "team": "Oklahoma State",
+    "team": "Oklahoma St.",
     "conference": "Big 12 Conference",
     "raa": 7.58,
     "games_played": 59,
@@ -205,7 +205,7 @@
   },
   {
     "rank": 18,
-    "team": "Mississippi State",
+    "team": "Mississippi St.",
     "conference": "Southeastern Conference",
     "raa": 7.47,
     "games_played": 63,
@@ -229,7 +229,7 @@
   },
   {
     "rank": 20,
-    "team": "Arizona State",
+    "team": "Arizona St.",
     "conference": "Big 12 Conference",
     "raa": 7.19,
     "games_played": 61,
@@ -445,7 +445,7 @@
   },
   {
     "rank": 38,
-    "team": "Penn State",
+    "team": "Penn St.",
     "conference": "Big Ten Conference",
     "raa": 4.99,
     "games_played": 53,
@@ -518,7 +518,7 @@
   {
     "rank": 44,
     "team": "Fla. Atlantic",
-    "conference": "Independent / Other",
+    "conference": "American Athletic Conference",
     "raa": 4.49,
     "games_played": 52,
     "wins": 33,
@@ -529,7 +529,7 @@
   },
   {
     "rank": 45,
-    "team": "Wichita State",
+    "team": "Wichita St.",
     "conference": "American Athletic Conference",
     "raa": 4.36,
     "games_played": 51,
@@ -541,7 +541,7 @@
   },
   {
     "rank": 46,
-    "team": "Jacksonville State",
+    "team": "Jacksonville St.",
     "conference": "Conference USA",
     "raa": 4.29,
     "games_played": 58,
@@ -553,7 +553,7 @@
   },
   {
     "rank": 47,
-    "team": "Texas State",
+    "team": "Texas St.",
     "conference": "Sun Belt Conference",
     "raa": 4.27,
     "games_played": 59,
@@ -577,7 +577,7 @@
   },
   {
     "rank": 49,
-    "team": "Iowa State",
+    "team": "Iowa St.",
     "conference": "Big 12 Conference",
     "raa": 4.13,
     "games_played": 55,
@@ -589,7 +589,7 @@
   },
   {
     "rank": 50,
-    "team": "Ohio State",
+    "team": "Ohio St.",
     "conference": "Big Ten Conference",
     "raa": 4.04,
     "games_played": 53,
@@ -601,8 +601,8 @@
   },
   {
     "rank": 51,
-    "team": "Cal St. Fullerton",
-    "conference": "Independent / Other",
+    "team": "Cal.",
+    "conference": "Big West Conference",
     "raa": 3.98,
     "games_played": 54,
     "wins": 39,
@@ -650,7 +650,7 @@
   {
     "rank": 55,
     "team": "South Fla.",
-    "conference": "Independent / Other",
+    "conference": "American Athletic Conference",
     "raa": 3.78,
     "games_played": 59,
     "wins": 42,
@@ -686,7 +686,7 @@
   {
     "rank": 58,
     "team": "Boston U.",
-    "conference": "Independent / Other",
+    "conference": "Patriot League",
     "raa": 3.43,
     "games_played": 61,
     "wins": 45,
@@ -697,7 +697,7 @@
   },
   {
     "rank": 59,
-    "team": "NC State",
+    "team": "NC St.",
     "conference": "Atlantic Coast Conference",
     "raa": 3.31,
     "games_played": 53,
@@ -734,7 +734,7 @@
   {
     "rank": 62,
     "team": "Western Ky.",
-    "conference": "Independent / Other",
+    "conference": "Conference USA",
     "raa": 3.13,
     "games_played": 50,
     "wins": 38,
@@ -782,7 +782,7 @@
   {
     "rank": 66,
     "team": "App State",
-    "conference": "Independent / Other",
+    "conference": "Sun Belt Conference",
     "raa": 2.76,
     "games_played": 50,
     "wins": 29,
@@ -794,7 +794,7 @@
   {
     "rank": 67,
     "team": "Central Ark.",
-    "conference": "Independent / Other",
+    "conference": "ASUN Conference",
     "raa": 2.71,
     "games_played": 52,
     "wins": 34,
@@ -914,7 +914,7 @@
   {
     "rank": 77,
     "team": "LMU (CA)",
-    "conference": "Independent / Other",
+    "conference": "West Coast Conference",
     "raa": 2.44,
     "games_played": 52,
     "wins": 33,
@@ -926,7 +926,7 @@
   {
     "rank": 78,
     "team": "Southern Ill.",
-    "conference": "Independent / Other",
+    "conference": "Missouri Valley Conference",
     "raa": 2.37,
     "games_played": 48,
     "wins": 33,
@@ -962,7 +962,7 @@
   {
     "rank": 81,
     "team": "North Ala.",
-    "conference": "Independent / Other",
+    "conference": "ASUN Conference",
     "raa": 2.26,
     "games_played": 49,
     "wins": 35,
@@ -985,7 +985,7 @@
   },
   {
     "rank": 83,
-    "team": "Boise State",
+    "team": "Boise St.",
     "conference": "Mountain West Conference",
     "raa": 2.21,
     "games_played": 55,
@@ -1034,7 +1034,7 @@
   {
     "rank": 87,
     "team": "UIW",
-    "conference": "Independent / Other",
+    "conference": "Southland Conference",
     "raa": 2.05,
     "games_played": 52,
     "wins": 32,
@@ -1057,7 +1057,7 @@
   },
   {
     "rank": 89,
-    "team": "Idaho State",
+    "team": "Idaho St.",
     "conference": "Big Sky Conference",
     "raa": 1.98,
     "games_played": 54,
@@ -1070,7 +1070,7 @@
   {
     "rank": 90,
     "team": "UNC Greensboro",
-    "conference": "Independent / Other",
+    "conference": "Southern Conference",
     "raa": 1.97,
     "games_played": 59,
     "wins": 40,
@@ -1081,7 +1081,7 @@
   },
   {
     "rank": 91,
-    "team": "San Diego State",
+    "team": "San Diego St.",
     "conference": "Mountain West Conference",
     "raa": 1.87,
     "games_played": 50,
@@ -1105,7 +1105,7 @@
   },
   {
     "rank": 93,
-    "team": "Fresno State",
+    "team": "Fresno St.",
     "conference": "Mountain West Conference",
     "raa": 1.67,
     "games_played": 47,
@@ -1153,7 +1153,7 @@
   },
   {
     "rank": 97,
-    "team": "Sacramento State",
+    "team": "Sacramento St.",
     "conference": "Big Sky Conference",
     "raa": 1.57,
     "games_played": 49,
@@ -1190,7 +1190,7 @@
   {
     "rank": 100,
     "team": "Southern Miss.",
-    "conference": "Independent / Other",
+    "conference": "Sun Belt Conference",
     "raa": 1.48,
     "games_played": 57,
     "wins": 33,
@@ -1249,7 +1249,7 @@
   },
   {
     "rank": 105,
-    "team": "North Dakota State",
+    "team": "North Dakota St.",
     "conference": "Summit League",
     "raa": 1.41,
     "games_played": 50,
@@ -1262,7 +1262,7 @@
   {
     "rank": 106,
     "team": "UNI",
-    "conference": "Independent / Other",
+    "conference": "Missouri Valley Conference",
     "raa": 1.41,
     "games_played": 51,
     "wins": 28,
@@ -1334,7 +1334,7 @@
   {
     "rank": 112,
     "team": "Ga. Southern",
-    "conference": "Independent / Other",
+    "conference": "Sun Belt Conference",
     "raa": 1.22,
     "games_played": 53,
     "wins": 24,
@@ -1394,7 +1394,7 @@
   {
     "rank": 117,
     "team": "Lamar University",
-    "conference": "Independent / Other",
+    "conference": "Southland Conference",
     "raa": 1.19,
     "games_played": 56,
     "wins": 32,
@@ -1453,7 +1453,7 @@
   },
   {
     "rank": 122,
-    "team": "Georgia State",
+    "team": "Georgia St.",
     "conference": "Sun Belt Conference",
     "raa": 1.1,
     "games_played": 56,
@@ -1477,7 +1477,7 @@
   },
   {
     "rank": 124,
-    "team": "New Mexico State",
+    "team": "New Mexico St.",
     "conference": "Conference USA",
     "raa": 1.04,
     "games_played": 51,
@@ -1525,7 +1525,7 @@
   },
   {
     "rank": 128,
-    "team": "Illinois State",
+    "team": "Illinois St.",
     "conference": "Missouri Valley Conference",
     "raa": 0.86,
     "games_played": 47,
@@ -1549,7 +1549,7 @@
   },
   {
     "rank": 130,
-    "team": "South Dakota State",
+    "team": "South Dakota St.",
     "conference": "Summit League",
     "raa": 0.83,
     "games_played": 55,
@@ -1561,7 +1561,7 @@
   },
   {
     "rank": 131,
-    "team": "Long Beach State",
+    "team": "Long Beach St.",
     "conference": "Big West Conference",
     "raa": 0.78,
     "games_played": 50,
@@ -1573,7 +1573,7 @@
   },
   {
     "rank": 132,
-    "team": "Michigan State",
+    "team": "Michigan St.",
     "conference": "Big Ten Conference",
     "raa": 0.74,
     "games_played": 51,
@@ -1585,7 +1585,7 @@
   },
   {
     "rank": 133,
-    "team": "Tarleton State",
+    "team": "Tarleton St.",
     "conference": "Western Athletic Conference",
     "raa": 0.61,
     "games_played": 57,
@@ -1598,7 +1598,7 @@
   {
     "rank": 134,
     "team": "Wofford",
-    "conference": "Independent / Other",
+    "conference": "Southern Conference",
     "raa": 0.58,
     "games_played": 48,
     "wins": 31,
@@ -1610,7 +1610,7 @@
   {
     "rank": 135,
     "team": "Western Caro.",
-    "conference": "Independent / Other",
+    "conference": "Southern Conference",
     "raa": 0.54,
     "games_played": 55,
     "wins": 33,
@@ -1622,7 +1622,7 @@
   {
     "rank": 136,
     "team": "Murray St.",
-    "conference": "Independent / Other",
+    "conference": "Ohio Valley Conference",
     "raa": 0.53,
     "games_played": 50,
     "wins": 27,
@@ -1634,7 +1634,7 @@
   {
     "rank": 137,
     "team": "Central Mich.",
-    "conference": "Independent / Other",
+    "conference": "Mid-American Conference",
     "raa": 0.5,
     "games_played": 47,
     "wins": 24,
@@ -1658,7 +1658,7 @@
   {
     "rank": 139,
     "team": "NIU",
-    "conference": "Independent / Other",
+    "conference": "Mid-American Conference",
     "raa": 0.42,
     "games_played": 40,
     "wins": 23,
@@ -1669,7 +1669,7 @@
   },
   {
     "rank": 140,
-    "team": "Colorado State",
+    "team": "Colorado St.",
     "conference": "Mountain West Conference",
     "raa": 0.41,
     "games_played": 51,
@@ -1693,7 +1693,7 @@
   },
   {
     "rank": 142,
-    "team": "Ball State",
+    "team": "Ball St.",
     "conference": "Mid-American Conference",
     "raa": 0.33,
     "games_played": 48,
@@ -1706,7 +1706,7 @@
   {
     "rank": 143,
     "team": "FGCU",
-    "conference": "Independent / Other",
+    "conference": "ASUN Conference",
     "raa": 0.32,
     "games_played": 52,
     "wins": 21,
@@ -1718,7 +1718,7 @@
   {
     "rank": 144,
     "team": "Army West Point",
-    "conference": "Independent / Other",
+    "conference": "Patriot League",
     "raa": 0.24,
     "games_played": 56,
     "wins": 32,
@@ -1730,7 +1730,7 @@
   {
     "rank": 145,
     "team": "Western Mich.",
-    "conference": "Independent / Other",
+    "conference": "Mid-American Conference",
     "raa": 0.14,
     "games_played": 52,
     "wins": 27,
@@ -1777,7 +1777,7 @@
   },
   {
     "rank": 149,
-    "team": "Missouri State",
+    "team": "Missouri St.",
     "conference": "Conference USA",
     "raa": 0.06,
     "games_played": 50,
@@ -1801,7 +1801,7 @@
   },
   {
     "rank": 151,
-    "team": "San Jose State",
+    "team": "San Jose St.",
     "conference": "Mountain West Conference",
     "raa": -0.02,
     "games_played": 48,
@@ -1837,7 +1837,7 @@
   },
   {
     "rank": 154,
-    "team": "Northwestern State",
+    "team": "Northwestern St.",
     "conference": "Southland Conference",
     "raa": -0.13,
     "games_played": 52,
@@ -1850,7 +1850,7 @@
   {
     "rank": 155,
     "team": "Middle Tenn.",
-    "conference": "Independent / Other",
+    "conference": "Conference USA",
     "raa": -0.16,
     "games_played": 51,
     "wins": 21,
@@ -1886,7 +1886,7 @@
   {
     "rank": 158,
     "team": "UC San Diego",
-    "conference": "Independent / Other",
+    "conference": "Big West Conference",
     "raa": -0.23,
     "games_played": 51,
     "wins": 23,
@@ -1898,7 +1898,7 @@
   {
     "rank": 159,
     "team": "Eastern Ill.",
-    "conference": "Independent / Other",
+    "conference": "Ohio Valley Conference",
     "raa": -0.24,
     "games_played": 56,
     "wins": 34,
@@ -2006,7 +2006,7 @@
   {
     "rank": 168,
     "team": "Eastern Ky.",
-    "conference": "Independent / Other",
+    "conference": "ASUN Conference",
     "raa": -0.72,
     "games_played": 52,
     "wins": 27,
@@ -2018,7 +2018,7 @@
   {
     "rank": 169,
     "team": "Northern Colo.",
-    "conference": "Independent / Other",
+    "conference": "Big Sky Conference",
     "raa": -0.76,
     "games_played": 48,
     "wins": 23,
@@ -2066,7 +2066,7 @@
   {
     "rank": 173,
     "team": "Prairie View",
-    "conference": "Independent / Other",
+    "conference": "Southwestern Athletic Conference",
     "raa": -0.83,
     "games_played": 45,
     "wins": 27,
@@ -2173,7 +2173,7 @@
   },
   {
     "rank": 182,
-    "team": "Youngstown State",
+    "team": "Youngstown St.",
     "conference": "Horizon League",
     "raa": -1.26,
     "games_played": 50,
@@ -2209,7 +2209,7 @@
   },
   {
     "rank": 185,
-    "team": "Indiana State",
+    "team": "Indiana St.",
     "conference": "Missouri Valley Conference",
     "raa": -1.35,
     "games_played": 50,
@@ -2234,7 +2234,7 @@
   {
     "rank": 187,
     "team": "Loyola Chicago",
-    "conference": "Independent / Other",
+    "conference": "Missouri Valley Conference",
     "raa": -1.41,
     "games_played": 49,
     "wins": 27,
@@ -2269,7 +2269,7 @@
   },
   {
     "rank": 190,
-    "team": "Portland State",
+    "team": "Portland St.",
     "conference": "Big Sky Conference",
     "raa": -1.46,
     "games_played": 45,
@@ -2366,7 +2366,7 @@
   {
     "rank": 198,
     "team": "Southeast Mo. St.",
-    "conference": "Independent / Other",
+    "conference": "Ohio Valley Conference",
     "raa": -1.63,
     "games_played": 50,
     "wins": 21,
@@ -2377,7 +2377,7 @@
   },
   {
     "rank": 199,
-    "team": "Utah State",
+    "team": "Utah St.",
     "conference": "Mountain West Conference",
     "raa": -1.64,
     "games_played": 54,
@@ -2462,7 +2462,7 @@
   {
     "rank": 206,
     "team": "Col. of Charleston",
-    "conference": "Independent / Other",
+    "conference": "Coastal Athletic Association",
     "raa": -1.91,
     "games_played": 58,
     "wins": 28,
@@ -2474,7 +2474,7 @@
   {
     "rank": 207,
     "team": "Massachusetts",
-    "conference": "Independent / Other",
+    "conference": "Mid-American Conference",
     "raa": -1.92,
     "games_played": 48,
     "wins": 19,
@@ -2498,7 +2498,7 @@
   {
     "rank": 209,
     "team": "CSUN",
-    "conference": "Independent / Other",
+    "conference": "Big West Conference",
     "raa": -1.98,
     "games_played": 46,
     "wins": 14,
@@ -2570,7 +2570,7 @@
   {
     "rank": 215,
     "team": "Queens (NC)",
-    "conference": "Independent / Other",
+    "conference": "ASUN Conference",
     "raa": -2.15,
     "games_played": 48,
     "wins": 14,
@@ -2594,7 +2594,7 @@
   {
     "rank": 217,
     "team": "UAlbany",
-    "conference": "Independent / Other",
+    "conference": "America East Conference",
     "raa": -2.18,
     "games_played": 43,
     "wins": 24,
@@ -2606,7 +2606,7 @@
   {
     "rank": 218,
     "team": "SIUE",
-    "conference": "Independent / Other",
+    "conference": "Ohio Valley Conference",
     "raa": -2.19,
     "games_played": 54,
     "wins": 27,
@@ -2725,7 +2725,7 @@
   },
   {
     "rank": 228,
-    "team": "Kent State",
+    "team": "Kent St.",
     "conference": "Mid-American Conference",
     "raa": -2.67,
     "games_played": 47,
@@ -2749,7 +2749,7 @@
   },
   {
     "rank": 230,
-    "team": "Weber State",
+    "team": "Weber St.",
     "conference": "Big Sky Conference",
     "raa": -2.68,
     "games_played": 55,
@@ -2810,7 +2810,7 @@
   {
     "rank": 235,
     "team": "West Ga.",
-    "conference": "Independent / Other",
+    "conference": "ASUN Conference",
     "raa": -2.85,
     "games_played": 54,
     "wins": 14,
@@ -2833,7 +2833,7 @@
   },
   {
     "rank": 237,
-    "team": "Kennesaw State",
+    "team": "Kennesaw St.",
     "conference": "ASUN Conference",
     "raa": -2.89,
     "games_played": 50,
@@ -2894,7 +2894,7 @@
   {
     "rank": 242,
     "team": "Southern U.",
-    "conference": "Independent / Other",
+    "conference": "Southwestern Athletic Conference",
     "raa": -3.07,
     "games_played": 40,
     "wins": 26,
@@ -2930,7 +2930,7 @@
   {
     "rank": 245,
     "team": "A&M-Corpus Christi",
-    "conference": "Independent / Other",
+    "conference": "Southland Conference",
     "raa": -3.12,
     "games_played": 52,
     "wins": 14,
@@ -2942,7 +2942,7 @@
   {
     "rank": 246,
     "team": "Northern Ky.",
-    "conference": "Independent / Other",
+    "conference": "Horizon League",
     "raa": -3.21,
     "games_played": 48,
     "wins": 23,
@@ -2966,7 +2966,7 @@
   {
     "rank": 248,
     "team": "Southern Ind.",
-    "conference": "Independent / Other",
+    "conference": "Ohio Valley Conference",
     "raa": -3.38,
     "games_played": 45,
     "wins": 15,
@@ -3110,7 +3110,7 @@
   {
     "rank": 260,
     "team": "Detroit Mercy",
-    "conference": "Independent / Other",
+    "conference": "Horizon League",
     "raa": -4.09,
     "games_played": 44,
     "wins": 14,
@@ -3134,7 +3134,7 @@
   {
     "rank": 262,
     "team": "Central Conn. St.",
-    "conference": "Independent / Other",
+    "conference": "Northeast Conference",
     "raa": -4.1,
     "games_played": 45,
     "wins": 27,
@@ -3182,7 +3182,7 @@
   {
     "rank": 266,
     "team": "CSU Bakersfield",
-    "conference": "Independent / Other",
+    "conference": "Big West Conference",
     "raa": -4.43,
     "games_played": 50,
     "wins": 10,
@@ -3218,7 +3218,7 @@
   {
     "rank": 269,
     "team": "N.C. A&T",
-    "conference": "Independent / Other",
+    "conference": "Coastal Athletic Association",
     "raa": -4.65,
     "games_played": 52,
     "wins": 19,
@@ -3230,7 +3230,7 @@
   {
     "rank": 270,
     "team": "Charleston So.",
-    "conference": "Independent / Other",
+    "conference": "Big South Conference",
     "raa": -4.76,
     "games_played": 51,
     "wins": 10,
@@ -3242,7 +3242,7 @@
   {
     "rank": 271,
     "team": "Mount St. Mary's",
-    "conference": "Independent / Other",
+    "conference": "Metro Atlantic Athletic Conference",
     "raa": -4.78,
     "games_played": 48,
     "wins": 20,
@@ -3277,7 +3277,7 @@
   },
   {
     "rank": 274,
-    "team": "Alabama State",
+    "team": "Alabama St.",
     "conference": "Southwestern Athletic Conference",
     "raa": -5.05,
     "games_played": 53,
@@ -3290,7 +3290,7 @@
   {
     "rank": 275,
     "team": "IU Indy",
-    "conference": "Independent / Other",
+    "conference": "Horizon League",
     "raa": -5.13,
     "games_played": 47,
     "wins": 7,
@@ -3301,7 +3301,7 @@
   },
   {
     "rank": 276,
-    "team": "Morehead State",
+    "team": "Morehead St.",
     "conference": "Ohio Valley Conference",
     "raa": -5.17,
     "games_played": 45,
@@ -3313,7 +3313,7 @@
   },
   {
     "rank": 277,
-    "team": "Jackson State",
+    "team": "Jackson St.",
     "conference": "Southwestern Athletic Conference",
     "raa": -5.25,
     "games_played": 40,
@@ -3373,7 +3373,7 @@
   },
   {
     "rank": 282,
-    "team": "Delaware State",
+    "team": "Delaware St.",
     "conference": "Mid-Eastern Athletic Conference",
     "raa": -6.15,
     "games_played": 34,
@@ -3397,7 +3397,7 @@
   },
   {
     "rank": 284,
-    "team": "South Carolina State",
+    "team": "South Carolina St.",
     "conference": "Mid-Eastern Athletic Conference",
     "raa": -6.18,
     "games_played": 37,
@@ -3410,7 +3410,7 @@
   {
     "rank": 285,
     "team": "East Texas A&M",
-    "conference": "Independent / Other",
+    "conference": "Southland Conference",
     "raa": -6.18,
     "games_played": 52,
     "wins": 6,
@@ -3434,7 +3434,7 @@
   {
     "rank": 287,
     "team": "Ark.-Pine Bluff",
-    "conference": "Independent / Other",
+    "conference": "Southwestern Athletic Conference",
     "raa": -6.6,
     "games_played": 40,
     "wins": 13,
@@ -3446,7 +3446,7 @@
   {
     "rank": 288,
     "team": "FDU",
-    "conference": "Independent / Other",
+    "conference": "Northeast Conference",
     "raa": -6.61,
     "games_played": 52,
     "wins": 20,
@@ -3469,7 +3469,7 @@
   },
   {
     "rank": 290,
-    "team": "Norfolk State",
+    "team": "Norfolk St.",
     "conference": "Mid-Eastern Athletic Conference",
     "raa": -6.93,
     "games_played": 40,
@@ -3506,7 +3506,7 @@
   {
     "rank": 293,
     "team": "Hampton",
-    "conference": "Independent / Other",
+    "conference": "Mid-Eastern Athletic Conference",
     "raa": -7.18,
     "games_played": 43,
     "wins": 10,
@@ -3517,7 +3517,7 @@
   },
   {
     "rank": 294,
-    "team": "Tennessee State",
+    "team": "Tennessee St.",
     "conference": "Ohio Valley Conference",
     "raa": -7.57,
     "games_played": 39,
@@ -3542,7 +3542,7 @@
   {
     "rank": 296,
     "team": "Grambling",
-    "conference": "Independent / Other",
+    "conference": "Southwestern Athletic Conference",
     "raa": -7.78,
     "games_played": 38,
     "wins": 12,
@@ -3554,7 +3554,7 @@
   {
     "rank": 297,
     "team": "Alcorn",
-    "conference": "Independent / Other",
+    "conference": "Southwestern Athletic Conference",
     "raa": -7.78,
     "games_played": 39,
     "wins": 7,
@@ -3565,7 +3565,7 @@
   },
   {
     "rank": 298,
-    "team": "Morgan State",
+    "team": "Morgan St.",
     "conference": "Mid-Eastern Athletic Conference",
     "raa": -7.99,
     "games_played": 36,
@@ -3602,7 +3602,7 @@
   {
     "rank": 301,
     "team": "N.C. Central",
-    "conference": "Independent / Other",
+    "conference": "Mid-Eastern Athletic Conference",
     "raa": -8.02,
     "games_played": 47,
     "wins": 7,
@@ -3625,7 +3625,7 @@
   },
   {
     "rank": 303,
-    "team": "Coppin State",
+    "team": "Coppin St.",
     "conference": "Mid-Eastern Athletic Conference",
     "raa": -8.44,
     "games_played": 34,
@@ -3638,7 +3638,7 @@
   {
     "rank": 304,
     "team": "Saint Francis",
-    "conference": "Independent / Other",
+    "conference": "Northeast Conference",
     "raa": -9.15,
     "games_played": 48,
     "wins": 5,
@@ -3650,7 +3650,7 @@
   {
     "rank": 305,
     "team": "UMES",
-    "conference": "Independent / Other",
+    "conference": "Mid-Eastern Athletic Conference",
     "raa": -9.71,
     "games_played": 41,
     "wins": 9,
@@ -3674,7 +3674,7 @@
   {
     "rank": 307,
     "team": "Mississippi Val.",
-    "conference": "Independent / Other",
+    "conference": "Southwestern Athletic Conference",
     "raa": -14.93,
     "games_played": 35,
     "wins": 0,
