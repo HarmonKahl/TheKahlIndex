@@ -32,7 +32,7 @@ def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
     # Re-verify counts after mutual purge to ensure no team dropped below min_games
     clean_counts = clean_df.groupby("team")["opponent"].count()
     final_valid_teams = set(clean_counts[clean_counts >= min_games].index)
-    
+
     clean_df = clean_df[
         clean_df["team"].isin(final_valid_teams) & clean_df["opponent"].isin(final_valid_teams)
     ].copy()
@@ -41,7 +41,6 @@ def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
         print(f"No teams remaining after filtering games against non-ranked teams.")
         return pd.DataFrame()
 
-    # Step 1: Season totals on PURGED data -> raw runs/7, league-centered off/def
     season = (
         clean_df.groupby("team")
         .agg(
@@ -66,10 +65,8 @@ def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
     season["def_adj"] = mean_ra_per_7 - season["ra_per_7"]
     season["net_adj"] = season["off_adj"] + season["def_adj"]
 
-    # Step 2: Opponent lists from PURGED dataset (ONLY ranked opponents included)
     opponents = clean_df.groupby("team")["opponent"].apply(list).to_dict()
 
-    # Step 3: Iterative SOS loop (centered every pass)
     net_adj = season.set_index("team")["net_adj"].to_dict()
     raa = dict(net_adj)
 
@@ -92,7 +89,6 @@ def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
             print(f"Converged after {n} iterations (largest change: {max_change:.6f})")
             break
 
-    # Step 4: Map final RAA & calculate exact SoS
     season["raa"] = season["team"].map(raa)
     season["sos"] = season["raa"] - season["net_adj"]
 
