@@ -238,8 +238,8 @@
         const tbodyEl = document.getElementById('rankings-body');
 
         try {
-            const res = await fetch(`ratings.json?v=\${Date.now()}`);
-            if (!res.ok) throw new Error(`HTTP \${res.status}`);
+            const res = await fetch(`ratings.json?v=${Date.now()}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
             const teams = await res.json();
             tbodyEl.innerHTML = '';
@@ -255,12 +255,12 @@
 
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>\${rank}</td>
-                    <td><strong>\${teamName}</strong></td>
-                    <td>\${conf}</td>
+                    <td>${rank}</td>
+                    <td><strong>${teamName}</strong></td>
+                    <td>${conf}</td>
                     <td>${wins}-${losses}</td>
-                    <td>\${sos}</td>
-                    <td>\${raa}</td>
+                    <td>${sos}</td>
+                    <td>${raa}</td>
                 `;
                 tbodyEl.appendChild(row);
             });
@@ -272,7 +272,7 @@
 
         } catch (err) {
             console.error('Ratings Fetch Error:', err);
-            loadingEl.innerHTML = `<p style="color: #ef4444;">Failed to load ratings.json (\${err.message})</p>`;
+            loadingEl.innerHTML = `<p style="color: #ef4444;">Failed to load ratings.json (${err.message})</p>`;
         }
     }
 
@@ -305,10 +305,10 @@
             sortedConfs.forEach((c, i) => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>\${i + 1}</td>
-                    <td><strong>\${c.name}</strong></td>
-                    <td>\${c.avg.toFixed(2)}</td>
-                    <td>\${c.count}</td>
+                    <td>${i + 1}</td>
+                    <td><strong>${c.name}</strong></td>
+                    <td>${c.avg.toFixed(2)}</td>
+                    <td>${c.count}</td>
                 `;
                 tbodyEl.appendChild(row);
             });
@@ -317,4 +317,72 @@
             tableEl.style.display = 'table';
         } catch (err) {
             console.error('Conference Error:', err);
-            loadingEl.innerHTML = `<p style="color: #ef44
+            loadingEl.innerHTML = `<p style="color: #ef4444;">Unable to compute conference averages.</p>`;
+        }
+    }
+
+    // Load Bracketology Data
+    async function loadBracketology() {
+        const loadingEl = document.getElementById('bracket-loading');
+        const containerEl = document.getElementById('bracket-container');
+
+        try {
+            const res = await fetch(`bracketology.json?v=${Date.now()}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+            const json = await res.json();
+            const regionals = Array.isArray(json) ? json : (json.regionals || []);
+
+            containerEl.innerHTML = '';
+            regionals.forEach((reg, i) => {
+                const card = document.createElement('div');
+                card.className = 'regional-card';
+
+                const teamList = reg.teams || reg.seeds || [];
+                let host = reg.host || reg.host_school || '';
+                if (!host && teamList.length > 0) {
+                    const top = teamList[0];
+                    host = typeof top === 'string' ? top : (top.team || top.name || '');
+                }
+
+                const regionalTitle = host ? `${host} Regional` : `Regional ${i + 1}`;
+
+                let listHTML = '';
+                teamList.forEach((t, idx) => {
+                    const name = typeof t === 'string' ? t : (t.team || t.name || 'TBD');
+                    const seed = (typeof t === 'object' && t.seed) ? t.seed : (idx + 1);
+
+                    listHTML += `
+                        <li class="team-item">
+                            <span class="seed-num">#${seed}</span>
+                            <span class="team-name">${name}</span>
+                        </li>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="regional-header">
+                        <span class="regional-title">${regionalTitle}</span>
+                    </div>
+                    <ul class="team-list">${listHTML}</ul>
+                `;
+
+                containerEl.appendChild(card);
+            });
+
+            loadingEl.style.display = 'none';
+
+        } catch (err) {
+            console.error('Bracketology Fetch Error:', err);
+            loadingEl.innerHTML = `<p style="color: #ef4444;">Failed to load bracketology.json (${err.message})</p>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadRatings();
+        loadBracketology();
+    });
+</script>
+
+</body>
+</html>
