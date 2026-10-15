@@ -610,7 +610,7 @@ def generate_bracketology(final_df, output_path="bracketology.json"):
     # Tag conferences
     df["conference"] = df["team"].map(lambda t: CONFERENCE_MAP.get(t, "Independent / Other"))
 
-    # Step 1: Identify 31 Automatic Qualifiers (AQ) - Top team per conference
+    # Step 1: Identify 31 Automatic Qualifiers (AQ) - Highest ranked team per conference
     aq_df = df[df["conference"] != "Independent / Other"]
     aq_teams = aq_df.groupby("conference").first().reset_index()
     aq_team_names = set(aq_teams["team"])
@@ -621,7 +621,7 @@ def generate_bracketology(final_df, output_path="bracketology.json"):
     # Take top 33 At-Large bids
     at_large_teams = at_large_candidates.head(33)
 
-    # Combine AQ and At-Large teams into 64-team field
+    # Combine AQ and At-Large teams into 64-team field, ordered by overall Kahl Index rank
     field_df = pd.concat([aq_teams, at_large_teams]).sort_values("rank").reset_index(drop=True)
 
     if len(field_df) < 64:
@@ -630,55 +630,70 @@ def generate_bracketology(final_df, output_path="bracketology.json"):
 
     field = field_df.head(64).to_dict("records")
 
-    # Step 3: Seed Bands (16 teams per band)
-    hosts = field[0:16]        # Seed 1s (Regional Hosts)
-    band_2 = field[16:32]      # Seed 2s
+    # Step 3: Top 32 National Seeds (Serpentine Pairing for Top 32)
+    # Seeds 1-16: Regional Hosts (Seed 1s)
+    hosts = field[0:16]
+    
+    # Seeds 17-32: Traveling National Seeds (Seed 2s)
+    # Serpentine: Seed 17 pairs with Host 16, Seed 18 with Host 15, ..., Seed 32 with Host 1
+    seed_2s = field[16:32]
+    seed_2s_serpentine = list(reversed(seed_2s))
+
+    # Bottom 32 Teams (Seeds 33-64)
     band_3 = field[32:48]      # Seed 3s
     band_4 = field[48:64]      # Seed 4s
 
     regionals = []
 
-    # Step 4: Fill Regional Pods with Conference Conflict Protection
+    # Step 4: Construct Regional Pods
     for i in range(16):
-        host = hosts[i]
-        pod = [host]
-        pod_conferences = {host["conference"]}
+        host = hosts[i]                      # Seed 1
+        seed_2 = seed_2s_serpentine[i]       # Seed 2 (National Seed 17-32)
+        
+        pod_conferences = {host["conference"], seed_2["conference"]}
 
+        # Helper to pick Seed 3 and Seed 4 from bottom 32 while avoiding conference conflicts
         def pick_candidate(band):
             for idx, candidate in enumerate(band):
                 conf = candidate["conference"]
                 if conf == "Independent / Other" or conf not in pod_conferences:
                     pod_conferences.add(conf)
                     return band.pop(idx)
+            # Fallback if conflict cannot be avoided
             candidate = band.pop(0)
             pod_conferences.add(candidate["conference"])
             return candidate
 
-        seed_2 = pick_candidate(band_2)
         seed_3 = pick_candidate(band_3)
         seed_4 = pick_candidate(band_4)
-
-        pod.extend([seed_2, seed_3, seed_4])
 
         regionals.append({
             "regional_number": i + 1,
             "host_team": host["team"],
             "host_rank": host["rank"],
             "teams": [
-                {"seed_in_pod": 1, "team": pod[0]["team"], "conference": pod[0]["conference"], "overall_rank": pod[0]["rank"], "raa": round(float(pod[0]["raa"]), 2)},
-                {"seed_in_pod": 2, "team": pod[1]["team"], "conference": pod[1]["conference"], "overall_rank": pod[1]["rank"], "raa": round(float(pod[1]["raa"]), 2)},
-                {"seed_in_pod": 3, "team": pod[2]["team"], "conference": pod[2]["conference"], "overall_rank": pod[2]["rank"], "raa": round(float(pod[2]["raa"]), 2)},
-                {"seed_in_pod": 4, "team": pod[3]["team"], "conference": pod[3]["conference"], "overall_rank": pod[3]["rank"], "raa": round(float(pod[3]["raa"]), 2)},
+                {"seed_in_pod": 1, "national_seed": i + 1, "team": host["team"], "conference": host["conference"], "overall_rank": host["rank"], "raa": round(float(host["raa"]), 2)},
+                {"seed_in_pod": 2, "national_seed": 32 - i, "team": seed_2["team"], "conference": seed_2["conference"], "overall_rank": seed_2["rank"], "raa": round(float(seed_2["raa"]), 2)},
+                {"seed_in_pod": 3, "national_seed": None, "team": seed_3["team"], "conference": seed_3["conference"], "overall_rank": seed_3["rank"], "raa": round(float(seed_3["raa"]), 2)},
+                {"seed_in_pod": 4, "national_seed": None, "team": seed_4["team"], "conference": seed_4["conference"], "overall_rank": seed_4["rank"], "raa": round(float(seed_4["raa"]), 2)},
             ]
         })
 
     # Step 5: Bubble Watch Breakdown
     # At-Large ranks 30-33 = Last 4 In
     last_four_in = at_large_candidates.iloc[29:33][["team", "conference", "rank", "raa"]].to_dict("records")
+    for item in last_four_in:
+        item["raa"] = round(float(item["raa"]), 2)
+
     # At-Large ranks 34-37 = First 4 Out
     first_four_out = at_large_candidates.iloc[33:37][["team", "conference", "rank", "raa"]].to_dict("records")
+    for item in first_four_out:
+        item["raa"] = round(float(item["raa"]), 2)
+
     # At-Large ranks 38-41 = Next 4 Out
     next_four_out = at_large_candidates.iloc[37:41][["team", "conference", "rank", "raa"]].to_dict("records")
+    for item in next_four_out:
+        item["raa"] = round(float(item["raa"]), 2)
 
     bracket_data = {
         "regionals": regionals,
@@ -690,7 +705,7 @@ def generate_bracketology(final_df, output_path="bracketology.json"):
     with open(output_path, "w") as f:
         json.dump(bracket_data, f, indent=2)
 
-    print(f"Successfully generated bracketology and bubble watch to {output_path}.")
+    print(f"Successfully generated 32-seed national bracketology to {output_path}.")
 
 def save_ratings_json(final_df, output_path="ratings.json"):
     if final_df is None or final_df.empty:
