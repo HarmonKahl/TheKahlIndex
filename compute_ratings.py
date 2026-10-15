@@ -310,12 +310,12 @@ RAW_CONFERENCES = [
     ("Sun Belt Conference", "Troy"),
     ("Sun Belt Conference", "ULM"),
     ("West Coast Conference", "LMU (CA)"),
+    ("West Coast Conference", "Oregon St."),
     ("West Coast Conference", "Pacific"),
     ("West Coast Conference", "Saint Mary's"),
     ("West Coast Conference", "San Diego"),
     ("West Coast Conference", "Santa Clara"),
     ("West Coast Conference", "Seattle U"),
-    ("West Coast Conference", "Oregon St."),
     ("Western Athletic Conference", "Abilene Christian"),
     ("Western Athletic Conference", "California Baptist"),
     ("Western Athletic Conference", "Southern Utah"),
@@ -330,7 +330,6 @@ CONFERENCE_MAP = {school: conf for conf, school in RAW_CONFERENCES}
 
 # 2. Comprehensive Alignment Dictionary for Scraped Names -> Custom Display Names
 NAME_ALIGNMENT = {
-    # Custom requested fixes
     "Florida Atlantic": "Fla. Atlantic",
     "Cal State Fullerton": "Cal.",
     "Cal St. Fullerton": "Cal.",
@@ -402,7 +401,8 @@ NAME_ALIGNMENT = {
     "IU Indy": "IU Indy",
     "IUPUI": "IU Indy",
     "IUPUI (IU Indy)": "IU Indy",
-    "Western Illinois": "Western Illinois",
+    "Western Illinois": "Western Ill.",
+    "Western Ill.": "Western Ill.",
     "East Texas A&M": "East Texas A&M",
     "Texas A&M-Commerce": "East Texas A&M",
     "Arkansas Pine Bluff": "Ark.-Pine Bluff",
@@ -422,8 +422,6 @@ NAME_ALIGNMENT = {
     "Maryland Eastern Shore": "UMES",
     "Mississippi Valley State": "Mississippi Val.",
     "Mississippi Valley St.": "Mississippi Val.",
-
-    # Standard "State" -> "St." aliases
     "North Dakota State": "North Dakota St.",
     "N. Dakota St.": "North Dakota St.",
     "South Dakota State": "South Dakota St.",
@@ -499,48 +497,34 @@ NAME_ALIGNMENT = {
 }
 
 def clean_school_name(raw_name):
-    """Aligns incoming school names to the exact required user formatting."""
     if not isinstance(raw_name, str):
         return "Unknown"
-    
     cleaned = raw_name.strip()
-    
-    # 1. Direct match in explicit alignment mapping
     if cleaned in NAME_ALIGNMENT:
         return NAME_ALIGNMENT[cleaned]
-        
-    # 2. Check if already formatted as canonical school name
     if cleaned in CONFERENCE_MAP:
         return cleaned
-
-    # 3. Swap trailing " State" -> " St."
     if " State" in cleaned:
         swapped = cleaned.replace(" State", " St.")
         if swapped in CONFERENCE_MAP:
             return swapped
         if swapped in NAME_ALIGNMENT:
             return NAME_ALIGNMENT[swapped]
-
     return cleaned
 
 def load_data(team_csv_path="team_games_season.csv"):
     if not os.path.exists(team_csv_path) or os.stat(team_csv_path).st_size == 0:
         print(f"Warning: {team_csv_path} is empty or missing.")
         return None
-
     df = pd.read_csv(team_csv_path)
     if df.empty:
         return None
-        
-    # Standardize team and opponent names immediately
     df["team"] = df["team"].apply(clean_school_name)
     df["opponent"] = df["opponent"].apply(clean_school_name)
-    
     return df
 
 def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
     team_df = team_df[(team_df["team"] != "TBA") & (team_df["opponent"] != "TBA")].copy()
-
     raw_counts = team_df.groupby("team")["opponent"].count()
     valid_teams = set(raw_counts[raw_counts >= min_games].index)
 
@@ -615,6 +599,99 @@ def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
 
     return season
 
+def generate_bracketology(final_df, output_path="bracketology.json"):
+    if final_df is None or final_df.empty:
+        with open(output_path, "w") as f:
+            json.dump({}, f)
+        return
+
+    df = final_df.copy()
+
+    # Tag conferences
+    df["conference"] = df["team"].map(lambda t: CONFERENCE_MAP.get(t, "Independent / Other"))
+
+    # Step 1: Identify 31 Automatic Qualifiers (AQ) - Top team per conference
+    aq_df = df[df["conference"] != "Independent / Other"]
+    aq_teams = aq_df.groupby("conference").first().reset_index()
+    aq_team_names = set(aq_teams["team"])
+
+    # Step 2: At-Large Pool (Best teams regardless of conference not already an AQ)
+    at_large_candidates = df[~df["team"].isin(aq_team_names)].sort_values("rank").reset_index(drop=True)
+    
+    # Take top 33 At-Large bids
+    at_large_teams = at_large_candidates.head(33)
+
+    # Combine AQ and At-Large teams into 64-team field
+    field_df = pd.concat([aq_teams, at_large_teams]).sort_values("rank").reset_index(drop=True)
+
+    if len(field_df) < 64:
+        print(f"Warning: Only {len(field_df)} teams available for Bracketology.")
+        return
+
+    field = field_df.head(64).to_dict("records")
+
+    # Step 3: Seed Bands (16 teams per band)
+    hosts = field[0:16]        # Seed 1s (Regional Hosts)
+    band_2 = field[16:32]      # Seed 2s
+    band_3 = field[32:48]      # Seed 3s
+    band_4 = field[48:64]      # Seed 4s
+
+    regionals = []
+
+    # Step 4: Fill Regional Pods with Conference Conflict Protection
+    for i in range(16):
+        host = hosts[i]
+        pod = [host]
+        pod_conferences = {host["conference"]}
+
+        def pick_candidate(band):
+            for idx, candidate in enumerate(band):
+                conf = candidate["conference"]
+                if conf == "Independent / Other" or conf not in pod_conferences:
+                    pod_conferences.add(conf)
+                    return band.pop(idx)
+            candidate = band.pop(0)
+            pod_conferences.add(candidate["conference"])
+            return candidate
+
+        seed_2 = pick_candidate(band_2)
+        seed_3 = pick_candidate(band_3)
+        seed_4 = pick_candidate(band_4)
+
+        pod.extend([seed_2, seed_3, seed_4])
+
+        regionals.append({
+            "regional_number": i + 1,
+            "host_team": host["team"],
+            "host_rank": host["rank"],
+            "teams": [
+                {"seed_in_pod": 1, "team": pod[0]["team"], "conference": pod[0]["conference"], "overall_rank": pod[0]["rank"], "raa": round(float(pod[0]["raa"]), 2)},
+                {"seed_in_pod": 2, "team": pod[1]["team"], "conference": pod[1]["conference"], "overall_rank": pod[1]["rank"], "raa": round(float(pod[1]["raa"]), 2)},
+                {"seed_in_pod": 3, "team": pod[2]["team"], "conference": pod[2]["conference"], "overall_rank": pod[2]["rank"], "raa": round(float(pod[2]["raa"]), 2)},
+                {"seed_in_pod": 4, "team": pod[3]["team"], "conference": pod[3]["conference"], "overall_rank": pod[3]["rank"], "raa": round(float(pod[3]["raa"]), 2)},
+            ]
+        })
+
+    # Step 5: Bubble Watch Breakdown
+    # At-Large ranks 30-33 = Last 4 In
+    last_four_in = at_large_candidates.iloc[29:33][["team", "conference", "rank", "raa"]].to_dict("records")
+    # At-Large ranks 34-37 = First 4 Out
+    first_four_out = at_large_candidates.iloc[33:37][["team", "conference", "rank", "raa"]].to_dict("records")
+    # At-Large ranks 38-41 = Next 4 Out
+    next_four_out = at_large_candidates.iloc[37:41][["team", "conference", "rank", "raa"]].to_dict("records")
+
+    bracket_data = {
+        "regionals": regionals,
+        "last_four_in": last_four_in,
+        "first_four_out": first_four_out,
+        "next_four_out": next_four_out
+    }
+
+    with open(output_path, "w") as f:
+        json.dump(bracket_data, f, indent=2)
+
+    print(f"Successfully generated bracketology and bubble watch to {output_path}.")
+
 def save_ratings_json(final_df, output_path="ratings.json"):
     if final_df is None or final_df.empty:
         with open(output_path, "w") as f:
@@ -652,5 +729,7 @@ if __name__ == "__main__":
     if df_games is not None:
         final_ratings = compute_kahl_index(df_games, min_games=20)
         save_ratings_json(final_ratings, "ratings.json")
+        generate_bracketology(final_ratings, "bracketology.json")
     else:
         save_ratings_json(None, "ratings.json")
+        generate_bracketology(None, "bracketology.json")
