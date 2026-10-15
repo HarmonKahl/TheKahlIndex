@@ -80,7 +80,7 @@
             display: block;
         }
 
-        /* Bracketology Grid Styling */
+        /* Bracketology Grid */
         .regionals-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -137,7 +137,7 @@
             font-weight: 500;
         }
 
-        /* Table Styling for Rankings */
+        /* Rankings Tables */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -175,4 +175,50 @@
 <div class="container">
     <header>
         <h1>The Kahl Index</h1>
-        <div
+        <div class="subtitle">NCAA Softball Ratings & Daily Projected Bracketology</div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'rankings')">Kahl Index Rankings</button>
+        <button class="tab-btn" onclick="switchTab(event, 'conferences')">Conference Rankings</button>
+        <button class="tab-btn" onclick="switchTab(event, 'bracketology')">Bracketology (64-Team)</button>
+    </div>
+
+    <!-- Overall Rankings Tab (Default Active) -->
+    <div id="rankings" class="tab-content active">
+        <div id="rankings-loading" class="loading">Loading Kahl Index Rankings...</div>
+        <table id="rankings-table" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Conference</th>
+                    <th>SOS</th>
+                    <th>RAA</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody id="rankings-body"></tbody>
+        </table>
+    </div>
+
+    <!-- Conference Rankings Tab -->
+    <div id="conferences" class="tab-content">
+        <div id="conferences-loading" class="loading">Loading Conference Rankings...</div>
+        <table id="conferences-table" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Conference</th>
+                    <th>Average Rating</th>
+                    <th>Teams</th>
+                </tr>
+            </thead>
+            <tbody id="conferences-body"></tbody>
+        </table>
+    </div>
+
+    <!-- Bracketology Tab -->
+    <div id="bracketology" class="tab-content">
+        <div id="bracket-loading" class="loading">Loading Bracketology Projection...</div>
+        <div id="bracket-container" class="regionals-grid">
