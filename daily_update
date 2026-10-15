@@ -6,6 +6,9 @@ on:
     - cron: '0 9 * * *'
   workflow_dispatch: # Allows you to manually trigger a run anytime from GitHub UI
 
+permissions:
+  contents: write
+
 jobs:
   update-ratings:
     runs-on: ubuntu-latest
