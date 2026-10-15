@@ -84,4 +84,288 @@
     }
     .podium-team {
       font-size: 1.4rem;
-      font-weight:
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+    .podium-raa {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--accent-blue);
+    }
+
+    /* Controls Bar */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .search-input {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.6rem 1rem;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      width: 100%;
+      max-width: 320px;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: var(--accent-blue);
+    }
+
+    /* Table Design */
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      overflow-x: auto;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+    th, td {
+      padding: 1rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+    th {
+      background: rgba(15, 23, 42, 0.6);
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+    tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .team-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 600;
+    }
+    .table-logo {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    /* Badges */
+    .raa-badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+    .raa-positive {
+      background: var(--green-bg);
+      color: var(--green-text);
+    }
+    .raa-negative {
+      background: var(--red-bg);
+      color: var(--red-text);
+    }
+
+    .record-text {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>THE KAHL INDEX</h1>
+    <p>NCAA Division I Softball Power Rankings (Runs Above Average)</p>
+  </header>
+
+  <!-- Top 3 Featured Cards -->
+  <div class="top-three" id="topThree"></div>
+
+  <!-- Search & Filter Controls -->
+  <div class="controls">
+    <input type="text" id="searchInput" class="search-input" placeholder="Search team..." onkeyup="filterTable()" />
+  </div>
+
+  <!-- Main Rankings Table -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Team</th>
+          <th>RAA</th>
+          <th>Record</th>
+          <th>Runs/7</th>
+          <th>RA/7</th>
+          <th>SoS</th>
+        </tr>
+      </thead>
+      <tbody id="rankingsBody">
+        <tr>
+          <td colspan="7" style="text-align: center; color: var(--text-muted);">Loading ratings...</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    var rawRatings = [];
+
+    var SLUG_OVERRIDES = {
+      'ucla': 'ucla',
+      'ole miss': 'ole-miss',
+      'smu': 'smu',
+      'byu': 'byu',
+      'lsu': 'lsu',
+      'unc': 'north-carolina'
+    };
+
+    function numFix(val) {
+      var n = Number(val);
+      return isNaN(n) ? '0.00' : n.toFixed(2);
+    }
+
+    function getLogoUrl(teamObj) {
+      if (!teamObj) return '';
+      var slug = teamObj.slug;
+
+      if (!slug && teamObj.team) {
+        var cleanName = String(teamObj.team).toLowerCase().trim();
+        if (SLUG_OVERRIDES[cleanName]) {
+          slug = SLUG_OVERRIDES[cleanName];
+        } else {
+          slug = cleanName
+            .replace(/&/g, '-')
+            .replace(/['.]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/[^a-z0-9\-]/g, '');
+        }
+      }
+
+      return slug ? 'https://ncaa-api.henrygd.me/logo/' + slug + '.svg?dark=true' : '';
+    }
+
+    async function loadRatings() {
+      var tbody = document.getElementById('rankingsBody');
+      if (!tbody) return;
+
+      try {
+        var response = await fetch('./ratings.json?v=' + new Date().getTime());
+        
+        if (!response.ok) {
+          throw new Error('HTTP status ' + response.status + ' (' + response.statusText + ')');
+        }
+
+        rawRatings = await response.json();
+
+        if (!rawRatings || !Array.isArray(rawRatings) || rawRatings.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--text-muted);">' +
+            'ratings.json is empty or invalid. Run compute_ratings.py to populate data.</td></tr>';
+          return;
+        }
+
+        renderTopThree(rawRatings.slice(0, 3));
+        renderTable(rawRatings);
+      } catch (error) {
+        console.error('Error loading ratings.json:', error);
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: var(--red-text);">' +
+          'Could not load ratings.json: ' + error.message + '<br><small style="color: var(--text-muted);">' +
+          'Check that ratings.json is committed in the root directory of your repository.</small></td></tr>';
+      }
+    }
+
+    function renderTopThree(top3) {
+      var container = document.getElementById('topThree');
+      if (!container || !top3 || top3.length === 0) return;
+
+      var classes = ['rank-1', 'rank-2', 'rank-3'];
+      var labels = ['#1 Ranked', '#2 Ranked', '#3 Ranked'];
+      var html = '';
+
+      for (var i = 0; i < top3.length; i++) {
+        var team = top3[i];
+        var raaVal = Number(team.raa) || 0;
+        var sosVal = Number(team.sos) || 0;
+        var raaPrefix = raaVal > 0 ? '+' : '';
+        var sosPrefix = sosVal > 0 ? '+' : '';
+        var logoUrl = getLogoUrl(team);
+        var wins = team.wins !== undefined ? team.wins : '-';
+        var losses = team.losses !== undefined ? team.losses : '-';
+
+        html += '<div class="podium-card ' + classes[i] + '">' +
+                  '<div class="podium-badge">' + labels[i] + '</div>' +
+                  '<img class="podium-logo" src="' + logoUrl + '" alt="" onerror="this.style.display=\'none\'" />' +
+                  '<div class="podium-team">' + (team.team || 'Unknown') + '</div>' +
+                  '<div class="podium-raa">' + raaPrefix + numFix(raaVal) + '</div>' +
+                  '<div class="record-text" style="margin-top:0.4rem;">' + wins + '-' + losses + ' | SoS: ' + sosPrefix + numFix(sosVal) + '</div>' +
+                '</div>';
+      }
+
+      container.innerHTML = html;
+    }
+
+    function renderTable(data) {
+      var tbody = document.getElementById('rankingsBody');
+      if (!tbody) return;
+
+      var html = '';
+
+      for (var i = 0; i < data.length; i++) {
+        var row = data[i];
+        var raaVal = Number(row.raa) || 0;
+        var sosVal = Number(row.sos) || 0;
+        var raaClass = raaVal >= 0 ? 'raa-positive' : 'raa-negative';
+        var raaFormatted = (raaVal > 0 ? '+' : '') + numFix(raaVal);
+        var sosFormatted = (sosVal > 0 ? '+' : '') + numFix(sosVal);
+        var logoUrl = getLogoUrl(row);
+        var wins = row.wins !== undefined ? row.wins : '-';
+        var losses = row.losses !== undefined ? row.losses : '-';
+
+        html += '<tr>' +
+                  '<td style="font-weight: 700; color: var(--text-muted);">#' + (row.rank || (i + 1)) + '</td>' +
+                  '<td>' +
+                    '<div class="team-cell">' +
+                      '<img class="table-logo" src="' + logoUrl + '" alt="" onerror="this.style.display=\'none\'" />' +
+                      '<span>' + (row.team || 'Unknown') + '</span>' +
+                    '</div>' +
+                  '</td>' +
+                  '<td><span class="raa-badge ' + raaClass + '">' + raaFormatted + '</span></td>' +
+                  '<td>' + wins + '-' + losses + '</td>' +
+                  '<td>' + numFix(row.r_per_7) + '</td>' +
+                  '<td>' + numFix(row.ra_per_7) + '</td>' +
+                  '<td style="color: var(--text-muted);">' + sosFormatted + '</td>' +
+                '</tr>';
+      }
+
+      tbody.innerHTML = html;
+    }
+
+    function filterTable() {
+      var query = document.getElementById('searchInput').value.toLowerCase();
+      var filtered = rawRatings.filter(function(item) {
+        return (item.team || '').toLowerCase().includes(query);
+      });
+      renderTable(filtered);
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', loadRatings);
+    } else {
+      loadRatings();
+    }
+  </script>
+</body>
+</html>
