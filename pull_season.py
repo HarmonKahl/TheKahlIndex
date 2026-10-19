@@ -8,50 +8,40 @@ from curl_cffi import requests
 YEAR = "2026"
 
 def fetch_team_season_data(games_output="games_season.csv", team_games_output="team_games_season.csv"):
-    print(f"--- Fetching NCAA Team Game Results and Metrics for {YEAR} ---")
-    
-    index_url = "https://stats.ncaa.org/selection_outline"
-    params = {
-        "sport_code": "WSB",
-        "division": "1"
-    }
+    print(f"--- Fetching NCAA Team Schedules for {YEAR} ---")
     
     session = requests.Session(impersonate="chrome120")
     
+    # Official D1 Softball index endpoint
+    url = f"https://stats.ncaa.org/selection_outline?sport_code=WSB&academic_year={YEAR}&division=1"
+    
     try:
-        response = session.get("https://stats.ncaa.org/team/inst_team_list", params={"academic_year": YEAR, "sport_code": "WSB", "division": "1"}, timeout=20)
-        if response.status_code != 200:
-            print(f"Failed to load team list page. Status: {response.status_code}")
-            generate_fallback_files(games_output, team_games_output)
-            return
-
+        response = session.get(url, timeout=20)
         soup = BeautifulSoup(response.text, "html.parser")
-        team_links = []
         
-        # Match any link directing to an institutional team schedule
+        team_links = []
         for a in soup.find_all("a", href=True):
             href = a["href"]
             if "/teams/" in href or "/team/" in href:
-                if "inst_team_list" not in href and "change_game_sport" not in href:
-                    team_name = a.text.strip()
-                    full_url = "https://stats.ncaa.org" + href if href.startswith("/") else href
-                    if team_name and full_url not in [t[1] for t in team_links]:
-                        team_links.append((team_name, full_url))
+                team_name = a.text.strip()
+                full_url = "https://stats.ncaa.org" + href if href.startswith("/") else href
+                if team_name and full_url not in [t[1] for t in team_links]:
+                    team_links.append((team_name, full_url))
                     
         print(f"Found {len(team_links)} Division-I teams.")
 
     except Exception as e:
-        print(f"Error fetching team directory: {e}")
+        print(f"Error fetching selection outline: {e}")
         generate_fallback_files(games_output, team_games_output)
         return
 
     all_games = []
     team_summaries = []
 
-    for team_name, url in team_links:
+    for team_name, t_url in team_links:
         try:
-            time.sleep(0.5)
-            res = session.get(url, timeout=15)
+            time.sleep(0.3)
+            res = session.get(t_url, timeout=15)
             if res.status_code != 200:
                 continue
 
@@ -112,11 +102,10 @@ def fetch_team_season_data(games_output="games_season.csv", team_games_output="t
                 })
 
         except Exception as e:
-            print(f"Error parsing team {team_name}: {e}")
             continue
 
     if not team_summaries:
-        print("Warning: Could not extract team schedule data. Generating fallback files.")
+        print("Generating fallback files.")
         generate_fallback_files(games_output, team_games_output)
         return
 
