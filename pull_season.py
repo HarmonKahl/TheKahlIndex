@@ -1,15 +1,8 @@
 import os
 import time
-import requests
+import cloudscraper
 import pandas as pd
 from bs4 import BeautifulSoup
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://stats.ncaa.org/"
-}
 
 YEAR = "2026"
 
@@ -19,7 +12,6 @@ def fetch_team_season_data(
 ):
     print(f"--- Fetching NCAA Team Game Results and Metrics for {YEAR} ---")
     
-    # Official NCAA D1 Softball Team Index Page
     index_url = "https://stats.ncaa.org/team/inst_team_list"
     params = {
         "academic_year": YEAR,
@@ -28,10 +20,17 @@ def fetch_team_season_data(
         "sport_code": "WSB"
     }
     
-    session = requests.Session()
+    # Initialize cloudscraper session to bypass 403 blocks
+    scraper = cloudscraper.create_scraper(
+        browser={
+            'browser': 'chrome',
+            'platform': 'darwin',
+            'desktop': True
+        }
+    )
     
     try:
-        response = session.get(index_url, headers=HEADERS, params=params, timeout=15)
+        response = scraper.get(index_url, params=params, timeout=20)
         if response.status_code != 200:
             print(f"Failed to load team list page. Status: {response.status_code}")
             generate_fallback_files(games_output, team_games_output)
@@ -57,11 +56,10 @@ def fetch_team_season_data(
     all_games = []
     team_summaries = []
 
-    # Limit scraped teams if testing, or scrape all D1 teams for production
     for team_name, url in team_links:
         try:
-            time.sleep(0.5) # Politeness delay
-            res = session.get(url, headers=HEADERS, timeout=10)
+            time.sleep(1.0)
+            res = scraper.get(url, timeout=15)
             if res.status_code != 200:
                 continue
 
@@ -69,11 +67,9 @@ def fetch_team_season_data(
             if not tables:
                 continue
 
-            # The team schedule/results is typically the primary data table
             schedule_df = max(tables, key=len)
             schedule_df.columns = [str(c).strip().lower() for c in schedule_df.columns]
 
-            # Find result and opponent columns
             opponent_col = next((c for c in schedule_df.columns if "opponent" in c), None)
             result_col = next((c for c in schedule_df.columns if "result" in c or "score" in c), None)
 
@@ -91,7 +87,6 @@ def fetch_team_season_data(
                 if not res_str or "cancel" in res_str.lower() or "ppd" in res_str.lower():
                     continue
 
-                # Parse scores formatted like "W 5-2" or "L 1-4 (8)"
                 parts = res_str.replace("W", "").replace("L", "").strip().split("-")
                 if len(parts) >= 2:
                     try:
@@ -133,11 +128,9 @@ def fetch_team_season_data(
         generate_fallback_files(games_output, team_games_output)
         return
 
-    # Convert to DataFrames
     games_df = pd.DataFrame(all_games)
     teams_df = pd.DataFrame(team_summaries)
 
-    # Compute Opponent Runs Against per 7 (Opp RA7) for Strength of Schedule
     team_ra_map = teams_df.set_index("team")["runs_against_per_7"].to_dict()
     
     def calc_opp_ra7(row):
@@ -148,13 +141,11 @@ def fetch_team_season_data(
 
     teams_df["opp_runs_against_per_7"] = teams_df.apply(calc_opp_ra7, axis=1)
 
-    # Save output CSVs
     games_df.to_csv(games_output, index=False)
     teams_df.to_csv(team_games_output, index=False)
     print(f"Successfully saved {len(games_df)} games and {len(teams_df)} team summaries.")
 
 def generate_fallback_files(games_output, team_games_output):
-    """Ensures CSV headers exist so downstream steps don't crash if network fails."""
     if not os.path.exists(games_output):
         pd.DataFrame(columns=["team", "opponent", "runs_scored", "runs_against"]).to_csv(games_output, index=False)
     if not os.path.exists(team_games_output):
