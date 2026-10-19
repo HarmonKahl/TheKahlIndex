@@ -1,101 +1,62 @@
 import os
-import time
 import requests
 import pandas as pd
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://stats.ncaa.org/"
-}
+API_BASE = "https://ncaa-api.henrygd.me/stats/softball/d1/current/individual"
 
 def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
-    print("Fetching cumulative D1 player hitting stats...")
-    base_url = "https://stats.ncaa.org/rankings/national_ranking"
+    print("Fetching cumulative player stats from henrygd.me API...")
+    
+    # Category path for Batting / Hits / Total Bases
+    # Defaulting to national individual hitting stats
+    url = f"{API_BASE}/batting"
     
     all_players = []
-    session = requests.Session()
     
-    # Optional: Set current academic year dynamically or fixed
-    academic_year = "2026"
-    
-    for page in range(1, 11):
-        params = {
-            "academic_year": academic_year,
-            "sport_code": "WSB",
-            "division": "1",
-            "ranking_period": "101",
-            "page": str(page)
-        }
-        
+    # Paginate through player leaderboard pages
+    for page in range(1, 15):
         try:
-            print(f"Requesting page {page} of cumulative player stats...")
-            response = session.get(base_url, headers=HEADERS, params=params, timeout=15)
-            
+            response = requests.get(url, params={"page": page}, timeout=15)
             if response.status_code != 200:
-                print(f"Failed page {page} with status code: {response.status_code}")
-                break
-                
-            tables = pd.read_html(response.text)
-            if not tables:
-                print(f"No tables found on page {page}.")
-                break
-                
-            df = max(tables, key=len)
-            if df.empty or len(df) < 5:
-                break
-                
-            all_players.append(df)
-            time.sleep(1.5)
+                # Fall back to root hitting endpoint if category slug varies
+                if page == 1:
+                    response = requests.get(API_BASE, timeout=15)
+                else:
+                    break
             
+            data = response.json()
+            players = data.get("stats", []) or data.get("data", [])
+            
+            if not players:
+                break
+                
+            for p in players:
+                # Parse fields safely from API response
+                all_players.append({
+                    "player_name": p.get("player") or p.get("name") or p.get("playerName", ""),
+                    "team": p.get("team") or p.get("school", ""),
+                    "games_played": int(p.get("g") or p.get("gp") or 0),
+                    "ab": int(p.get("ab") or 0),
+                    "hits": int(p.get("h") or 0),
+                    "doubles": int(p.get("d2b") or p.get("2b") or 0),
+                    "triples": int(p.get("d3b") or p.get("3b") or 0),
+                    "hr": int(p.get("hr") or 0),
+                    "walks": int(p.get("bb") or 0),
+                    "strikeouts": int(p.get("so") or p.get("k") or 0)
+                })
+                
         except Exception as e:
             print(f"Error fetching page {page}: {e}")
             break
 
     if not all_players:
-        print("Warning: Could not fetch new cumulative player stats.")
-        # Ensure file exists so git add doesn't throw a fatal error
-        if not os.path.exists(output_path):
-            pd.DataFrame(columns=["player_name", "team", "games_played", "ab", "hits", "doubles", "triples", "hr", "walks", "strikeouts"]).to_csv(output_path, index=False)
+        print("Warning: No player data returned from API.")
         return
 
-    combined_df = pd.concat(all_players, ignore_index=True)
-    combined_df.columns = [str(col).strip().lower() for col in combined_df.columns]
-    
-    column_mapping = {
-        "player": "player_name",
-        "name": "player_name",
-        "team": "team",
-        "g": "games_played",
-        "gp": "games_played",
-        "ab": "ab",
-        "h": "hits",
-        "2b": "doubles",
-        "3b": "triples",
-        "hr": "hr",
-        "bb": "walks",
-        "so": "strikeouts",
-        "k": "strikeouts"
-    }
-    
-    combined_df.rename(columns=column_mapping, inplace=True)
-    
-    target_cols = ["games_played", "ab", "hits", "doubles", "triples", "hr", "walks", "strikeouts"]
-    for col in target_cols:
-        if col not in combined_df.columns:
-            combined_df[col] = 0
-        else:
-            combined_df[col] = pd.to_numeric(combined_df[col], errors="coerce").fillna(0)
-
-    if "player_name" in combined_df.columns:
-        combined_df["player_name"] = combined_df["player_name"].astype(str).str.strip()
-    if "team" in combined_df.columns:
-        combined_df["team"] = combined_df["team"].astype(str).str.strip()
-
-    combined_df.drop_duplicates(subset=["player_name", "team"], inplace=True)
-    combined_df.to_csv(output_path, index=False)
-    print(f"Successfully saved {len(combined_df)} player cumulative stat records to {output_path}.")
+    df = pd.DataFrame(all_players)
+    df.drop_duplicates(subset=["player_name", "team"], inplace=True)
+    df.to_csv(output_path, index=False)
+    print(f"Successfully saved {len(df)} cumulative player records to {output_path}.")
 
 if __name__ == "__main__":
     fetch_cumulative_stats()
