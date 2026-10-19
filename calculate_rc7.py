@@ -2,11 +2,18 @@ import os
 import json
 import pandas as pd
 
-def calculate_rc7(input_path="player_games_season.csv", output_path="players.json", ab_per_game_threshold=1.5):
+def calculate_rc7(
+    input_path="player_games_season.csv", 
+    all_output_path="players.json", 
+    qualified_output_path="qualified_players.json",
+    min_ab_cutoff=10, 
+    ab_per_game_threshold=1.5
+):
     if not os.path.exists(input_path) or os.stat(input_path).st_size == 0:
-        print(f"Warning: {input_path} not found or empty. Writing empty array to {output_path}.")
-        with open(output_path, "w") as f:
-            json.dump([], f)
+        print(f"Warning: {input_path} not found or empty. Writing empty arrays.")
+        for path in (all_output_path, qualified_output_path):
+            with open(path, "w") as f:
+                json.dump([], f)
         return
 
     print(f"Loading player game data from {input_path}...")
@@ -24,7 +31,7 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
     df["full_name"] = df["first_name"].fillna("").astype(str).str.strip() + " " + df["last_name"].fillna("").astype(str).str.strip()
     df["full_name"] = df["full_name"].str.strip()
 
-    # 1. Calculate max games played per team to determine team season game counts
+    # 1. Calculate total team games played to evaluate qualified status
     team_game_counts = df.groupby("team")["game_id"].nunique().to_dict()
 
     # 2. Aggregate stats per player across all games
@@ -46,10 +53,10 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
         "strikeouts": "SO"
     })
 
-    # Include everyone who has logged at least 1 At-Bat
-    grouped = grouped[grouped["AB"] >= 1].copy()
+    # --- HARD CUTOFF: Eliminate anyone with fewer than 10 ABs ---
+    grouped = grouped[grouped["AB"] >= min_ab_cutoff].copy()
 
-    players_list = []
+    all_players = []
     for _, row in grouped.iterrows():
         ab = row["AB"]
         h = row["H"]
@@ -57,7 +64,7 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
         g = row["G"]
         team = row["team"]
 
-        # Determine qualification based on 1.5 AB per team game
+        # Qualification threshold: 1.5 ABs per team game
         team_total_games = team_game_counts.get(team, g)
         min_required_ab = team_total_games * ab_per_game_threshold
         is_qualified = bool(ab >= min_required_ab)
@@ -75,7 +82,7 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
         outs = (ab - h)
         rc7 = (rc / outs) * 21 if outs > 0 else 0.0
 
-        players_list.append({
+        all_players.append({
             "name": row["full_name"],
             "team": team,
             "games_played": int(g),
@@ -91,15 +98,22 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
             "rc7": round(rc7, 2)
         })
 
-    # Sort players by RC7 descending
-    players_list.sort(key=lambda x: x["rc7"], reverse=True)
+    # Sort all players by RC7 descending
+    all_players.sort(key=lambda x: x["rc7"], reverse=True)
 
-    with open(output_path, "w") as f:
-        json.dump(players_list, f, indent=2)
+    # Filter out qualified subset
+    qualified_players = [p for p in all_players if p["qualified"]]
 
-    total_players = len(players_list)
-    qualified_players = sum(1 for p in players_list if p["qualified"])
-    print(f"Saved {total_players} total hitters to {output_path} ({qualified_players} qualified @ >= {ab_per_game_threshold} AB/game).")
+    # Save all players JSON (>= 10 ABs)
+    with open(all_output_path, "w") as f:
+        json.dump(all_players, f, indent=2)
+
+    # Save qualified players JSON (>= 10 ABs AND >= 1.5 AB/team-game)
+    with open(qualified_output_path, "w") as f:
+        json.dump(qualified_players, f, indent=2)
+
+    print(f"Saved {len(all_players)} total players (>= {min_ab_cutoff} ABs) to {all_output_path}.")
+    print(f"Saved {len(qualified_players)} qualified players (>= {ab_per_game_threshold} AB/game) to {qualified_output_path}.")
 
 if __name__ == "__main__":
     calculate_rc7()
