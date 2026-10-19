@@ -117,58 +117,91 @@ def parse_innings_pitched(ip_str):
     return whole + thirds
 
 
-def fetch_innings_for_game(game_id, debug=False):
+def fetch_boxscore_data(game_id, debug=False):
+    """Fetches innings pitched AND individual player hitting box scores."""
     if not game_id:
-        return None, None
+        return (None, None), []
     try:
         data = _get_json(BOXSCORE_URL.format(game_id=game_id))
     except Exception as e:
         if debug:
             print(f"  boxscore fetch failed for game {game_id}: {e}")
-        return None, None
+        return (None, None), []
 
     teams_meta = data.get("teams", [])
-    home_id = next(
-        (t["teamId"] for t in teams_meta if t.get("isHome")), None
-    )
-    away_id = next(
-        (t["teamId"] for t in teams_meta if t.get("isHome") is False), None
-    )
-    if home_id is None or away_id is None:
-        return None, None
-    home_id, away_id = str(home_id), str(away_id)
+    home_id = next((t["teamId"] for t in teams_meta if t.get("isHome")), None)
+    away_id = next((t["teamId"] for t in teams_meta if t.get("isHome") is False), None)
+    
+    team_names = {
+        str(t.get("teamId")): t.get("shortName", t.get("name", "Unknown"))
+        for t in teams_meta
+    }
+
+    home_id = str(home_id) if home_id is not None else None
+    away_id = str(away_id) if away_id is not None else None
 
     ip_by_team = {}
+    player_rows = []
+
     for tb in data.get("teamBoxscore", []):
         tid = str(tb.get("teamId"))
+        team_name = team_names.get(tid, "Unknown")
+        
+        # 1. Innings Pitched
         pitcher_totals = (tb.get("teamStats") or {}).get("pitcherTotals") or {}
         ip_by_team[tid] = parse_innings_pitched(
             pitcher_totals.get("inningsPitched")
         )
 
-    home_ip = ip_by_team.get(home_id)
-    away_ip = ip_by_team.get(away_id)
-    if home_ip is None or away_ip is None:
-        return None, None
-    return away_ip, home_ip
+        # 2. Extract Individual Player Hitting Stats
+        for player in tb.get("playerStats", []):
+            stats = player.get("stats", {})
+            # Ensure player had at least 1 AB or BB (i.e. made a plate appearance)
+            try:
+                ab = int(stats.get("ab", 0) or 0)
+                bb = int(stats.get("bb", 0) or 0)
+                if ab == 0 and bb == 0:
+                    continue
+                
+                player_rows.append({
+                    "game_id": game_id,
+                    "player_name": player.get("name", "Unknown"),
+                    "team": team_name,
+                    "AB": ab,
+                    "H": int(stats.get("hits", stats.get("h", 0)) or 0),
+                    "BB": bb,
+                    "2B": int(stats.get("d", stats.get("2b", 0)) or 0),
+                    "3B": int(stats.get("t", stats.get("3b", 0)) or 0),
+                    "HR": int(stats.get("hr", 0) or 0)
+                })
+            except (ValueError, TypeError):
+                continue
+
+    away_ip = ip_by_team.get(away_id) if away_id else None
+    home_ip = ip_by_team.get(home_id) if home_id else None
+
+    return (away_ip, home_ip), player_rows
 
 
-def fetch_innings_concurrent(game_ids, debug=False, max_workers=5):
-    results = {}
+def fetch_boxscores_concurrent(game_ids, debug=False, max_workers=5):
+    results_inn = {}
+    all_player_rows = []
     with ThreadPoolExecutor(max_workers=max_workers) as ex:
         futures = {
-            ex.submit(fetch_innings_for_game, gid, debug): gid
+            ex.submit(fetch_boxscore_data, gid, debug): gid
             for gid in game_ids
         }
         for fut in as_completed(futures):
             gid = futures[fut]
             try:
-                results[gid] = fut.result()
+                inn, players = fut.result()
+                results_inn[gid] = inn
+                all_player_rows.extend(players)
             except Exception as e:
                 if debug:
                     print(f"  concurrent fetch failed for game {gid}: {e}")
-                results[gid] = (None, None)
-    return results
+                results_inn[gid] = (None, None)
+    return results_inn, all_player_rows
 
 
 def pull_day(
@@ -229,14 +262,12 @@ def pull_day(
             }
             seen_order.append(key)
 
-        if debug:
-            print(f"    page {page}: {len(raw_games)} game(s)")
-
     games = [seen[k] for k in seen_order]
+    day_player_rows = []
 
     if fetch_innings:
         game_ids = [row["game_id"] for row in games if row["game_id"]]
-        inn_map = fetch_innings_concurrent(
+        inn_map, day_player_rows = fetch_boxscores_concurrent(
             game_ids, debug=debug, max_workers=innings_workers
         )
         for row in games:
@@ -244,7 +275,7 @@ def pull_day(
                 row["game_id"], (None, None)
             )
 
-    return games
+    return games, day_player_rows
 
 
 def games_to_team_rows(games):
@@ -336,6 +367,7 @@ def pull_season(
     os.makedirs(out_dir, exist_ok=True)
     games_path = os.path.join(out_dir, "games_season.csv")
     team_path = os.path.join(out_dir, "team_games_season.csv")
+    player_path = os.path.join(out_dir, "player_boxscores_2026.csv")
     progress_path = os.path.join(out_dir, "_completed_dates.txt")
 
     completed = set()
@@ -343,79 +375,4 @@ def pull_season(
         with open(progress_path) as f:
             completed = set(line.strip() for line in f if line.strip())
 
-    if not os.path.exists(team_path) or os.stat(team_path).st_size == 0:
-        completed = set()
-
-    all_games = (
-        pd.read_csv(games_path).to_dict("records")
-        if os.path.exists(games_path) and os.stat(games_path).st_size > 0
-        else []
-    )
-    all_team_rows = (
-        pd.read_csv(team_path).to_dict("records")
-        if os.path.exists(team_path) and os.stat(team_path).st_size > 0
-        else []
-    )
-
-    dates = list(_daterange(start, end))
-
-    failed_dates = []
-    for i, d in enumerate(dates, 1):
-        date_str = d.isoformat()
-        if date_str in completed:
-            print(f"Skipping {date_str} (already logged in _completed_dates.txt)")
-            continue
-
-        day_games, attempt = None, 0
-        while attempt <= max_retries:
-            try:
-                day_games = pull_day(
-                    d.year,
-                    d.month,
-                    d.day,
-                    fetch_innings=fetch_innings,
-                    debug=debug,
-                )
-                break
-            except Exception as e:
-                attempt += 1
-                time.sleep(2 * attempt)
-
-        if day_games is None:
-            failed_dates.append(date_str)
-            continue
-
-        all_games.extend(day_games)
-        all_team_rows.extend(games_to_team_rows(day_games))
-        completed.add(date_str)
-
-        pd.DataFrame(all_games).to_csv(games_path, index=False)
-        pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
-        with open(progress_path, "w") as f:
-            f.write("\n".join(sorted(completed)))
-
-        print(
-            f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games "
-            f"(running total: {len(all_games)} games, {len(all_team_rows)} team-rows)"
-        )
-
-    return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
-
-
-if __name__ == "__main__":
-    if len(sys.argv) >= 3:
-        # Range mode: explicit start and end dates passed (e.g. python pull_season.py 2026-02-05 2026-06-04)
-        start_date = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
-        end_date = datetime.strptime(sys.argv[2], "%Y-%m-%d").date()
-    elif len(sys.argv) == 2:
-        # Single-day mode: explicit single date passed (e.g. python pull_season.py 2026-03-15)
-        start_date = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
-        end_date = start_date
-    else:
-        # Daily cron mode: default to pulling yesterday and today to ensure late west coast boxscores are included
-        today = date.today()
-        start_date = today - timedelta(days=1)
-        end_date = today
-
-    print(f"Running scraper for date range: {start_date} to {end_date}")
-    pull_season(start=start_date, end=end_date, out_dir=".")
+    if not os.
