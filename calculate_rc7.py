@@ -7,6 +7,7 @@ def calculate_rc7(
     all_output_path="players.json", 
     qualified_output_path="qualified_players.json",
     min_ab_cutoff=10, 
+    min_qualified_ab=40,
     ab_per_game_threshold=1.5
 ):
     if not os.path.exists(input_path) or os.stat(input_path).st_size == 0:
@@ -64,10 +65,10 @@ def calculate_rc7(
         g = row["G"]
         team = row["team"]
 
-        # Qualification threshold: 1.5 ABs per team game
+        # Qualification check: must meet 1.5 AB/game AND hit at least 40 total ABs
         team_total_games = team_game_counts.get(team, g)
         min_required_ab = team_total_games * ab_per_game_threshold
-        is_qualified = bool(ab >= min_required_ab)
+        is_qualified = bool(ab >= min_required_ab and ab >= min_qualified_ab)
 
         # Basic Runs Created (RC)
         if (ab + bb) > 0:
@@ -108,12 +109,12 @@ def calculate_rc7(
     with open(all_output_path, "w") as f:
         json.dump(all_players, f, indent=2)
 
-    # Save qualified players JSON (>= 10 ABs AND >= 1.5 AB/team-game)
+    # Save qualified players JSON (>= 10 ABs, >= 1.5 AB/team-game, AND >= 40 total ABs)
     with open(qualified_output_path, "w") as f:
         json.dump(qualified_players, f, indent=2)
 
     print(f"Saved {len(all_players)} total players (>= {min_ab_cutoff} ABs) to {all_output_path}.")
-    print(f"Saved {len(qualified_players)} qualified players (>= {ab_per_game_threshold} AB/game) to {qualified_output_path}.")
+    print(f"Saved {len(qualified_players)} qualified players (>= {ab_per_game_threshold} AB/game AND >= {min_qualified_ab} ABs) to {qualified_output_path}.")
 
 if __name__ == "__main__":
     calculate_rc7()
