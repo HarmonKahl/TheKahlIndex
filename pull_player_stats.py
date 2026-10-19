@@ -2,7 +2,7 @@
 pull_player_stats.py
 
 Pulls per-PLAYER batting and fielding stats for D-I softball games using the NCAA API.
-Includes automatic retries and backoff for HTTP 428 (Precondition Required) rate limits.
+Includes automatic retries and backoff for HTTP 428 rate limits and HTTP 502/503 server errors.
 """
 
 import os
@@ -19,8 +19,8 @@ import requests
 SCOREBOARD_URL = "https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
 BOXSCORE_URL = "https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
 
-# Enforce a safer rate limit (approx 2.5 requests per second)
-REQUESTS_PER_SECOND_LIMIT = 2.5
+# Enforce a conservative rate limit (approx 2 requests per second)
+REQUESTS_PER_SECOND_LIMIT = 2.0
 _MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
 
 
@@ -46,28 +46,33 @@ _session.mount("http://", _adapter)
 
 
 def _get_json_with_retry(url, max_retries=5):
-    """Fetches JSON with automatic retry on 428 Precondition Required / rate limit errors."""
+    """
+    Fetches JSON with automatic exponential backoff for 428 (rate limit)
+    and 500/502/503/504 (transient server errors).
+    """
+    RETRYABLE_CODES = {428, 500, 502, 503, 504}
+
     for attempt in range(max_retries):
         _limiter.wait()
         try:
             resp = _session.get(url, timeout=15)
             
-            # If hit by HTTP 428 rate limiting, sleep and retry
-            if resp.status_code == 428:
-                time.sleep(1.5 * (attempt + 1))
+            if resp.status_code in RETRYABLE_CODES:
+                time.sleep(2.0 * (attempt + 1))
                 continue
                 
             resp.raise_for_status()
             return resp.json()
+            
         except requests.exceptions.HTTPError as e:
-            if resp.status_code == 428 and attempt < max_retries - 1:
-                time.sleep(1.5 * (attempt + 1))
+            if resp.status_code in RETRYABLE_CODES and attempt < max_retries - 1:
+                time.sleep(2.0 * (attempt + 1))
                 continue
             raise e
-        except Exception as e:
+        except (requests.exceptions.RequestException, Exception) as e:
             if attempt == max_retries - 1:
                 raise e
-            time.sleep(1.0 * (attempt + 1))
+            time.sleep(2.0 * (attempt + 1))
             
     raise requests.exceptions.HTTPError(f"Failed after {max_retries} retries for URL: {url}")
 
@@ -170,7 +175,6 @@ def fetch_player_rows_for_game(game_id, date_str):
 
 def fetch_player_rows_concurrent(game_ids, date_str, max_workers=2):
     all_rows = []
-    # Lower workers to 2 to eliminate HTTP 428 responses
     with ThreadPoolExecutor(max_workers=max_workers) as ex:
         futures = {ex.submit(fetch_player_rows_for_game, gid, date_str): gid for gid in game_ids}
         for fut in as_completed(futures):
