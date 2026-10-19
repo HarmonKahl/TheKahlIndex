@@ -1,21 +1,13 @@
 import os
 import time
-import cloudscraper
 import pandas as pd
+from curl_cffi import requests
 
 def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
-    print("Fetching cumulative player stats via cloudscraper...")
+    print("Fetching cumulative player stats via curl_cffi Chrome impersonation...")
     
     url = "https://stats.ncaa.org/rankings/national_ranking"
-    
-    # Initialize cloudscraper session
-    scraper = cloudscraper.create_scraper(
-        browser={
-            'browser': 'chrome',
-            'platform': 'darwin',
-            'desktop': True
-        }
-    )
+    session = requests.Session(impersonate="chrome120")
     
     all_players = []
     
@@ -29,7 +21,7 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
         }
         
         try:
-            response = scraper.get(url, params=params, timeout=20)
+            response = session.get(url, params=params, timeout=20)
             if response.status_code != 200:
                 print(f"Page {page} returned status code: {response.status_code}")
                 break
