@@ -25,7 +25,7 @@ def calculate_rc7():
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
 
-    # Aggregate by player across full season
+    # Aggregate stats by player for the season
     player_stats = df.groupby(['player_name', 'team']).agg({
         'game_id': 'nunique',
         'AB': 'sum',
@@ -38,7 +38,7 @@ def calculate_rc7():
 
     player_stats.rename(columns={'game_id': 'games_played'}, inplace=True)
 
-    # Total Bases, PA, Outs
+    # Calculate Total Bases, PA, and Outs
     player_stats['TB'] = (
         player_stats['H'] + 
         player_stats['2B'] + 
@@ -48,7 +48,7 @@ def calculate_rc7():
     player_stats['PA'] = player_stats['AB'] + player_stats['BB']
     player_stats['Outs'] = player_stats['AB'] - player_stats['H']
 
-    # Classic RC & Raw RC7 per 21 outs
+    # Classic Bill James RC & Raw RC7
     player_stats['RC'] = player_stats.apply(
         lambda r: ((r['H'] + r['BB']) * r['TB']) / r['PA'] if r['PA'] > 0 else 0, axis=1
     )
@@ -56,10 +56,10 @@ def calculate_rc7():
         lambda r: (r['RC'] / r['Outs']) * 21 if r['Outs'] > 0 else 0, axis=1
     )
 
-    # Minimum 15 PA filter for season qualification
+    # Filter qualification threshold (e.g., 15 PA minimum)
     qualified_players = player_stats[player_stats['PA'] >= 15].copy()
 
-    # Neutral OPAF baseline
+    # OPAF Baseline setup
     qualified_players['OPAF'] = 1.00
     qualified_players['RC7_adj'] = (qualified_players['RC7_raw'] * qualified_players['OPAF']).round(2)
     qualified_players['RC7_raw'] = qualified_players['RC7_raw'].round(2)
