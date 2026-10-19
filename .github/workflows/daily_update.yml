@@ -2,8 +2,8 @@ name: Update Kahl Index Data
 
 on:
   schedule:
-    - cron: '0 6 * * *' # Daily at 6 AM UTC
-  workflow_dispatch: # Manual trigger
+    - cron: '0 6 * * *' # Runs daily at 6 AM UTC
+  workflow_dispatch: # Allows manual triggers from GitHub Actions tab
 
 jobs:
   build-and-deploy:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # --- 1. Python Environment Setup ---
+      # --- 1. Python Setup ---
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -27,19 +27,19 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas requests
 
-      # --- 2. Live Scraper & Metrics Pipeline ---
+      # --- 2. Data Extraction & Analytics Pipeline ---
       - name: Run Live NCAA Python Scraper
-        run: python pull_season.py
+        run: python pull_season.py 2026-02-05 2026-06-10
 
       - name: Calculate Player RC7 Metrics
         run: python calculate_rc7.py
 
-      # --- 3. Commit Generated JSON Data ---
+      # --- 3. Commit Generated Files back to Repository ---
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add ratings.json bracketology.json players.json player_boxscores_2026.csv games_season.csv team_games_season.csv _completed_dates.txt || true
           git status
-          git commit -m "Auto-update Kahl Index data" || exit 0
+          git commit -m "Auto-update Kahl Index 2026 data" || exit 0
           git push origin main
