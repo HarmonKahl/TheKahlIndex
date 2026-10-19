@@ -39,7 +39,7 @@ jobs:
         run: |
           install.packages(c("tidyverse", "jsonlite", "devtools"))
           devtools::install_github("sportsdataverse/softballR")
-        shell: Rscript ${{ runner.os }}
+        shell: Rscript
 
       - name: Run Softball R Script
         run: Rscript calculate_rc7.R
