@@ -1,15 +1,12 @@
 import os
 import time
-import cloudscraper
 import pandas as pd
 from bs4 import BeautifulSoup
+from curl_cffi import requests
 
 YEAR = "2026"
 
-def fetch_team_season_data(
-    games_output="games_season.csv", 
-    team_games_output="team_games_season.csv"
-):
+def fetch_team_season_data(games_output="games_season.csv", team_games_output="team_games_season.csv"):
     print(f"--- Fetching NCAA Team Game Results and Metrics for {YEAR} ---")
     
     index_url = "https://stats.ncaa.org/team/inst_team_list"
@@ -20,17 +17,10 @@ def fetch_team_season_data(
         "sport_code": "WSB"
     }
     
-    # Initialize cloudscraper session to bypass 403 blocks
-    scraper = cloudscraper.create_scraper(
-        browser={
-            'browser': 'chrome',
-            'platform': 'darwin',
-            'desktop': True
-        }
-    )
+    session = requests.Session(impersonate="chrome120")
     
     try:
-        response = scraper.get(index_url, params=params, timeout=20)
+        response = session.get(index_url, params=params, timeout=20)
         if response.status_code != 200:
             print(f"Failed to load team list page. Status: {response.status_code}")
             generate_fallback_files(games_output, team_games_output)
@@ -59,7 +49,7 @@ def fetch_team_season_data(
     for team_name, url in team_links:
         try:
             time.sleep(1.0)
-            res = scraper.get(url, timeout=15)
+            res = session.get(url, timeout=15)
             if res.status_code != 200:
                 continue
 
