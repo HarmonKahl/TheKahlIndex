@@ -2,40 +2,46 @@ import os
 import time
 import requests
 import pandas as pd
+from datetime import datetime, timedelta
 
 BASE_URL = "https://ncaa-api.henrygd.me"
+START_DATE = datetime(2026, 2, 5)
+END_DATE = datetime(2026, 6, 10)
 
 def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
-    print("Fetching game boxscores from henrygd.me API to aggregate cumulative stats...")
+    print(f"Fetching game boxscores ({START_DATE.strftime('%Y-%m-%d')} to {END_DATE.strftime('%Y-%m-%d')})...")
     
-    # 1. Fetch recent game IDs from scoreboard
-    scoreboard_url = f"{BASE_URL}/scoreboard/softball/d1"
     game_ids = []
+    current_date = START_DATE
     
-    try:
-        res = requests.get(scoreboard_url, timeout=15)
-        if res.status_code == 200:
-            data = res.json()
-            games = data.get("games", []) or data.get("scoreboard", [])
-            for g in games:
-                gid = g.get("game", {}).get("url", "") or g.get("id", "") or g.get("gameId", "")
-                # Format game ID from URL path if needed
-                if "/" in str(gid):
-                    gid = str(gid).strip("/").split("/")[-1]
-                if gid:
-                    game_ids.append(gid)
-    except Exception as e:
-        print(f"Error fetching game IDs from scoreboard: {e}")
+    while current_date <= END_DATE:
+        date_str = current_date.strftime("%Y/%m/%d")
+        url = f"{BASE_URL}/scoreboard/softball/d1/{date_str}"
+        try:
+            res = requests.get(url, timeout=10)
+            if res.status_code == 200:
+                data = res.json()
+                games = data.get("games", []) or data.get("scoreboard", [])
+                for g in games:
+                    game_info = g.get("game", g) if isinstance(g, dict) else {}
+                    gid = game_info.get("url", "") or game_info.get("id", "")
+                    if "/" in str(gid):
+                        gid = str(gid).strip("/").split("/")[-1]
+                    if gid and gid not in game_ids:
+                        game_ids.append(gid)
+        except Exception:
+            pass
 
-    print(f"Found {len(game_ids)} game box scores to parse.")
+        current_date += timedelta(days=1)
+
+    print(f"Found {len(game_ids)} game box scores across the date range. Aggregating stats...")
     
     player_totals = {}
 
-    # 2. Iterate through box scores and extract hitting stats
-    for gid in game_ids[:100]:  # Limit for fast execution
+    for gid in game_ids:
         box_url = f"{BASE_URL}/game/{gid}/boxscore"
         try:
-            time.sleep(0.2)
+            time.sleep(0.1)
             box_res = requests.get(box_url, timeout=10)
             if box_res.status_code != 200:
                 continue
@@ -83,7 +89,6 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
         except Exception:
             continue
 
-    # Build output CSV
     rows = []
     for (pname, team), s in player_totals.items():
         rows.append({
