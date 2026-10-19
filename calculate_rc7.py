@@ -2,7 +2,7 @@ import os
 import json
 import pandas as pd
 
-def calculate_rc7(input_path="player_games_season.csv", output_path="players.json", min_ab=20):
+def calculate_rc7(input_path="player_games_season.csv", output_path="players.json", ab_per_game_threshold=1.5):
     if not os.path.exists(input_path) or os.stat(input_path).st_size == 0:
         print(f"Warning: {input_path} not found or empty. Writing empty array to {output_path}.")
         with open(output_path, "w") as f:
@@ -24,9 +24,12 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
     df["full_name"] = df["first_name"].fillna("").astype(str).str.strip() + " " + df["last_name"].fillna("").astype(str).str.strip()
     df["full_name"] = df["full_name"].str.strip()
 
-    # Aggregate stats per player across all games
+    # 1. Calculate max games played per team to determine team season game counts
+    team_game_counts = df.groupby("team")["game_id"].nunique().to_dict()
+
+    # 2. Aggregate stats per player across all games
     grouped = df.groupby(["full_name", "team"], as_index=False).agg({
-        "game_id": "count",        # Games played
+        "game_id": "nunique",      # Unique games player appeared in
         "at_bats": "sum",
         "hits": "sum",
         "runs_scored": "sum",
@@ -43,17 +46,21 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
         "strikeouts": "SO"
     })
 
-    # --- FILTER OUT PLAYERS WITH LESS THAN 20 ABs ---
-    grouped = grouped[grouped["AB"] >= min_ab].copy()
-    print(f"Filtered dataset to {len(grouped)} players with at least {min_ab} ABs.")
+    # Include everyone who has logged at least 1 At-Bat
+    grouped = grouped[grouped["AB"] >= 1].copy()
 
-    # --- Calculate RC7 / Adjusted Runs Created ---
     players_list = []
     for _, row in grouped.iterrows():
         ab = row["AB"]
         h = row["H"]
         bb = row["BB"]
         g = row["G"]
+        team = row["team"]
+
+        # Determine qualification based on 1.5 AB per team game
+        team_total_games = team_game_counts.get(team, g)
+        min_required_ab = team_total_games * ab_per_game_threshold
+        is_qualified = bool(ab >= min_required_ab)
 
         # Basic Runs Created (RC)
         if (ab + bb) > 0:
@@ -70,8 +77,10 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
 
         players_list.append({
             "name": row["full_name"],
-            "team": row["team"],
-            "games": int(g),
+            "team": team,
+            "games_played": int(g),
+            "team_games": int(team_total_games),
+            "qualified": is_qualified,
             "ab": int(ab),
             "hits": int(h),
             "runs": int(row["R"]),
@@ -88,7 +97,9 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
     with open(output_path, "w") as f:
         json.dump(players_list, f, indent=2)
 
-    print(f"Successfully calculated RC7 for {len(players_list)} qualified players and saved to {output_path}!")
+    total_players = len(players_list)
+    qualified_players = sum(1 for p in players_list if p["qualified"])
+    print(f"Saved {total_players} total hitters to {output_path} ({qualified_players} qualified @ >= {ab_per_game_threshold} AB/game).")
 
 if __name__ == "__main__":
     calculate_rc7()
