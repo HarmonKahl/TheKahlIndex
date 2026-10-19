@@ -1,20 +1,21 @@
 import os
 import time
-import requests
+import cloudscraper
 import pandas as pd
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Language": "en-US,en;q=0.9",
-    "Referer": "https://stats.ncaa.org/"
-}
-
 def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
-    print("Fetching cumulative player stats directly from stats.ncaa.org...")
+    print("Fetching cumulative player stats via cloudscraper...")
     
     url = "https://stats.ncaa.org/rankings/national_ranking"
-    session = requests.Session()
+    
+    # Initialize cloudscraper session
+    scraper = cloudscraper.create_scraper(
+        browser={
+            'browser': 'chrome',
+            'platform': 'darwin',
+            'desktop': True
+        }
+    )
     
     all_players = []
     
@@ -28,7 +29,7 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
         }
         
         try:
-            response = session.get(url, headers=HEADERS, params=params, timeout=15)
+            response = scraper.get(url, params=params, timeout=20)
             if response.status_code != 200:
                 print(f"Page {page} returned status code: {response.status_code}")
                 break
@@ -49,7 +50,7 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
             break
 
     if not all_players:
-        print("Warning: Could not pull live HTML tables. Creating baseline output structure.")
+        print("Warning: Could not pull cumulative stats. Creating baseline file.")
         if not os.path.exists(output_path):
             pd.DataFrame(columns=[
                 "player_name", "team", "games_played", "ab", "hits", 
