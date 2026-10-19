@@ -3,11 +3,12 @@ name: Update Kahl Index Data
 on:
   schedule:
     - cron: '0 6 * * *' # Daily at 6 AM UTC
-  workflow_dispatch:
+  workflow_dispatch: # Manual trigger
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     permissions:
       contents: write
 
@@ -15,40 +16,30 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # --- 1. Python Environment Setup ---
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      - name: Set up R
-        uses: r-lib/actions/setup-r@v2
-
-      - name: Install R Dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          packages: |
-            any::tidyverse
-            any::jsonlite
-
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests pandas beautifulsoup4
+          pip install pandas requests
 
-      # 1. Python pulls live daily data -> outputs fresh CSV
+      # --- 2. Live Scraper & Metrics Pipeline ---
       - name: Run Live NCAA Python Scraper
         run: python pull_season.py
 
-      # 2. R reads the fresh CSV -> outputs players.json
-      - name: Run Sabermetrics Calculation
-        run: Rscript calculate_rc7.R
+      - name: Calculate Player RC7 Metrics
+        run: python calculate_rc7.py
 
-      # 3. Push updated JSON to repo
+      # --- 3. Commit Generated JSON Data ---
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add ratings.json bracketology.json players.json || true
+          git add ratings.json bracketology.json players.json player_boxscores_2026.csv games_season.csv team_games_season.csv _completed_dates.txt || true
           git status
           git commit -m "Auto-update Kahl Index data" || exit 0
           git push origin main
