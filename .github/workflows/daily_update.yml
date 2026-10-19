@@ -22,8 +22,8 @@ jobs:
 
       - name: Install R Dependencies
         run: |
-          Rscript -e 'install.packages(c("tidyverse", "jsonlite", "devtools"))'
-          Rscript -e 'devtools::install_github("sportsdataverse/softballR")'
+          Rscript -e 'install.packages(c("tidyverse", "jsonlite", "remotes"))'
+          Rscript -e 'remotes::install_github("sportsdataverse/softballR")'
 
       - name: Run Softball R Script
         run: Rscript calculate_rc7.R
