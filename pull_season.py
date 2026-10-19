@@ -1,76 +1,63 @@
 import os
 import requests
 import pandas as pd
+from datetime import datetime, timedelta
 
-YEAR = "2026"
 BASE_URL = "https://ncaa-api.henrygd.me"
+START_DATE = datetime(2026, 2, 5)
+END_DATE = datetime(2026, 6, 10)
 
-def fetch_team_season_data(
-    games_output="games_season.csv", 
-    team_games_output="team_games_season.csv"
-):
-    print(f"--- Fetching NCAA Game Results via henrygd.me API ({YEAR}) ---")
-    
-    # Target scoreboard and game schedule endpoints
-    url = f"{BASE_URL}/scoreboard/softball/d1"
+def fetch_team_season_data(games_output="games_season.csv", team_games_output="team_games_season.csv"):
+    print(f"--- Fetching NCAA Game Results ({START_DATE.strftime('%Y-%m-%d')} to {END_DATE.strftime('%Y-%m-%d')}) ---")
     
     all_games = []
-    
-    try:
-        response = requests.get(url, timeout=15)
-        if response.status_code == 200:
-            data = response.json()
-            games_list = data.get("games", []) or data.get("scoreboard", [])
-            
-            for g in games_list:
-                game_info = g.get("game", g)
-                home_team = game_info.get("home", {}).get("names", {}).get("short", "") or game_info.get("homeTeam", "")
-                away_team = game_info.get("away", {}).get("names", {}).get("short", "") or game_info.get("awayTeam", "")
-                
-                home_score = game_info.get("home", {}).get("score", None)
-                away_score = game_info.get("away", {}).get("score", None)
-                
-                if home_score is not None and away_score is not None and home_team and away_team:
-                    try:
-                        hs = int(home_score)
-                        aws = int(away_score)
-                        
-                        # Add home perspective
-                        all_games.append({
-                            "team": home_team,
-                            "opponent": away_team,
-                            "runs_scored": hs,
-                            "runs_against": aws
-                        })
-                        # Add away perspective
-                        all_games.append({
-                            "team": away_team,
-                            "opponent": home_team,
-                            "runs_scored": aws,
-                            "runs_against": hs
-                        })
-                    except ValueError:
-                        continue
-        else:
-            print(f"Scoreboard endpoint returned status: {response.status_code}")
+    current_date = START_DATE
 
-    except Exception as e:
-        print(f"Error requesting henrygd.me scoreboard API: {e}")
+    while current_date <= END_DATE:
+        date_str = current_date.strftime("%Y/%m/%d")
+        url = f"{BASE_URL}/scoreboard/softball/d1/{date_str}"
+        
+        try:
+            response = requests.get(url, timeout=10)
+            if response.status_code == 200:
+                data = response.json()
+                games_list = data.get("games", []) or data.get("scoreboard", [])
+                
+                for g in games_list:
+                    game_info = g.get("game", g) if isinstance(g, dict) else {}
+                    
+                    home_team = game_info.get("home", {}).get("names", {}).get("short", "")
+                    away_team = game_info.get("away", {}).get("names", {}).get("short", "")
+                    
+                    home_score = game_info.get("home", {}).get("score", None)
+                    away_score = game_info.get("away", {}).get("score", None)
+                    
+                    if home_score is not None and away_score is not None and home_team and away_team:
+                        try:
+                            hs = int(home_score)
+                            aws = int(away_score)
+                            
+                            all_games.append({"team": home_team, "opponent": away_team, "runs_scored": hs, "runs_against": aws})
+                            all_games.append({"team": away_team, "opponent": home_team, "runs_scored": aws, "runs_against": hs})
+                        except ValueError:
+                            continue
+        except Exception:
+            pass
+
+        current_date += timedelta(days=1)
 
     if not all_games:
-        print("Warning: No game data returned from henrygd.me scoreboard. Generating baseline files.")
+        print("Warning: No games found for the specified date range. Generating baseline files.")
         generate_fallback_files(games_output, team_games_output)
         return
 
     games_df = pd.DataFrame(all_games)
 
-    # Calculate team aggregates (Runs Against per 7)
     team_stats = []
     for team_name, group in games_df.groupby("team"):
         gp = len(group)
         rs = group["runs_scored"].sum()
         ra = group["runs_against"].sum()
-        
         ra7 = (ra / (gp * 7)) * 7 if gp > 0 else 0.0
         rs7 = (rs / (gp * 7)) * 7 if gp > 0 else 0.0
         
@@ -84,8 +71,6 @@ def fetch_team_season_data(
         })
 
     teams_df = pd.DataFrame(team_stats)
-
-    # Opponent Strength Adjustment (Opp RA7)
     team_ra_map = teams_df.set_index("team")["runs_against_per_7"].to_dict()
     
     def calc_opp_ra7(row):
