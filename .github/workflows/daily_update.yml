@@ -36,7 +36,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add player_games_season.csv _player_completed_dates.txt players.json games_season.csv team_games_season.csv ratings.json bracketology.json || true
+          git add player_games_season.csv _player_completed_dates.txt players.json qualified_players.json games_season.csv team_games_season.csv ratings.json bracketology.json || true
           git status
-          git commit -m "Auto-update Kahl Index player game stats" || exit 0
+          git commit -m "Auto-update Kahl Index player game stats and RC7 metrics" || exit 0
           git push origin main
