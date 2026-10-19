@@ -1,122 +1,96 @@
 import os
-import time
-import io
+import requests
 import pandas as pd
-from bs4 import BeautifulSoup
-from curl_cffi import requests
 
 YEAR = "2026"
+BASE_URL = "https://ncaa-api.henrygd.me"
 
-def fetch_team_season_data(games_output="games_season.csv", team_games_output="team_games_season.csv"):
-    print(f"--- Fetching NCAA Team Schedules for {YEAR} ---")
+def fetch_team_season_data(
+    games_output="games_season.csv", 
+    team_games_output="team_games_season.csv"
+):
+    print(f"--- Fetching NCAA Game Results via henrygd.me API ({YEAR}) ---")
     
-    session = requests.Session(impersonate="chrome120")
+    # Target scoreboard and game schedule endpoints
+    url = f"{BASE_URL}/scoreboard/softball/d1"
     
-    # Official D1 Softball index endpoint
-    url = f"https://stats.ncaa.org/selection_outline?sport_code=WSB&academic_year={YEAR}&division=1"
+    all_games = []
     
     try:
-        response = session.get(url, timeout=20)
-        soup = BeautifulSoup(response.text, "html.parser")
-        
-        team_links = []
-        for a in soup.find_all("a", href=True):
-            href = a["href"]
-            if "/teams/" in href or "/team/" in href:
-                team_name = a.text.strip()
-                full_url = "https://stats.ncaa.org" + href if href.startswith("/") else href
-                if team_name and full_url not in [t[1] for t in team_links]:
-                    team_links.append((team_name, full_url))
-                    
-        print(f"Found {len(team_links)} Division-I teams.")
-
-    except Exception as e:
-        print(f"Error fetching selection outline: {e}")
-        generate_fallback_files(games_output, team_games_output)
-        return
-
-    all_games = []
-    team_summaries = []
-
-    for team_name, t_url in team_links:
-        try:
-            time.sleep(0.3)
-            res = session.get(t_url, timeout=15)
-            if res.status_code != 200:
-                continue
-
-            tables = pd.read_html(io.StringIO(res.text))
-            if not tables:
-                continue
-
-            schedule_df = max(tables, key=len)
-            schedule_df.columns = [str(c).strip().lower() for c in schedule_df.columns]
-
-            opponent_col = next((c for c in schedule_df.columns if "opponent" in c), None)
-            result_col = next((c for c in schedule_df.columns if "result" in c or "score" in c), None)
-
-            if not opponent_col or not result_col:
-                continue
-
-            games_played = 0
-            total_runs_scored = 0
-            total_runs_against = 0
-
-            for _, row in schedule_df.iterrows():
-                opp = str(row[opponent_col]).strip()
-                res_str = str(row[result_col]).strip()
-
-                if not res_str or "cancel" in res_str.lower() or "ppd" in res_str.lower():
-                    continue
-
-                parts = res_str.replace("W", "").replace("L", "").strip().split("-")
-                if len(parts) >= 2:
+        response = requests.get(url, timeout=15)
+        if response.status_code == 200:
+            data = response.json()
+            games_list = data.get("games", []) or data.get("scoreboard", [])
+            
+            for g in games_list:
+                game_info = g.get("game", g)
+                home_team = game_info.get("home", {}).get("names", {}).get("short", "") or game_info.get("homeTeam", "")
+                away_team = game_info.get("away", {}).get("names", {}).get("short", "") or game_info.get("awayTeam", "")
+                
+                home_score = game_info.get("home", {}).get("score", None)
+                away_score = game_info.get("away", {}).get("score", None)
+                
+                if home_score is not None and away_score is not None and home_team and away_team:
                     try:
-                        runs_scored = int(parts[0].strip().split()[0])
-                        runs_against = int(parts[1].strip().split()[0])
-
-                        games_played += 1
-                        total_runs_scored += runs_scored
-                        total_runs_against += runs_against
-
+                        hs = int(home_score)
+                        aws = int(away_score)
+                        
+                        # Add home perspective
                         all_games.append({
-                            "team": team_name,
-                            "opponent": opp,
-                            "runs_scored": runs_scored,
-                            "runs_against": runs_against
+                            "team": home_team,
+                            "opponent": away_team,
+                            "runs_scored": hs,
+                            "runs_against": aws
+                        })
+                        # Add away perspective
+                        all_games.append({
+                            "team": away_team,
+                            "opponent": home_team,
+                            "runs_scored": aws,
+                            "runs_against": hs
                         })
                     except ValueError:
                         continue
+        else:
+            print(f"Scoreboard endpoint returned status: {response.status_code}")
 
-            if games_played > 0:
-                ra7 = (total_runs_against / (games_played * 7)) * 7
-                rs7 = (total_runs_scored / (games_played * 7)) * 7
+    except Exception as e:
+        print(f"Error requesting henrygd.me scoreboard API: {e}")
 
-                team_summaries.append({
-                    "team": team_name,
-                    "games_played": games_played,
-                    "runs_scored": total_runs_scored,
-                    "runs_against": total_runs_against,
-                    "runs_against_per_7": round(ra7, 2),
-                    "runs_scored_per_7": round(rs7, 2)
-                })
-
-        except Exception as e:
-            continue
-
-    if not team_summaries:
-        print("Generating fallback files.")
+    if not all_games:
+        print("Warning: No game data returned from henrygd.me scoreboard. Generating baseline files.")
         generate_fallback_files(games_output, team_games_output)
         return
 
     games_df = pd.DataFrame(all_games)
-    teams_df = pd.DataFrame(team_summaries)
 
+    # Calculate team aggregates (Runs Against per 7)
+    team_stats = []
+    for team_name, group in games_df.groupby("team"):
+        gp = len(group)
+        rs = group["runs_scored"].sum()
+        ra = group["runs_against"].sum()
+        
+        ra7 = (ra / (gp * 7)) * 7 if gp > 0 else 0.0
+        rs7 = (rs / (gp * 7)) * 7 if gp > 0 else 0.0
+        
+        team_stats.append({
+            "team": team_name,
+            "games_played": gp,
+            "runs_scored": rs,
+            "runs_against": ra,
+            "runs_against_per_7": round(ra7, 2),
+            "runs_scored_per_7": round(rs7, 2)
+        })
+
+    teams_df = pd.DataFrame(team_stats)
+
+    # Opponent Strength Adjustment (Opp RA7)
     team_ra_map = teams_df.set_index("team")["runs_against_per_7"].to_dict()
     
     def calc_opp_ra7(row):
-        team = row["team"]
-        opps = games_df[games_df["team"] == team]["opponent"]
+        t = row["team"]
+        opps = games_df[games_df["team"] == t]["opponent"]
         opp_ras = [team_ra_map[o] for o in opps if o in team_ra_map]
         return round(sum(opp_ras) / len(opp_ras), 2) if opp_ras else teams_df["runs_against_per_7"].mean()
 
@@ -124,7 +98,7 @@ def fetch_team_season_data(games_output="games_season.csv", team_games_output="t
 
     games_df.to_csv(games_output, index=False)
     teams_df.to_csv(team_games_output, index=False)
-    print(f"Successfully saved {len(games_df)} games and {len(teams_df)} team summaries.")
+    print(f"Successfully saved {len(games_df)} game records and {len(teams_df)} team summaries.")
 
 def generate_fallback_files(games_output, team_games_output):
     if not os.path.exists(games_output):
