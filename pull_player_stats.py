@@ -2,7 +2,7 @@
 pull_player_stats.py
 
 Pulls per-PLAYER batting and fielding stats for D-I softball games using the NCAA API.
-Includes automatic retries and backoff for HTTP 428 rate limits and HTTP 502/503 server errors.
+Only queries games marked as FINAL on the scoreboard to prevent fetching nonexistent box scores.
 """
 
 import os
@@ -19,7 +19,6 @@ import requests
 SCOREBOARD_URL = "https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
 BOXSCORE_URL = "https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
 
-# Enforce a conservative rate limit (approx 2 requests per second)
 REQUESTS_PER_SECOND_LIMIT = 2.0
 _MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
 
@@ -45,36 +44,37 @@ _session.mount("https://", _adapter)
 _session.mount("http://", _adapter)
 
 
-def _get_json_with_retry(url, max_retries=5):
-    """
-    Fetches JSON with automatic exponential backoff for 428 (rate limit)
-    and 500/502/503/504 (transient server errors).
-    """
+def _get_json_with_retry(url, max_retries=3):
+    """Fetches JSON, skipping non-existent box scores immediately on 404/400."""
     RETRYABLE_CODES = {428, 500, 502, 503, 504}
 
     for attempt in range(max_retries):
         _limiter.wait()
         try:
-            resp = _session.get(url, timeout=15)
-            
+            resp = _session.get(url, timeout=10)
+
+            # If the box score doesn't exist (canceled/unplayed game), don't waste retries
+            if resp.status_code in (400, 404):
+                return None
+
             if resp.status_code in RETRYABLE_CODES:
-                time.sleep(2.0 * (attempt + 1))
+                time.sleep(1.5 * (attempt + 1))
                 continue
-                
+
             resp.raise_for_status()
             return resp.json()
-            
+
         except requests.exceptions.HTTPError as e:
             if resp.status_code in RETRYABLE_CODES and attempt < max_retries - 1:
-                time.sleep(2.0 * (attempt + 1))
+                time.sleep(1.5 * (attempt + 1))
                 continue
             raise e
-        except (requests.exceptions.RequestException, Exception) as e:
+        except Exception as e:
             if attempt == max_retries - 1:
                 raise e
-            time.sleep(2.0 * (attempt + 1))
-            
-    raise requests.exceptions.HTTPError(f"Failed after {max_retries} retries for URL: {url}")
+            time.sleep(1.0 * (attempt + 1))
+
+    return None
 
 
 def _get_scoreboard_page(year, month, day, page):
@@ -95,17 +95,29 @@ def extract_game_id(game):
 
 
 def discover_game_ids(year, month, day, max_pages=20):
+    """Only fetches game IDs for games that were actually completed (FINAL)."""
     seen = set()
     for page in range(1, max_pages + 1):
         data = _get_scoreboard_page(year, month, day, page)
+        if not data:
+            break
+
         raw_games = data.get("games", [])
         if not raw_games:
             break
+
         for entry in raw_games:
             game = entry.get("game", entry)
+            
+            # Check game status -- skip canceled, postponed, or unplayed games
+            state = str(game.get("gameState") or game.get("status") or "").lower()
+            if "final" not in state and "completed" not in state and state != "f":
+                continue
+
             gid = extract_game_id(game)
             if gid:
                 seen.add(gid)
+
     return sorted(seen)
 
 
@@ -119,6 +131,9 @@ def _num(val):
 
 
 def extract_player_rows(boxscore_json, date_str, game_id):
+    if not boxscore_json or not isinstance(boxscore_json, dict):
+        return []
+
     teams_meta = boxscore_json.get("teams", [])
     team_by_id = {str(t.get("teamId")): t for t in teams_meta}
     if len(team_by_id) != 2:
@@ -167,8 +182,9 @@ def extract_player_rows(boxscore_json, date_str, game_id):
 def fetch_player_rows_for_game(game_id, date_str):
     try:
         data = _get_json_with_retry(BOXSCORE_URL.format(game_id=game_id))
-    except Exception as e:
-        print(f"  boxscore fetch failed for game {game_id}: {e}")
+        if not data:
+            return []
+    except Exception:
         return []
     return extract_player_rows(data, date_str, game_id)
 
@@ -180,8 +196,8 @@ def fetch_player_rows_concurrent(game_ids, date_str, max_workers=2):
         for fut in as_completed(futures):
             try:
                 all_rows.extend(fut.result())
-            except Exception as e:
-                print(f"  concurrent fetch failed for game {futures[fut]}: {e}")
+            except Exception:
+                pass
     return all_rows
 
 
@@ -207,27 +223,16 @@ def pull_player_stats(start, end, out_dir=".", max_retries=2, max_workers=2):
     dates = list(_daterange(start, end))
     print(f"{len(dates)} day(s) requested, {len(completed)} already done\n")
 
-    failed_dates = []
     for i, d in enumerate(dates, 1):
         date_str = d.isoformat()
         if date_str in completed:
             continue
 
-        day_rows, attempt = None, 0
-        while attempt <= max_retries:
-            try:
-                game_ids = discover_game_ids(d.year, d.month, d.day)
-                day_rows = fetch_player_rows_concurrent(game_ids, date_str, max_workers=max_workers)
-                break
-            except Exception as e:
-                attempt += 1
-                print(f"[{i}/{len(dates)}] {date_str}: error ({e}), retry {attempt}/{max_retries}")
-                time.sleep(2 * attempt)
-
-        if day_rows is None:
-            print(f"[{i}/{len(dates)}] {date_str}: FAILED after {max_retries} retries -- "
-                  f"skipped, will retry on next run")
-            failed_dates.append(date_str)
+        try:
+            game_ids = discover_game_ids(d.year, d.month, d.day)
+            day_rows = fetch_player_rows_concurrent(game_ids, date_str, max_workers=max_workers)
+        except Exception as e:
+            print(f"[{i}/{len(dates)}] {date_str}: error ({e})")
             continue
 
         all_rows.extend(day_rows)
@@ -240,12 +245,7 @@ def pull_player_stats(start, end, out_dir=".", max_retries=2, max_workers=2):
         print(f"[{i}/{len(dates)}] {date_str}: {len(day_rows)} player-rows "
               f"(running total: {len(all_rows)})")
 
-    if failed_dates:
-        print(f"\n{len(failed_dates)} day(s) failed -- rerun to retry just those:")
-        print(" ", failed_dates)
-    else:
-        print(f"\nDone. {len(all_rows)} player-rows written to {out_path}")
-
+    print(f"\nDone. {len(all_rows)} player-rows written to {out_path}")
     return pd.DataFrame(all_rows)
 
 
