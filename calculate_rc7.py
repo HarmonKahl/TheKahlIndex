@@ -16,19 +16,34 @@ def calculate_rc7(
         return
 
     players_df = pd.read_csv(stats_path)
-    team_games_df = pd.read_csv(team_games_path)
+    
+    if not os.path.exists(team_games_path):
+        print(f"Warning: {team_games_path} missing. Proceeding with unadjusted RC7.")
+        team_games_df = pd.DataFrame()
+    else:
+        team_games_df = pd.read_csv(team_games_path)
 
-    # 1. Map games played per team
-  # In calculate_rc7.py replace line 22-24 with this column check:
-games_col = "games_played" if "games_played" in team_games_df.columns else "games"
-team_games_map = team_games_df.set_index("team")[games_col].to_dict()
-
-    d1_avg_ra7 = team_games_df["runs_against_per_7"].mean()
-    team_opp_map = team_games_df.set_index("team")["opp_runs_against_per_7"].to_dict()
+    # Robust column detection for team games played
+    if not team_games_df.empty:
+        games_col = "games_played" if "games_played" in team_games_df.columns else "games"
+        team_games_map = team_games_df.set_index("team")[games_col].to_dict()
+        
+        # Calculate League D1 Average RA7
+        ra_col = "runs_against_per_7" if "runs_against_per_7" in team_games_df.columns else "ra7"
+        if ra_col in team_games_df.columns:
+            d1_avg_ra7 = team_games_df[ra_col].mean()
+            team_opp_map = team_games_df.set_index("team")["opp_runs_against_per_7"].to_dict() if "opp_runs_against_per_7" in team_games_df.columns else {}
+        else:
+            d1_avg_ra7 = 4.0
+            team_opp_map = {}
+    else:
+        team_games_map = {}
+        d1_avg_ra7 = 4.0
+        team_opp_map = {}
 
     all_players = []
     for _, row in players_df.iterrows():
-        team = row["team"]
+        team = str(row.get("team", "")).strip()
         ab = float(row.get("ab", 0))
         h = float(row.get("hits", 0))
         d2b = float(row.get("doubles", 0))
@@ -39,11 +54,11 @@ team_games_map = team_games_df.set_index("team")[games_col].to_dict()
         if ab < min_ab_cutoff:
             continue
 
-        # Exact Total Bases
+        # Exact Total Bases Equation
         singles = h - (d2b + d3b + hr)
         tb = singles + (2 * d2b) + (3 * d3b) + (4 * hr)
 
-        # Exact Bill James Runs Created
+        # Bill James Runs Created
         a = h + bb
         b = tb + (0.26 * bb)
         c = ab + bb
@@ -53,17 +68,17 @@ team_games_map = team_games_df.set_index("team")[games_col].to_dict()
         outs = ab - h
         rc7 = (rc / outs) * 21 if outs > 0 else 0.0
 
-        # Opponent Adjustment
+        # Opponent Adjustment Factor
         opp_ra7 = team_opp_map.get(team, d1_avg_ra7)
-        m_opp = (d1_avg_ra7 / opp_ra7) if opp_ra7 > 0 else 1.0
+        m_opp = (d1_avg_ra7 / opp_ra7) if (opp_ra7 and opp_ra7 > 0) else 1.0
         rc7_adj = rc7 * m_opp
 
-        # Qualification Status
+        # Dynamic Qualification Status
         team_games = team_games_map.get(team, row.get("games_played", 1))
         is_qualified = bool(ab >= (team_games * ab_per_game_threshold) and ab >= min_qualified_ab)
 
         all_players.append({
-            "name": row["player_name"],
+            "name": str(row.get("player_name", "")).strip(),
             "team": team,
             "ab": int(ab),
             "hits": int(h),
@@ -83,6 +98,8 @@ team_games_map = team_games_df.set_index("team")[games_col].to_dict()
 
     with open(qualified_output_path, "w") as f:
         json.dump(qualified_players, f, indent=2)
+
+    print(f"Calculated RC7 for {len(all_players)} players ({len(qualified_players)} qualified).")
 
 if __name__ == "__main__":
     calculate_rc7()
