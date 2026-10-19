@@ -1,5 +1,6 @@
 import os
 import time
+import io
 import pandas as pd
 from bs4 import BeautifulSoup
 from curl_cffi import requests
@@ -9,18 +10,16 @@ YEAR = "2026"
 def fetch_team_season_data(games_output="games_season.csv", team_games_output="team_games_season.csv"):
     print(f"--- Fetching NCAA Team Game Results and Metrics for {YEAR} ---")
     
-    index_url = "https://stats.ncaa.org/team/inst_team_list"
+    index_url = "https://stats.ncaa.org/selection_outline"
     params = {
-        "academic_year": YEAR,
-        "conf_id": "-1",
-        "division": "1",
-        "sport_code": "WSB"
+        "sport_code": "WSB",
+        "division": "1"
     }
     
     session = requests.Session(impersonate="chrome120")
     
     try:
-        response = session.get(index_url, params=params, timeout=20)
+        response = session.get("https://stats.ncaa.org/team/inst_team_list", params={"academic_year": YEAR, "sport_code": "WSB", "division": "1"}, timeout=20)
         if response.status_code != 200:
             print(f"Failed to load team list page. Status: {response.status_code}")
             generate_fallback_files(games_output, team_games_output)
@@ -29,12 +28,15 @@ def fetch_team_season_data(games_output="games_season.csv", team_games_output="t
         soup = BeautifulSoup(response.text, "html.parser")
         team_links = []
         
+        # Match any link directing to an institutional team schedule
         for a in soup.find_all("a", href=True):
-            if "/team/" in a["href"] and "stats" not in a["href"]:
-                team_name = a.text.strip()
-                team_url = "https://stats.ncaa.org" + a["href"]
-                if team_name and team_url not in [t[1] for t in team_links]:
-                    team_links.append((team_name, team_url))
+            href = a["href"]
+            if "/teams/" in href or "/team/" in href:
+                if "inst_team_list" not in href and "change_game_sport" not in href:
+                    team_name = a.text.strip()
+                    full_url = "https://stats.ncaa.org" + href if href.startswith("/") else href
+                    if team_name and full_url not in [t[1] for t in team_links]:
+                        team_links.append((team_name, full_url))
                     
         print(f"Found {len(team_links)} Division-I teams.")
 
@@ -48,12 +50,12 @@ def fetch_team_season_data(games_output="games_season.csv", team_games_output="t
 
     for team_name, url in team_links:
         try:
-            time.sleep(1.0)
+            time.sleep(0.5)
             res = session.get(url, timeout=15)
             if res.status_code != 200:
                 continue
 
-            tables = pd.read_html(res.text)
+            tables = pd.read_html(io.StringIO(res.text))
             if not tables:
                 continue
 
