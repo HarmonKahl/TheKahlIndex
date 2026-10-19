@@ -1,26 +1,8 @@
 """
 pull_player_stats.py
 
-Pulls per-PLAYER batting and fielding stats (not just team totals) for D-I
-softball games, using the same NCAA API and the same day-by-day scoreboard
-discovery as pull_season.py. Same rate limiting, same resume/checkpoint
-behavior, same CLI date pattern -- fits the same daily-automation plan
-once the 2027 season starts.
-
-KNOWN LIMITATION (confirmed from a real box score, Nebraska vs LSU):
-every player's `pitcherStats` field came back null, including actual
-pitchers. Individual pitcher metrics may not be reliably available this
-way -- batting and fielding per player were fully populated, though.
-Team-level pitching totals (innings pitched, runs allowed, etc.) are NOT
-duplicated here; use pull_season.py / team_games_season.csv for those.
-
-OUTPUT: player_games_season.csv, one row per player per game.
-
-USAGE
------
-    python pull_player_stats.py                      # yesterday only (daily job default)
-    python pull_player_stats.py 2026-02-05            # one specific day
-    python pull_player_stats.py 2026-02-05 2026-06-04 # a date range (backfill)
+Pulls per-PLAYER batting and fielding stats for D-I softball games using the NCAA API.
+Includes automatic retries and backoff for HTTP 428 (Precondition Required) rate limits.
 """
 
 import os
@@ -37,7 +19,8 @@ import requests
 SCOREBOARD_URL = "https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
 BOXSCORE_URL = "https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
 
-REQUESTS_PER_SECOND_LIMIT = 5
+# Enforce a safer rate limit (approx 2.5 requests per second)
+REQUESTS_PER_SECOND_LIMIT = 2.5
 _MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
 
 
@@ -57,23 +40,43 @@ class RateLimiter:
 
 _limiter = RateLimiter()
 _session = requests.Session()
-_adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
+_adapter = requests.adapters.HTTPAdapter(pool_connections=10, pool_maxsize=10)
 _session.mount("https://", _adapter)
 _session.mount("http://", _adapter)
 
 
-def _get_json(url):
-    _limiter.wait()
-    resp = _session.get(url, timeout=15)
-    resp.raise_for_status()
-    return resp.json()
+def _get_json_with_retry(url, max_retries=5):
+    """Fetches JSON with automatic retry on 428 Precondition Required / rate limit errors."""
+    for attempt in range(max_retries):
+        _limiter.wait()
+        try:
+            resp = _session.get(url, timeout=15)
+            
+            # If hit by HTTP 428 rate limiting, sleep and retry
+            if resp.status_code == 428:
+                time.sleep(1.5 * (attempt + 1))
+                continue
+                
+            resp.raise_for_status()
+            return resp.json()
+        except requests.exceptions.HTTPError as e:
+            if resp.status_code == 428 and attempt < max_retries - 1:
+                time.sleep(1.5 * (attempt + 1))
+                continue
+            raise e
+        except Exception as e:
+            if attempt == max_retries - 1:
+                raise e
+            time.sleep(1.0 * (attempt + 1))
+            
+    raise requests.exceptions.HTTPError(f"Failed after {max_retries} retries for URL: {url}")
 
 
 def _get_scoreboard_page(year, month, day, page):
     url = SCOREBOARD_URL.format(year=year, month=month, day=day)
     if page > 1:
         url += f"?page={page}"
-    return _get_json(url)
+    return _get_json_with_retry(url)
 
 
 def extract_game_id(game):
@@ -158,15 +161,16 @@ def extract_player_rows(boxscore_json, date_str, game_id):
 
 def fetch_player_rows_for_game(game_id, date_str):
     try:
-        data = _get_json(BOXSCORE_URL.format(game_id=game_id))
+        data = _get_json_with_retry(BOXSCORE_URL.format(game_id=game_id))
     except Exception as e:
         print(f"  boxscore fetch failed for game {game_id}: {e}")
         return []
     return extract_player_rows(data, date_str, game_id)
 
 
-def fetch_player_rows_concurrent(game_ids, date_str, max_workers=5):
+def fetch_player_rows_concurrent(game_ids, date_str, max_workers=2):
     all_rows = []
+    # Lower workers to 2 to eliminate HTTP 428 responses
     with ThreadPoolExecutor(max_workers=max_workers) as ex:
         futures = {ex.submit(fetch_player_rows_for_game, gid, date_str): gid for gid in game_ids}
         for fut in as_completed(futures):
@@ -184,7 +188,7 @@ def _daterange(start, end):
         d += timedelta(days=1)
 
 
-def pull_player_stats(start, end, out_dir=".", max_retries=2, max_workers=5):
+def pull_player_stats(start, end, out_dir=".", max_retries=2, max_workers=2):
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "player_games_season.csv")
     progress_path = os.path.join(out_dir, "_player_completed_dates.txt")
