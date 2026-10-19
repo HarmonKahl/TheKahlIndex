@@ -2,42 +2,61 @@ library(softballR)
 library(tidyverse)
 library(jsonlite)
 
-# 1. Dynamically get current season year (2026)
+# 1. Dynamically get current season year
 current_year <- as.numeric(format(Sys.Date(), "%Y"))
-
 cat(paste0("Fetching player box scores for season: ", current_year, "\n"))
 
-# 2. Fetch NCAA softball player hitting box scores via softballR
-box_scores <- load_ncaa_softball_playerbox(season = current_year, category = "Hitting")
-
-# 3. Calculate Team Level Pitching RA7 (Runs Allowed per 7 Innings) for OPAF
-# Extract pitching data if available, otherwise default OPAF baseline
-team_pitching_ra7 <- tryCatch({
-  pitching_box <- load_ncaa_softball_playerbox(season = current_year, category = "Pitching")
-  pitching_box %>%
-    filter(!is.na(IP) & IP > 0) %>%
-    group_by(team) %>%
-    summarise(
-      total_IP = sum(IP, na.rm = TRUE),
-      total_R_allowed = sum(R, na.rm = TRUE),
-      .groups = "drop"
-    ) %>%
-    mutate(
-      team_RA7 = ifelse(total_IP > 0, (total_R_allowed / total_IP) * 7, 0)
-    )
+# 2. Fetch NCAA softball player hitting box scores
+box_scores <- tryCatch({
+  load_ncaa_softball_playerbox(season = current_year, category = "Hitting")
 }, error = function(e) {
-  message("Pitching logs unavailable, falling back to neutral OPAF.")
+  message(paste("Error loading box scores:", e$message))
   return(NULL)
 })
 
-# Calculate National Average Pitching RA7
+# Default empty structure if fetch fails or yields zero rows
+if (is.null(box_scores) || nrow(box_scores) == 0) {
+  message("No box score data available. Writing empty array to players.json.")
+  write_json(list(), "players.json", pretty = TRUE)
+  quit(save = "no", status = 0)
+}
+
+# Ensure core counting stats are numeric
+box_scores <- box_scores %>%
+  mutate(across(c(AB, H, BB, X2B, X3B, HR), ~ as.numeric(as.character(.))))
+
+# 3. Calculate Team Level Pitching RA7 for OPAF
+team_pitching_ra7 <- tryCatch({
+  pitching_box <- load_ncaa_softball_playerbox(season = current_year, category = "Pitching")
+  if (!is.null(pitching_box) && nrow(pitching_box) > 0) {
+    pitching_box %>%
+      mutate(
+        IP = as.numeric(as.character(IP)),
+        R = as.numeric(as.character(R))
+      ) %>%
+      filter(!is.na(IP) & IP > 0) %>%
+      group_by(team) %>%
+      summarise(
+        total_IP = sum(IP, na.rm = TRUE),
+        total_R_allowed = sum(R, na.rm = TRUE),
+        .groups = "drop"
+      ) %>%
+      mutate(
+        team_RA7 = ifelse(total_IP > 0, (total_R_allowed / total_IP) * 7, 0)
+      )
+  } else { NULL }
+}, error = function(e) {
+  message("Pitching logs unavailable, falling back to neutral OPAF baseline.")
+  return(NULL)
+})
+
 nat_avg_ra7 <- if (!is.null(team_pitching_ra7) && nrow(team_pitching_ra7) > 0) {
   mean(team_pitching_ra7$team_RA7, na.rm = TRUE)
 } else {
-  4.00 # Standard Division I baseline fallback
+  4.00 # Division I standard baseline fallback
 }
 
-# 4. Process Player Batting Stats & Calculate Classic RC
+# 4. Calculate Classic RC & Scale to RC7
 player_stats <- box_scores %>%
   filter(!is.na(AB) & AB > 0) %>%
   group_by(player_id, player_name, team) %>%
@@ -62,9 +81,9 @@ player_stats <- box_scores %>%
     # Raw RC per 21 outs (7 innings)
     RC7_raw = ifelse(Outs > 0, (RC / Outs) * 21, 0)
   ) %>%
-  filter(PA >= 30) # Minimum plate appearance threshold
+  filter(PA >= 30)
 
-# 5. Merge Pitching Strength Adjustments (OPAF)
+# 5. Apply Pitching Adjustments (OPAF)
 if (!is.null(team_pitching_ra7) && nrow(team_pitching_ra7) > 0) {
   final_players <- player_stats %>%
     left_join(team_pitching_ra7, by = "team") %>%
@@ -83,7 +102,7 @@ if (!is.null(team_pitching_ra7) && nrow(team_pitching_ra7) > 0) {
     )
 }
 
-# 6. Format and Sort Final Columns
+# 6. Select, Sort, and Output to JSON
 final_output <- final_players %>%
   select(
     player_name,
@@ -99,6 +118,5 @@ final_output <- final_players %>%
   ) %>%
   arrange(desc(RC7_adj))
 
-# 7. Write directly to JSON file
 write_json(final_output, "players.json", pretty = TRUE)
 cat("Successfully generated players.json for season ", current_year, "\n")
