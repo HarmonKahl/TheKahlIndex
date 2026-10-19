@@ -19,9 +19,10 @@ def calculate_rc7(
     team_games_df = pd.read_csv(team_games_path)
 
     # 1. Map games played per team
-    team_games_map = team_games_df.set_index("team")["games_played"].to_dict()
+  # In calculate_rc7.py replace line 22-24 with this column check:
+games_col = "games_played" if "games_played" in team_games_df.columns else "games"
+team_games_map = team_games_df.set_index("team")[games_col].to_dict()
 
-    # 2. Compute League-Wide D1 RA7 & Team Opponent RA7
     d1_avg_ra7 = team_games_df["runs_against_per_7"].mean()
     team_opp_map = team_games_df.set_index("team")["opp_runs_against_per_7"].to_dict()
 
