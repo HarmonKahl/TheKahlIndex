@@ -2,21 +2,18 @@ import os
 import requests
 import pandas as pd
 
-# Community Mirror API for NCAA Stats
-BASE_URL = "https://ncaa-api.henrygd.me/stats/softball/d1/current/individual"
+YEAR = "2026"
+BASE_URL = f"https://ncaa-api.henrygd.me/stats/softball/d1/{YEAR}/individual"
 
 def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
-    """
-    Fetches cumulative Division-I hitting stats via the henrygd.me NCAA API proxy,
-    normalizes key columns, and saves/overwrites cumulative_player_stats.csv.
-    """
-    print("Fetching cumulative player stats from henrygd.me API...")
+    print(f"Fetching cumulative player stats for {YEAR} from henrygd.me API...")
     
-    # Primary hitting category endpoints to query
+    # Try explicit year paths and numeric NCAA stat category codes
     endpoints = [
         f"{BASE_URL}/batting-average",
         f"{BASE_URL}/home-runs",
-        BASE_URL  # Fallback to root individual stats endpoint
+        f"{BASE_URL}/20",  # Category 20: Hitting/Batting
+        f"https://ncaa-api.henrygd.me/stats/softball/d1/current/individual/20"
     ]
     
     all_players = []
@@ -25,7 +22,6 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
         print(f"Trying API endpoint: {url}")
         success = False
         
-        # Paginate through player leaderboard pages
         for page in range(1, 15):
             try:
                 response = requests.get(url, params={"page": page}, timeout=15)
@@ -34,7 +30,6 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
                     break
                 
                 data = response.json()
-                # Parse list of player objects from API schema variations
                 players = data.get("stats", []) or data.get("data", []) or data.get("rankings", [])
                 
                 if not players:
@@ -42,7 +37,6 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
                     
                 success = True
                 for p in players:
-                    # Clean/extract fields from API JSON response
                     player_name = p.get("player") or p.get("name") or p.get("playerName") or ""
                     team = p.get("team") or p.get("school") or p.get("teamName") or ""
                     
@@ -72,7 +66,6 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
 
     if not all_players:
         print("Warning: No player cumulative stats fetched from API.")
-        # Ensure dummy file structure exists so downstream steps do not crash git
         if not os.path.exists(output_path):
             pd.DataFrame(columns=[
                 "player_name", "team", "games_played", "ab", "hits", 
@@ -80,18 +73,13 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
             ]).to_csv(output_path, index=False)
         return
 
-    # Convert to DataFrame
     df = pd.DataFrame(all_players)
 
-    # Ensure numeric types
     numeric_cols = ["games_played", "ab", "hits", "doubles", "triples", "hr", "walks", "strikeouts"]
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0).astype(int)
 
-    # Deduplicate in case of overlapping API pages
     df.drop_duplicates(subset=["player_name", "team"], inplace=True)
-
-    # Save fresh snapshot to CSV
     df.to_csv(output_path, index=False)
     print(f"Successfully saved {len(df)} player cumulative stat records to {output_path}.")
 
