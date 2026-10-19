@@ -34,7 +34,7 @@ jobs:
       - name: Calculate Player RC7 Metrics
         run: python calculate_rc7.py
 
-      # --- 3. Commit Generated JSON Data and Logs ---
+      # --- 3. Commit Generated JSON Data, CSV Logs, and Completed Dates ---
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
