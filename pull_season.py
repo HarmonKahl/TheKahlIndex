@@ -118,7 +118,7 @@ def parse_innings_pitched(ip_str):
 
 
 def fetch_boxscore_data(game_id, debug=False):
-    """Fetches innings pitched AND individual player hitting box scores."""
+    """Fetches team innings pitched AND individual player hitting box scores."""
     if not game_id:
         return (None, None), []
     try:
@@ -131,7 +131,7 @@ def fetch_boxscore_data(game_id, debug=False):
     teams_meta = data.get("teams", [])
     home_id = next((t["teamId"] for t in teams_meta if t.get("isHome")), None)
     away_id = next((t["teamId"] for t in teams_meta if t.get("isHome") is False), None)
-    
+
     team_names = {
         str(t.get("teamId")): t.get("shortName", t.get("name", "Unknown"))
         for t in teams_meta
@@ -146,7 +146,7 @@ def fetch_boxscore_data(game_id, debug=False):
     for tb in data.get("teamBoxscore", []):
         tid = str(tb.get("teamId"))
         team_name = team_names.get(tid, "Unknown")
-        
+
         # 1. Innings Pitched
         pitcher_totals = (tb.get("teamStats") or {}).get("pitcherTotals") or {}
         ip_by_team[tid] = parse_innings_pitched(
@@ -156,13 +156,12 @@ def fetch_boxscore_data(game_id, debug=False):
         # 2. Extract Individual Player Hitting Stats
         for player in tb.get("playerStats", []):
             stats = player.get("stats", {})
-            # Ensure player had at least 1 AB or BB (i.e. made a plate appearance)
             try:
                 ab = int(stats.get("ab", 0) or 0)
                 bb = int(stats.get("bb", 0) or 0)
                 if ab == 0 and bb == 0:
                     continue
-                
+
                 player_rows.append({
                     "game_id": game_id,
                     "player_name": player.get("name", "Unknown"),
@@ -375,4 +374,82 @@ def pull_season(
         with open(progress_path) as f:
             completed = set(line.strip() for line in f if line.strip())
 
-    if not os.
+    if not os.path.exists(team_path) or os.stat(team_path).st_size == 0:
+        completed = set()
+
+    all_games = (
+        pd.read_csv(games_path).to_dict("records")
+        if os.path.exists(games_path) and os.stat(games_path).st_size > 0
+        else []
+    )
+    all_team_rows = (
+        pd.read_csv(team_path).to_dict("records")
+        if os.path.exists(team_path) and os.stat(team_path).st_size > 0
+        else []
+    )
+    all_player_rows = (
+        pd.read_csv(player_path).to_dict("records")
+        if os.path.exists(player_path) and os.stat(player_path).st_size > 0
+        else []
+    )
+
+    dates = list(_daterange(start, end))
+
+    for i, d in enumerate(dates, 1):
+        date_str = d.isoformat()
+        if date_str in completed:
+            print(f"Skipping {date_str} (already logged in _completed_dates.txt)")
+            continue
+
+        day_games, day_players, attempt = None, [], 0
+        while attempt <= max_retries:
+            try:
+                day_games, day_players = pull_day(
+                    d.year,
+                    d.month,
+                    d.day,
+                    fetch_innings=fetch_innings,
+                    debug=debug,
+                )
+                break
+            except Exception as e:
+                attempt += 1
+                time.sleep(2 * attempt)
+
+        if day_games is None:
+            continue
+
+        all_games.extend(day_games)
+        all_team_rows.extend(games_to_team_rows(day_games))
+        all_player_rows.extend(day_players)
+        completed.add(date_str)
+
+        pd.DataFrame(all_games).to_csv(games_path, index=False)
+        pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
+        if all_player_rows:
+            pd.DataFrame(all_player_rows).to_csv(player_path, index=False)
+
+        with open(progress_path, "w") as f:
+            f.write("\n".join(sorted(completed)))
+
+        print(
+            f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games, {len(day_players)} player lines logged."
+        )
+
+    return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) >= 3:
+        start_date = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
+        end_date = datetime.strptime(sys.argv[2], "%Y-%m-%d").date()
+    elif len(sys.argv) == 2:
+        start_date = datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
+        end_date = start_date
+    else:
+        today = date.today()
+        start_date = today - timedelta(days=1)
+        end_date = today
+
+    print(f"Running scraper for date range: {start_date} to {end_date}")
+    pull_season(start=start_date, end=end_date, out_dir=".")
