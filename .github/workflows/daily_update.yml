@@ -17,19 +17,17 @@ jobs:
         uses: actions/checkout@v4
 
       # --- 1. Python Setup & Script Execution ---
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-
-      - name: Install Python Dependencies
-        run: |
-          pip install pandas requests
-
-      - name: Run Python Ratings & Bracketology Scripts
-        run: |
-          python generate_ratings.py
-          python generate_bracketology.py
+      # (Uncomment and update file paths if you have python scripts)
+      # - name: Set up Python
+      #   uses: actions/setup-python@v5
+      #   with:
+      #     python-version: '3.10'
+      # - name: Install Python Dependencies
+      #   run: pip install pandas requests
+      # - name: Run Python Ratings & Bracketology Scripts
+      #   run: |
+      #     python generate_ratings.py
+      #     python generate_bracketology.py
 
       # --- 2. R Setup & Script Execution ---
       - name: Set up R
@@ -49,7 +47,7 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add ratings.json bracketology.json players.json
+          git add ratings.json bracketology.json players.json || true
           git status
-          git commit -m "Auto-update Kahl Index data (Ratings, Bracketology, Players)" || exit 0
+          git commit -m "Auto-update Kahl Index data" || exit 0
           git push origin main
