@@ -1,5 +1,6 @@
 import os
 import time
+import io
 import pandas as pd
 from curl_cffi import requests
 
@@ -26,8 +27,10 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
                 print(f"Page {page} returned status code: {response.status_code}")
                 break
                 
-            tables = pd.read_html(response.text)
+            # Wrap string in StringIO to satisfy Pandas requirements
+            tables = pd.read_html(io.StringIO(response.text))
             if not tables:
+                print(f"No tables found on page {page}.")
                 break
                 
             df = max(tables, key=len)
