@@ -3,24 +3,43 @@ import sys
 import requests
 import pandas as pd
 
-# API Endpoint for NCAA D1 Softball Hitting Leaderboards
-STATS_BASE_URL = "https://ncaa-api.henrygd.me/stats/softball/d1/current/individual/200"
-
 _session = requests.Session()
+
+def get_hitting_category_id():
+    """Queries the NCAA stats directory to automatically locate the Batting Average/Hitting category ID."""
+    base_url = "https://ncaa-api.henrygd.me/stats/softball/d1/current/individual"
+    try:
+        resp = _session.get(base_url, timeout=10)
+        resp.raise_for_status()
+        categories = resp.json()
+        
+        # Search available categories for hitting/batting
+        for cat in categories:
+            cat_name = str(cat.get("title") or cat.get("name") or "").lower()
+            if "batting" in cat_name or "hits" in cat_name or "average" in cat_name:
+                cat_id = str(cat.get("id") or cat.get("category_id"))
+                print(f"Discovered hitting category ID: {cat_id} ({cat_name})")
+                return cat_id
+    except Exception as e:
+        print(f"Could not auto-detect category ID ({e}). Falling back to standard category 148.")
+    
+    return "148"
 
 def fetch_season_player_stats(out_dir="."):
     print("\n--- Fetching NCAA Season Player Leaderboard ---")
+    category_id = get_hitting_category_id()
+    
     all_players = []
     page = 1
 
     while True:
-        url = f"{STATS_BASE_URL}?page={page}"
+        url = f"https://ncaa-api.henrygd.me/stats/softball/d1/current/individual/{category_id}?page={page}"
         try:
             resp = _session.get(url, timeout=15)
             resp.raise_for_status()
             data = resp.json()
         except Exception as e:
-            print(f"Finished fetching player stats at page {page}: {e}")
+            print(f"Finished fetching player stats on page {page}: {e}")
             break
 
         stats_list = data.get("stats", []) or data.get("data", [])
