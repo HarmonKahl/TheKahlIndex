@@ -117,8 +117,17 @@ def parse_innings_pitched(ip_str):
     return whole + thirds
 
 
+def _safe_int(val):
+    if val in (None, "", "-"):
+        return 0
+    try:
+        return int(float(val))
+    except (ValueError, TypeError):
+        return 0
+
+
 def fetch_boxscore_data(game_id, debug=False):
-    """Fetches team innings pitched AND individual player hitting box scores."""
+    """Fetches team innings pitched AND individual player hitting box scores flexibly."""
     if not game_id:
         return (None, None), []
     try:
@@ -143,9 +152,14 @@ def fetch_boxscore_data(game_id, debug=False):
     ip_by_team = {}
     player_rows = []
 
-    for tb in data.get("teamBoxscore", []):
-        tid = str(tb.get("teamId"))
-        team_name = team_names.get(tid, "Unknown")
+    # Check top-level teamBoxscore or nested structures
+    box_data = data.get("teamBoxscore") or data.get("boxscore") or []
+    if isinstance(box_data, dict):
+        box_data = [box_data]
+
+    for tb in box_data:
+        tid = str(tb.get("teamId", ""))
+        team_name = team_names.get(tid) or tb.get("teamName") or "Unknown"
 
         # 1. Innings Pitched
         pitcher_totals = (tb.get("teamStats") or {}).get("pitcherTotals") or {}
@@ -153,28 +167,47 @@ def fetch_boxscore_data(game_id, debug=False):
             pitcher_totals.get("inningsPitched")
         )
 
-        # 2. Extract Individual Player Hitting Stats
-        for player in tb.get("playerStats", []):
-            stats = player.get("stats", {})
-            try:
-                ab = int(stats.get("ab", 0) or 0)
-                bb = int(stats.get("bb", 0) or 0)
-                if ab == 0 and bb == 0:
-                    continue
+        # 2. Extract Individual Player Hitting Stats flexibly across schema variations
+        players = (
+            tb.get("playerStats") 
+            or tb.get("players") 
+            or tb.get("batting") 
+            or []
+        )
+        
+        for player in players:
+            name = (
+                player.get("name") 
+                or player.get("playerName") 
+                or player.get("player", {}).get("lastName") 
+                or "Unknown"
+            )
+            
+            # Check for stats in direct keys or 'stats' nested dict
+            s = player.get("stats") if isinstance(player.get("stats"), dict) else player
+            
+            ab = _safe_int(s.get("ab") or s.get("atBats") or s.get("AB"))
+            h = _safe_int(s.get("h") or s.get("hits") or s.get("H"))
+            bb = _safe_int(s.get("bb") or s.get("walks") or s.get("BB"))
+            d2 = _safe_int(s.get("d") or s.get("2b") or s.get("doubles") or s.get("2B"))
+            d3 = _safe_int(s.get("t") or s.get("3b") or s.get("triples") or s.get("3B"))
+            hr = _safe_int(s.get("hr") or s.get("homeRuns") or s.get("HR"))
 
-                player_rows.append({
-                    "game_id": game_id,
-                    "player_name": player.get("name", "Unknown"),
-                    "team": team_name,
-                    "AB": ab,
-                    "H": int(stats.get("hits", stats.get("h", 0)) or 0),
-                    "BB": bb,
-                    "2B": int(stats.get("d", stats.get("2b", 0)) or 0),
-                    "3B": int(stats.get("t", stats.get("3b", 0)) or 0),
-                    "HR": int(stats.get("hr", 0) or 0)
-                })
-            except (ValueError, TypeError):
+            # Skip players who didn't come to the plate or participate in hitting
+            if ab == 0 and bb == 0 and h == 0:
                 continue
+
+            player_rows.append({
+                "game_id": game_id,
+                "player_name": name,
+                "team": team_name,
+                "AB": ab,
+                "H": h,
+                "BB": bb,
+                "2B": d2,
+                "3B": d3,
+                "HR": hr
+            })
 
     away_ip = ip_by_team.get(away_id) if away_id else None
     home_ip = ip_by_team.get(home_id) if home_id else None
