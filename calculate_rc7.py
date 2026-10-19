@@ -2,7 +2,7 @@ import os
 import json
 import pandas as pd
 
-def calculate_rc7(input_path="player_games_season.csv", output_path="players.json"):
+def calculate_rc7(input_path="player_games_season.csv", output_path="players.json", min_ab=20):
     if not os.path.exists(input_path) or os.stat(input_path).st_size == 0:
         print(f"Warning: {input_path} not found or empty. Writing empty array to {output_path}.")
         with open(output_path, "w") as f:
@@ -33,14 +33,21 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
         "rbi": "sum",
         "walks": "sum",
         "strikeouts": "sum"
-    }).rename(columns={"game_id": "G", "at_bats": "AB", "hits": "H", "runs_scored": "R", "rbi": "RBI", "walks": "BB", "strikeouts": "SO"})
+    }).rename(columns={
+        "game_id": "G",
+        "at_bats": "AB",
+        "hits": "H",
+        "runs_scored": "R",
+        "rbi": "RBI",
+        "walks": "BB",
+        "strikeouts": "SO"
+    })
+
+    # --- FILTER OUT PLAYERS WITH LESS THAN 20 ABs ---
+    grouped = grouped[grouped["AB"] >= min_ab].copy()
+    print(f"Filtered dataset to {len(grouped)} players with at least {min_ab} ABs.")
 
     # --- Calculate RC7 / Adjusted Runs Created ---
-    # Formula components:
-    # A = On-Base Factor (H + BB)
-    # B = Total Bases / Advancement Factor (Estimated SLG proxy: 1.125 * H + 0.25 * BB)
-    # C = Opportunity Factor (AB + BB)
-    
     players_list = []
     for _, row in grouped.iterrows():
         ab = row["AB"]
@@ -51,7 +58,7 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
         # Basic Runs Created (RC)
         if (ab + bb) > 0:
             a = h + bb
-            b = (1.125 * h) + (0.25 * bb)  # Standard approximation when extra-base breakdown isn't isolated
+            b = (1.125 * h) + (0.25 * bb)  # Linear weights proxy for Total Bases
             c = ab + bb
             rc = (a * b) / c
         else:
@@ -81,7 +88,7 @@ def calculate_rc7(input_path="player_games_season.csv", output_path="players.jso
     with open(output_path, "w") as f:
         json.dump(players_list, f, indent=2)
 
-    print(f"Successfully calculated RC7 for {len(players_list)} players and saved to {output_path}!")
+    print(f"Successfully calculated RC7 for {len(players_list)} qualified players and saved to {output_path}!")
 
 if __name__ == "__main__":
     calculate_rc7()
