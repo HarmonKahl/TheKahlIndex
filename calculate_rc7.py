@@ -20,24 +20,32 @@ def calculate_rc7(
     print(f"Loading player game data from {input_path}...")
     df = pd.read_csv(input_path)
 
-    # Ensure required numeric columns are present and clean
+    # Clean numeric columns
     numeric_cols = ["at_bats", "hits", "runs_scored", "rbi", "walks", "strikeouts"]
     for col in numeric_cols:
-        if col not in df.columns:
-            df[col] = 0
-        else:
-            df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+        df[col] = pd.to_numeric(df.get(col, 0), errors="coerce").fillna(0)
 
-    # Create full name for grouping
+    # Full player name
     df["full_name"] = df["first_name"].fillna("").astype(str).str.strip() + " " + df["last_name"].fillna("").astype(str).str.strip()
     df["full_name"] = df["full_name"].str.strip()
 
-    # 1. Calculate total team games played to evaluate qualified status
+    # --- 1. COMPUTE OPPONENT STRENGTH ADJUSTMENT FACTOR ---
+    # Aggregate game-level runs scored per team/opponent
+    game_team_runs = df.groupby(["game_id", "team", "opponent"], as_index=False)["runs_scored"].sum()
+    
+    # Estimate game length (assuming standard 7-inning game per entry)
+    total_d1_runs = game_team_runs["runs_scored"].sum()
+    total_d1_games = game_team_runs["game_id"].nunique()
+    d1_avg_ra7 = (total_d1_runs / (total_d1_games * 2)) if total_d1_games > 0 else 4.0
+
+    # Calculate average runs allowed by opponents for each team
+    team_opponents = game_team_runs.groupby("team")["runs_scored"].mean().to_dict()
+
+    # --- 2. AGGREGATE PLAYER STATS ---
     team_game_counts = df.groupby("team")["game_id"].nunique().to_dict()
 
-    # 2. Aggregate stats per player across all games
     grouped = df.groupby(["full_name", "team"], as_index=False).agg({
-        "game_id": "nunique",      # Unique games player appeared in
+        "game_id": "nunique",
         "at_bats": "sum",
         "hits": "sum",
         "runs_scored": "sum",
@@ -54,7 +62,7 @@ def calculate_rc7(
         "strikeouts": "SO"
     })
 
-    # --- HARD CUTOFF: Eliminate anyone with fewer than 10 ABs ---
+    # Filter out hitters below minimum cutoff (< 10 AB)
     grouped = grouped[grouped["AB"] >= min_ab_cutoff].copy()
 
     all_players = []
@@ -65,23 +73,30 @@ def calculate_rc7(
         g = row["G"]
         team = row["team"]
 
-        # Qualification check: must meet 1.5 AB/game AND hit at least 40 total ABs
+        # Qualification threshold
         team_total_games = team_game_counts.get(team, g)
         min_required_ab = team_total_games * ab_per_game_threshold
         is_qualified = bool(ab >= min_required_ab and ab >= min_qualified_ab)
 
-        # Basic Runs Created (RC)
+        # Basic RC
         if (ab + bb) > 0:
             a = h + bb
-            b = (1.125 * h) + (0.25 * bb)  # Linear weights proxy for Total Bases
+            b = (1.125 * h) + (0.25 * bb)
             c = ab + bb
             rc = (a * b) / c
         else:
             rc = 0.0
 
-        # Adjust per 7 innings / 21 outs (RC7)
+        # Unadjusted RC7
         outs = (ab - h)
         rc7 = (rc / outs) * 21 if outs > 0 else 0.0
+
+        # Opponent Adjustment Factor
+        team_opp_ra7 = team_opponents.get(team, d1_avg_ra7)
+        opp_multiplier = (d1_avg_ra7 / team_opp_ra7) if team_opp_ra7 > 0 else 1.0
+        
+        # Opponent-Adjusted RC7
+        rc7_adj = rc7 * opp_multiplier
 
         all_players.append({
             "name": row["full_name"],
@@ -96,25 +111,23 @@ def calculate_rc7(
             "walks": int(bb),
             "strikeouts": int(row["SO"]),
             "rc": round(rc, 2),
-            "rc7": round(rc7, 2)
+            "rc7": round(rc7, 2),
+            "rc7_adj": round(rc7_adj, 2)
         })
 
-    # Sort all players by RC7 descending
-    all_players.sort(key=lambda x: x["rc7"], reverse=True)
+    # Sort players by Adjusted RC7 descending
+    all_players.sort(key=lambda x: x["rc7_adj"], reverse=True)
 
-    # Filter out qualified subset
     qualified_players = [p for p in all_players if p["qualified"]]
 
-    # Save all players JSON (>= 10 ABs)
     with open(all_output_path, "w") as f:
         json.dump(all_players, f, indent=2)
 
-    # Save qualified players JSON (>= 10 ABs, >= 1.5 AB/team-game, AND >= 40 total ABs)
     with open(qualified_output_path, "w") as f:
         json.dump(qualified_players, f, indent=2)
 
-    print(f"Saved {len(all_players)} total players (>= {min_ab_cutoff} ABs) to {all_output_path}.")
-    print(f"Saved {len(qualified_players)} qualified players (>= {ab_per_game_threshold} AB/game AND >= {min_qualified_ab} ABs) to {qualified_output_path}.")
+    print(f"Saved {len(all_players)} players to {all_output_path}.")
+    print(f"Saved {len(qualified_players)} qualified players to {qualified_output_path}.")
 
 if __name__ == "__main__":
     calculate_rc7()
