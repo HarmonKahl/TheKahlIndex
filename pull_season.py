@@ -1,67 +1,32 @@
 import os
 import re
 import sys
-import threading
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import date, datetime, timedelta
-
-import pandas as pd
 import requests
+import pandas as pd
+from datetime import datetime, date, timedelta
 
+# API Endpoints
 SCOREBOARD_URL = "https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
 BOXSCORE_URL = "https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
+STATS_BASE_URL = "https://ncaa-api.henrygd.me/stats/softball/d1/current/individual/200"
 
-REQUESTS_PER_SECOND_LIMIT = 5
-_MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
-
-
-class RateLimiter:
-    def __init__(self, min_interval=_MIN_INTERVAL):
-        self.min_interval = min_interval
-        self._last = 0.0
-        self._lock = threading.Lock()
-
-    def wait(self):
-        with self._lock:
-            elapsed = time.time() - self._last
-            if elapsed < self.min_interval:
-                time.sleep(self.min_interval - elapsed)
-            self._last = time.time()
-
-
-_limiter = RateLimiter()
 _session = requests.Session()
-_adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
-_session.mount("https://", _adapter)
-_session.mount("http://", _adapter)
 
+# ---------------------------------------------------------------------------
+# PART 1: GAME SCORES & INNING COUNTS SCRAPER
+# ---------------------------------------------------------------------------
 
 def _get_json(url):
-    _limiter.wait()
     resp = _session.get(url, timeout=15)
     resp.raise_for_status()
     return resp.json()
-
-
-def _get_scoreboard_page(year, month, day, page):
-    url = SCOREBOARD_URL.format(year=year, month=month, day=day)
-    if page > 1:
-        url += f"?page={page}"
-    return _get_json(url)
-
 
 def extract_team(side_data, fallback):
     if not isinstance(side_data, dict):
         return fallback
     names = side_data.get("names", {})
-    return (
-        names.get("short")
-        or names.get("full")
-        or side_data.get("description")
-        or fallback
-    )
-
+    return names.get("short") or names.get("full") or side_data.get("description") or fallback
 
 def extract_score(side_data):
     if not isinstance(side_data, dict):
@@ -72,7 +37,6 @@ def extract_score(side_data):
             return val
     return None
 
-
 def extract_game_id(game):
     for key in ("gameID", "id", "contestId", "contestID"):
         val = game.get(key)
@@ -81,23 +45,6 @@ def extract_game_id(game):
     url = game.get("url") or game.get("link") or ""
     m = re.search(r"/game/(\d+)", str(url))
     return m.group(1) if m else None
-
-
-def unique_key(game, away_team, home_team, away_score, home_score, date_str, idx=0):
-    game_id = extract_game_id(game)
-    if game_id:
-        return f"id:{game_id}"
-    url = game.get("url") or game.get("link")
-    if url:
-        return f"url:{url}"
-    start = (
-        game.get("startTime")
-        or game.get("startTimeEpoch")
-        or game.get("gameTime")
-        or ""
-    )
-    return f"fallback:{date_str}|{away_team}|{home_team}|{away_score}|{home_score}|{start}|idx:{idx}"
-
 
 def parse_innings_pitched(ip_str):
     if ip_str in (None, ""):
@@ -116,290 +63,33 @@ def parse_innings_pitched(ip_str):
     thirds = {"0": 0.0, "1": 1 / 3, "2": 2 / 3}.get(frac_s[:1], 0.0)
     return whole + thirds
 
-
-def _safe_int(val):
-    if val in (None, "", "-"):
-        return 0
-    try:
-        return int(float(val))
-    except (ValueError, TypeError):
-        return 0
-
-
-def fetch_boxscore_data(game_id, debug=False):
-    """Fetches team innings pitched AND individual player hitting box scores flexibly."""
+def fetch_game_innings(game_id):
     if not game_id:
-        return (None, None), []
+        return (None, None)
     try:
         data = _get_json(BOXSCORE_URL.format(game_id=game_id))
-    except Exception as e:
-        if debug:
-            print(f"  boxscore fetch failed for game {game_id}: {e}")
-        return (None, None), []
+        teams_meta = data.get("teams", [])
+        home_id = str(next((t["teamId"] for t in teams_meta if t.get("isHome")), ""))
+        away_id = str(next((t["teamId"] for t in teams_meta if t.get("isHome") is False), ""))
 
-    teams_meta = data.get("teams", [])
-    home_id = next((t["teamId"] for t in teams_meta if t.get("isHome")), None)
-    away_id = next((t["teamId"] for t in teams_meta if t.get("isHome") is False), None)
+        ip_by_team = {}
+        box_data = data.get("teamBoxscore") or data.get("boxscore") or []
+        if isinstance(box_data, dict):
+            box_data = [box_data]
 
-    team_names = {
-        str(t.get("teamId")): t.get("shortName", t.get("name", "Unknown"))
-        for t in teams_meta
-    }
+        for tb in box_data:
+            tid = str(tb.get("teamId", ""))
+            pitcher_totals = (tb.get("teamStats") or {}).get("pitcherTotals") or {}
+            ip_by_team[tid] = parse_innings_pitched(pitcher_totals.get("inningsPitched"))
 
-    home_id = str(home_id) if home_id is not None else None
-    away_id = str(away_id) if away_id is not None else None
+        return ip_by_team.get(away_id), ip_by_team.get(home_id)
+    except Exception:
+        return (None, None)
 
-    ip_by_team = {}
-    player_rows = []
-
-    # Check top-level teamBoxscore or nested structures
-    box_data = data.get("teamBoxscore") or data.get("boxscore") or []
-    if isinstance(box_data, dict):
-        box_data = [box_data]
-
-    for tb in box_data:
-        tid = str(tb.get("teamId", ""))
-        team_name = team_names.get(tid) or tb.get("teamName") or "Unknown"
-
-        # 1. Innings Pitched
-        pitcher_totals = (tb.get("teamStats") or {}).get("pitcherTotals") or {}
-        ip_by_team[tid] = parse_innings_pitched(
-            pitcher_totals.get("inningsPitched")
-        )
-
-        # 2. Extract Individual Player Hitting Stats flexibly across schema variations
-        players = (
-            tb.get("playerStats") 
-            or tb.get("players") 
-            or tb.get("batting") 
-            or []
-        )
-        
-        for player in players:
-            name = (
-                player.get("name") 
-                or player.get("playerName") 
-                or player.get("player", {}).get("lastName") 
-                or "Unknown"
-            )
-            
-            # Check for stats in direct keys or 'stats' nested dict
-            s = player.get("stats") if isinstance(player.get("stats"), dict) else player
-            
-            ab = _safe_int(s.get("ab") or s.get("atBats") or s.get("AB"))
-            h = _safe_int(s.get("h") or s.get("hits") or s.get("H"))
-            bb = _safe_int(s.get("bb") or s.get("walks") or s.get("BB"))
-            d2 = _safe_int(s.get("d") or s.get("2b") or s.get("doubles") or s.get("2B"))
-            d3 = _safe_int(s.get("t") or s.get("3b") or s.get("triples") or s.get("3B"))
-            hr = _safe_int(s.get("hr") or s.get("homeRuns") or s.get("HR"))
-
-            # Skip players who didn't come to the plate or participate in hitting
-            if ab == 0 and bb == 0 and h == 0:
-                continue
-
-            player_rows.append({
-                "game_id": game_id,
-                "player_name": name,
-                "team": team_name,
-                "AB": ab,
-                "H": h,
-                "BB": bb,
-                "2B": d2,
-                "3B": d3,
-                "HR": hr
-            })
-
-    away_ip = ip_by_team.get(away_id) if away_id else None
-    home_ip = ip_by_team.get(home_id) if home_id else None
-
-    return (away_ip, home_ip), player_rows
-
-
-def fetch_boxscores_concurrent(game_ids, debug=False, max_workers=5):
-    results_inn = {}
-    all_player_rows = []
-    with ThreadPoolExecutor(max_workers=max_workers) as ex:
-        futures = {
-            ex.submit(fetch_boxscore_data, gid, debug): gid
-            for gid in game_ids
-        }
-        for fut in as_completed(futures):
-            gid = futures[fut]
-            try:
-                inn, players = fut.result()
-                results_inn[gid] = inn
-                all_player_rows.extend(players)
-            except Exception as e:
-                if debug:
-                    print(f"  concurrent fetch failed for game {gid}: {e}")
-                results_inn[gid] = (None, None)
-    return results_inn, all_player_rows
-
-
-def pull_day(
-    year,
-    month,
-    day,
-    max_pages=20,
-    fetch_innings=True,
-    debug=False,
-    innings_workers=5,
-):
-    date_str = f"{year}-{month:02d}-{day:02d}"
-    seen, seen_order = {}, []
-
-    for page in range(1, max_pages + 1):
-        try:
-            data = _get_scoreboard_page(year, month, day, page)
-        except Exception:
-            break
-
-        raw_games = data.get("games", [])
-        if not raw_games:
-            break
-
-        for idx, entry in enumerate(raw_games):
-            game = entry.get("game", entry)
-            away_data, home_data = game.get("away", {}), game.get("home", {})
-            away_team = extract_team(away_data, "Away")
-            home_team = extract_team(home_data, "Home")
-            away_score = extract_score(away_data)
-            home_score = extract_score(home_data)
-            state = game.get("gameState", "unknown")
-            status = game.get("status", "")
-            game_id = extract_game_id(game)
-
-            key = unique_key(
-                game,
-                away_team,
-                home_team,
-                away_score,
-                home_score,
-                date_str,
-                idx=idx,
-            )
-            if key in seen:
-                continue
-            seen[key] = {
-                "date": date_str,
-                "game_id": game_id,
-                "away_team": away_team,
-                "away_score": away_score,
-                "home_team": home_team,
-                "home_score": home_score,
-                "state": state,
-                "status": status,
-                "away_innings": None,
-                "home_innings": None,
-            }
-            seen_order.append(key)
-
-    games = [seen[k] for k in seen_order]
-    day_player_rows = []
-
-    if fetch_innings:
-        game_ids = [row["game_id"] for row in games if row["game_id"]]
-        inn_map, day_player_rows = fetch_boxscores_concurrent(
-            game_ids, debug=debug, max_workers=innings_workers
-        )
-        for row in games:
-            row["away_innings"], row["home_innings"] = inn_map.get(
-                row["game_id"], (None, None)
-            )
-
-    return games, day_player_rows
-
-
-def games_to_team_rows(games):
-    rows = []
-    for g in games:
-        if g["away_score"] is None or g["home_score"] is None:
-            continue
-        try:
-            away_score, home_score = int(g["away_score"]), int(g["home_score"])
-        except (TypeError, ValueError):
-            continue
-
-        away_inn = (
-            g["away_innings"]
-            if g["away_innings"] and g["away_innings"] > 0
-            else 7.0
-        )
-        home_inn = (
-            g["home_innings"]
-            if g["home_innings"] and g["home_innings"] > 0
-            else 7.0
-        )
-
-        pairs = [
-            (
-                "away",
-                g["away_team"],
-                g["home_team"],
-                away_score,
-                home_score,
-                away_inn,
-                home_inn,
-            ),
-            (
-                "home",
-                g["home_team"],
-                g["away_team"],
-                home_score,
-                away_score,
-                home_inn,
-                away_inn,
-            ),
-        ]
-        for (
-            role,
-            team,
-            opponent,
-            runs_for,
-            runs_against,
-            inn_batted,
-            inn_fielded,
-        ) in pairs:
-            rows.append(
-                {
-                    "date": g["date"],
-                    "game_id": g["game_id"],
-                    "team": team,
-                    "opponent": opponent,
-                    "role": role,
-                    "runs_for": runs_for,
-                    "runs_against": runs_against,
-                    "innings_batted": inn_batted,
-                    "innings_fielded": inn_fielded,
-                    "win": (
-                        None
-                        if runs_for == runs_against
-                        else int(runs_for > runs_against)
-                    ),
-                }
-            )
-    return rows
-
-
-def _daterange(start, end):
-    d = start
-    while d <= end:
-        yield d
-        d += timedelta(days=1)
-
-
-def pull_season(
-    start,
-    end,
-    out_dir=".",
-    fetch_innings=True,
-    debug=False,
-    max_retries=2,
-):
-    os.makedirs(out_dir, exist_ok=True)
+def pull_game_scores(start, end, out_dir="."):
+    print(f"\n--- Scraping Game Scores & Innings ({start} to {end}) ---")
     games_path = os.path.join(out_dir, "games_season.csv")
     team_path = os.path.join(out_dir, "team_games_season.csv")
-    player_path = os.path.join(out_dir, "player_boxscores_2026.csv")
     progress_path = os.path.join(out_dir, "_completed_dates.txt")
 
     completed = set()
@@ -407,70 +97,129 @@ def pull_season(
         with open(progress_path) as f:
             completed = set(line.strip() for line in f if line.strip())
 
-    if not os.path.exists(team_path) or os.stat(team_path).st_size == 0:
-        completed = set()
+    all_games = pd.read_csv(games_path).to_dict("records") if os.path.exists(games_path) and os.stat(games_path).st_size > 0 else []
+    all_team_rows = pd.read_csv(team_path).to_dict("records") if os.path.exists(team_path) and os.stat(team_path).st_size > 0 else []
 
-    all_games = (
-        pd.read_csv(games_path).to_dict("records")
-        if os.path.exists(games_path) and os.stat(games_path).st_size > 0
-        else []
-    )
-    all_team_rows = (
-        pd.read_csv(team_path).to_dict("records")
-        if os.path.exists(team_path) and os.stat(team_path).st_size > 0
-        else []
-    )
-    all_player_rows = (
-        pd.read_csv(player_path).to_dict("records")
-        if os.path.exists(player_path) and os.stat(player_path).st_size > 0
-        else []
-    )
-
-    dates = list(_daterange(start, end))
-
-    for i, d in enumerate(dates, 1):
-        date_str = d.isoformat()
+    curr = start
+    while curr <= end:
+        date_str = curr.isoformat()
         if date_str in completed:
-            print(f"Skipping {date_str} (already logged in _completed_dates.txt)")
+            curr += timedelta(days=1)
             continue
 
-        day_games, day_players, attempt = None, [], 0
-        while attempt <= max_retries:
-            try:
-                day_games, day_players = pull_day(
-                    d.year,
-                    d.month,
-                    d.day,
-                    fetch_innings=fetch_innings,
-                    debug=debug,
-                )
-                break
-            except Exception as e:
-                attempt += 1
-                time.sleep(2 * attempt)
+        url = SCOREBOARD_URL.format(year=curr.year, month=curr.month, day=curr.day)
+        try:
+            data = _get_json(url)
+            raw_games = data.get("games", [])
+            day_games = []
 
-        if day_games is None:
-            continue
+            for entry in raw_games:
+                game = entry.get("game", entry)
+                away_data, home_data = game.get("away", {}), game.get("home", {})
+                game_id = extract_game_id(game)
+                away_inn, home_inn = fetch_game_innings(game_id)
 
-        all_games.extend(day_games)
-        all_team_rows.extend(games_to_team_rows(day_games))
-        all_player_rows.extend(day_players)
-        completed.add(date_str)
+                day_games.append({
+                    "date": date_str,
+                    "game_id": game_id,
+                    "away_team": extract_team(away_data, "Away"),
+                    "away_score": extract_score(away_data),
+                    "home_team": extract_team(home_data, "Home"),
+                    "home_score": extract_score(home_data),
+                    "state": game.get("gameState", "unknown"),
+                    "status": game.get("status", ""),
+                    "away_innings": away_inn,
+                    "home_innings": home_inn
+                })
 
-        pd.DataFrame(all_games).to_csv(games_path, index=False)
-        pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
-        if all_player_rows:
-            pd.DataFrame(all_player_rows).to_csv(player_path, index=False)
+            all_games.extend(day_games)
 
-        with open(progress_path, "w") as f:
-            f.write("\n".join(sorted(completed)))
+            # Build team-level rows
+            for g in day_games:
+                if g["away_score"] is None or g["home_score"] is None:
+                    continue
+                try:
+                    a_sc, h_sc = int(g["away_score"]), int(g["home_score"])
+                except (ValueError, TypeError):
+                    continue
 
-        print(
-            f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games, {len(day_players)} player lines logged."
-        )
+                a_inn = g["away_innings"] if g["away_innings"] and g["away_innings"] > 0 else 7.0
+                h_inn = g["home_innings"] if g["home_innings"] and g["home_innings"] > 0 else 7.0
 
-    return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
+                all_team_rows.append({"date": date_str, "game_id": g["game_id"], "team": g["away_team"], "opponent": g["home_team"], "role": "away", "runs_for": a_sc, "runs_against": h_sc, "innings_batted": a_inn, "innings_fielded": h_inn, "win": int(a_sc > h_sc)})
+                all_team_rows.append({"date": date_str, "game_id": g["game_id"], "team": g["home_team"], "opponent": g["away_team"], "role": "home", "runs_for": h_sc, "runs_against": a_sc, "innings_batted": h_inn, "innings_fielded": a_inn, "win": int(h_sc > a_sc)})
 
+            completed.add(date_str)
+            print(f"Logged {date_str}: {len(day_games)} games.")
+
+        except Exception as e:
+            print(f"Error pulling scoreboard for {date_str}: {e}")
+
+        curr += timedelta(days=1)
+
+    pd.DataFrame(all_games).to_csv(games_path, index=False)
+    pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
+    with open(progress_path, "w") as f:
+        f.write("\n".join(sorted(completed)))
+
+# ---------------------------------------------------------------------------
+# PART 2: PLAYER HITTING LEADERBOARD SCRAPER
+# ---------------------------------------------------------------------------
+
+def fetch_season_player_stats(out_dir="."):
+    print("\n--- Fetching NCAA Season Player Leaderboard ---")
+    all_players = []
+    page = 1
+
+    while True:
+        url = f"{STATS_BASE_URL}?page={page}"
+        try:
+            resp = _session.get(url, timeout=15)
+            resp.raise_for_status()
+            data = resp.json()
+        except Exception as e:
+            print(f"Finished at page {page}: {e}")
+            break
+
+        stats_list = data.get("stats", []) or data.get("data", [])
+        if not stats_list:
+            break
+
+        for row in stats_list:
+            def _clean(val):
+                if val in (None, "", "-"):
+                    return 0
+                try:
+                    return int(float(val))
+                except (ValueError, TypeError):
+                    return 0
+
+            all_players.append({
+                "player_name": row.get("name") or row.get("Player") or "Unknown",
+                "team": row.get("team") or row.get("Team") or "Unknown",
+                "G": _clean(row.get("g") or row.get("G")),
+                "AB": _clean(row.get("ab") or row.get("AB")),
+                "H": _clean(row.get("h") or row.get("H")),
+                "2B": _clean(row.get("d2") or row.get("2b") or row.get("2B")),
+                "3B": _clean(row.get("d3") or row.get("3b") or row.get("3B")),
+                "HR": _clean(row.get("hr") or row.get("HR")),
+                "BB": _clean(row.get("bb") or row.get("BB"))
+            })
+
+        print(f"Processed player stats page {page} ({len(stats_list)} players)")
+        total_pages = data.get("pageCount") or data.get("totalPages")
+        if total_pages and page >= int(total_pages):
+            break
+        page += 1
+
+    if all_players:
+        output_path = os.path.join(out_dir, "player_boxscores_2026.csv")
+        pd.DataFrame(all_players).to_csv(output_path, index=False)
+        print(f"Saved {len(all_players)} player records to {output_path} successfully!")
+
+# ---------------------------------------------------------------------------
+# MAIN EXECUTION
+# ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
     if len(sys.argv) >= 3:
@@ -484,5 +233,8 @@ if __name__ == "__main__":
         start_date = today - timedelta(days=1)
         end_date = today
 
-    print(f"Running scraper for date range: {start_date} to {end_date}")
-    pull_season(start=start_date, end=end_date, out_dir=".")
+    # 1. Pull game scores & inning counts
+    pull_game_scores(start_date, end_date)
+
+    # 2. Pull player hitting leaderboard
+    fetch_season_player_stats()
