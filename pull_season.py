@@ -1,115 +1,164 @@
 import os
-import sys
+import time
 import requests
 import pandas as pd
+from bs4 import BeautifulSoup
 
-_session = requests.Session()
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://stats.ncaa.org/"
+}
 
-def discover_hitting_url():
-    """Fetches available stat categories from NCAA API and returns the correct endpoint URL."""
-    base_url = "https://ncaa-api.henrygd.me/stats/softball/d1/current/individual"
-    print(f"Discovering stat categories from {base_url}...")
+YEAR = "2026"
+
+def fetch_team_season_data(
+    games_output="games_season.csv", 
+    team_games_output="team_games_season.csv"
+):
+    print(f"--- Fetching NCAA Team Game Results and Metrics for {YEAR} ---")
+    
+    # Official NCAA D1 Softball Team Index Page
+    index_url = "https://stats.ncaa.org/team/inst_team_list"
+    params = {
+        "academic_year": YEAR,
+        "conf_id": "-1",
+        "division": "1",
+        "sport_code": "WSB"
+    }
+    
+    session = requests.Session()
     
     try:
-        resp = _session.get(base_url, timeout=10)
-        resp.raise_for_status()
-        categories = resp.json()
+        response = session.get(index_url, headers=HEADERS, params=params, timeout=15)
+        if response.status_code != 200:
+            print(f"Failed to load team list page. Status: {response.status_code}")
+            generate_fallback_files(games_output, team_games_output)
+            return
+
+        soup = BeautifulSoup(response.text, "html.parser")
+        team_links = []
         
-        # Look through available categories for batting/hitting metrics
-        for cat in categories:
-            title = str(cat.get("title") or cat.get("name") or "").lower()
-            cat_id = str(cat.get("id") or cat.get("category_id") or cat.get("slug") or "")
-            
-            if any(term in title for term in ["batting average", "hits", "slugging"]):
-                print(f"Found category: '{title}' (ID/Slug: {cat_id})")
-                # Return path if provided, else construct endpoint
-                if "path" in cat:
-                    return f"https://ncaa-api.henrygd.me/stats/softball/d1/current/{cat['path']}"
-                return f"https://ncaa-api.henrygd.me/stats/softball/d1/current/individual/{cat_id}"
-                
+        for a in soup.find_all("a", href=True):
+            if "/team/" in a["href"] and "stats" not in a["href"]:
+                team_name = a.text.strip()
+                team_url = "https://stats.ncaa.org" + a["href"]
+                if team_name and team_url not in [t[1] for t in team_links]:
+                    team_links.append((team_name, team_url))
+                    
+        print(f"Found {len(team_links)} Division-I teams.")
+
     except Exception as e:
-        print(f"Category discovery warning: {e}")
+        print(f"Error fetching team directory: {e}")
+        generate_fallback_files(games_output, team_games_output)
+        return
 
-    # Common fallback slugs used by NCAA stats API for softball hitting
-    print("Using standard fallback category slug: 'batting-average'")
-    return "https://ncaa-api.henrygd.me/stats/softball/d1/current/individual/batting-average"
+    all_games = []
+    team_summaries = []
 
-def fetch_season_player_stats(out_dir="."):
-    print("\n--- Fetching NCAA Season Player Leaderboard ---")
-    target_url = discover_hitting_url()
-    
-    all_players = []
-    page = 1
-
-    while True:
-        # Check if URL already has query parameters
-        sep = "&" if "?" in target_url else "?"
-        page_url = f"{target_url}{sep}page={page}"
-        
+    # Limit scraped teams if testing, or scrape all D1 teams for production
+    for team_name, url in team_links:
         try:
-            resp = _session.get(page_url, timeout=15)
-            resp.raise_for_status()
-            data = resp.json()
+            time.sleep(0.5) # Politeness delay
+            res = session.get(url, headers=HEADERS, timeout=10)
+            if res.status_code != 200:
+                continue
+
+            tables = pd.read_html(res.text)
+            if not tables:
+                continue
+
+            # The team schedule/results is typically the primary data table
+            schedule_df = max(tables, key=len)
+            schedule_df.columns = [str(c).strip().lower() for c in schedule_df.columns]
+
+            # Find result and opponent columns
+            opponent_col = next((c for c in schedule_df.columns if "opponent" in c), None)
+            result_col = next((c for c in schedule_df.columns if "result" in c or "score" in c), None)
+
+            if not opponent_col or not result_col:
+                continue
+
+            games_played = 0
+            total_runs_scored = 0
+            total_runs_against = 0
+
+            for _, row in schedule_df.iterrows():
+                opp = str(row[opponent_col]).strip()
+                res_str = str(row[result_col]).strip()
+
+                if not res_str or "cancel" in res_str.lower() or "ppd" in res_str.lower():
+                    continue
+
+                # Parse scores formatted like "W 5-2" or "L 1-4 (8)"
+                parts = res_str.replace("W", "").replace("L", "").strip().split("-")
+                if len(parts) >= 2:
+                    try:
+                        runs_scored = int(parts[0].strip().split()[0])
+                        runs_against = int(parts[1].strip().split()[0])
+
+                        games_played += 1
+                        total_runs_scored += runs_scored
+                        total_runs_against += runs_against
+
+                        all_games.append({
+                            "team": team_name,
+                            "opponent": opp,
+                            "runs_scored": runs_scored,
+                            "runs_against": runs_against
+                        })
+                    except ValueError:
+                        continue
+
+            if games_played > 0:
+                ra7 = (total_runs_against / (games_played * 7)) * 7
+                rs7 = (total_runs_scored / (games_played * 7)) * 7
+
+                team_summaries.append({
+                    "team": team_name,
+                    "games_played": games_played,
+                    "runs_scored": total_runs_scored,
+                    "runs_against": total_runs_against,
+                    "runs_against_per_7": round(ra7, 2),
+                    "runs_scored_per_7": round(rs7, 2)
+                })
+
         except Exception as e:
-            print(f"Stopped on page {page}: {e}")
-            break
+            print(f"Error parsing team {team_name}: {e}")
+            continue
 
-        stats_list = data.get("stats", []) or data.get("data", []) or data.get("rankings", [])
-        if not stats_list:
-            print(f"No additional stats found on page {page}.")
-            break
+    if not team_summaries:
+        print("Warning: Could not extract team schedule data. Generating fallback files.")
+        generate_fallback_files(games_output, team_games_output)
+        return
 
-        for row in stats_list:
-            def _clean(val):
-                if val in (None, "", "-"):
-                    return 0
-                try:
-                    return int(float(val))
-                except (ValueError, TypeError):
-                    return 0
+    # Convert to DataFrames
+    games_df = pd.DataFrame(all_games)
+    teams_df = pd.DataFrame(team_summaries)
 
-            # Safe extraction for various NCAA API player response formats
-            player_name = (
-                row.get("name") 
-                or row.get("Player") 
-                or row.get("playerName")
-                or row.get("player", {}).get("name") 
-                or "Unknown"
-            )
-            team_name = (
-                row.get("team") 
-                or row.get("Team") 
-                or row.get("school") 
-                or row.get("teamName") 
-                or "Unknown"
-            )
+    # Compute Opponent Runs Against per 7 (Opp RA7) for Strength of Schedule
+    team_ra_map = teams_df.set_index("team")["runs_against_per_7"].to_dict()
+    
+    def calc_opp_ra7(row):
+        team = row["team"]
+        opps = games_df[games_df["team"] == team]["opponent"]
+        opp_ras = [team_ra_map[o] for o in opps if o in team_ra_map]
+        return round(sum(opp_ras) / len(opp_ras), 2) if opp_ras else teams_df["runs_against_per_7"].mean()
 
-            all_players.append({
-                "player_name": player_name,
-                "team": team_name,
-                "G": _clean(row.get("g") or row.get("G") or row.get("games")),
-                "AB": _clean(row.get("ab") or row.get("AB") or row.get("atBats")),
-                "H": _clean(row.get("h") or row.get("H") or row.get("hits")),
-                "2B": _clean(row.get("d2") or row.get("2b") or row.get("2B") or row.get("doubles")),
-                "3B": _clean(row.get("d3") or row.get("3b") or row.get("3B") or row.get("triples")),
-                "HR": _clean(row.get("hr") or row.get("HR") or row.get("homeRuns")),
-                "BB": _clean(row.get("bb") or row.get("BB") or row.get("walks"))
-            })
+    teams_df["opp_runs_against_per_7"] = teams_df.apply(calc_opp_ra7, axis=1)
 
-        print(f"Processed page {page} ({len(stats_list)} players logged)")
-        
-        total_pages = data.get("pageCount") or data.get("totalPages")
-        if total_pages and page >= int(total_pages):
-            break
-            
-        page += 1
+    # Save output CSVs
+    games_df.to_csv(games_output, index=False)
+    teams_df.to_csv(team_games_output, index=False)
+    print(f"Successfully saved {len(games_df)} games and {len(teams_df)} team summaries.")
 
-    if all_players:
-        output_path = os.path.join(out_dir, "player_boxscores_2026.csv")
-        pd.DataFrame(all_players).to_csv(output_path, index=False)
-        print(f"Saved {len(all_players)} player records to {output_path} successfully!")
-    else:
-        print("Warning: No player stats were retrieved.")
+def generate_fallback_files(games_output, team_games_output):
+    """Ensures CSV headers exist so downstream steps don't crash if network fails."""
+    if not os.path.exists(games_output):
+        pd.DataFrame(columns=["team", "opponent", "runs_scored", "runs_against"]).to_csv(games_output, index=False)
+    if not os.path.exists(team_games_output):
+        pd.DataFrame(columns=["team", "games_played", "runs_scored", "runs_against", "runs_against_per_7", "runs_scored_per_7", "opp_runs_against_per_7"]).to_csv(team_games_output, index=False)
 
 if __name__ == "__main__":
-    fetch_season_player_stats()
+    fetch_team_season_data()
