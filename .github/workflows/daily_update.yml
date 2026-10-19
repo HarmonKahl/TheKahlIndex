@@ -1,42 +1,50 @@
-name: Update Kahl Index Data
+name: Daily Kahl Index Pipeline
 
 on:
   schedule:
-    - cron: '0 6 * * *' # Runs daily at 6 AM UTC
-  workflow_dispatch: # Allows manual trigger from GitHub UI
+    # Runs automatically every day at 06:00 UTC (1:00 AM EST)
+    - cron: '0 6 * * *'
+  workflow_dispatch: # Allows manual triggers from the GitHub Actions UI
 
 jobs:
-  build-and-deploy:
+  run-pipeline:
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout Repository
+      - name: Check out repository
         uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+          cache: 'pip' # Speeds up execution by caching installed dependencies
 
-      - name: Install Python Dependencies
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests
+          pip install pandas requests lxml html5lib
 
-      - name: Run Live NCAA Player Game Scraper
-        run: python -u pull_player_stats.py 2026-02-05 2026-06-10
+      - name: Step 1 - Fetch Team Game Stats & Opponent Data
+        run: python pull_team_games.py
 
-      - name: Calculate Player RC7 Metrics
+      - name: Step 2 - Fetch Cumulative Player Stats
+        run: python pull_cumulative_stats.py
+
+      - name: Step 3 - Calculate RC7 Metrics & Generate Leaderboards
         run: python calculate_rc7.py
 
-      - name: Commit and Push Changes
+      - name: Step 4 - Commit and Push Output Data
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add player_games_season.csv _player_completed_dates.txt players.json qualified_players.json games_season.csv team_games_season.csv ratings.json bracketology.json || true
-          git status
-          git commit -m "Auto-update Kahl Index player game stats and RC7 metrics" || exit 0
-          git push origin main
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          git add cumulative_player_stats.csv players.json qualified_players.json
+          
+          # Only commit and push if data files were modified
+          if git diff --staged --quiet; then
+            echo "No changes detected in calculated metrics."
+          else
+            git commit -m "Auto-update Kahl Index player data [skip ci]"
+            git push
+          fi
