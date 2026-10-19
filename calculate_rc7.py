@@ -1,103 +1,87 @@
-import json
 import os
+import json
 import pandas as pd
 
-
-def calculate_rc7():
-    csv_file = "player_boxscores_2026.csv"
-
-    if not os.path.exists(csv_file):
-        print(
-            f"Warning: {csv_file} not found. Writing empty array to players.json."
-        )
-        with open("players.json", "w") as f:
+def calculate_rc7(input_path="player_games_season.csv", output_path="players.json"):
+    if not os.path.exists(input_path) or os.stat(input_path).st_size == 0:
+        print(f"Warning: {input_path} not found or empty. Writing empty array to {output_path}.")
+        with open(output_path, "w") as f:
             json.dump([], f)
         return
 
-    df = pd.read_csv(csv_file)
+    print(f"Loading player game data from {input_path}...")
+    df = pd.read_csv(input_path)
 
-    if df.empty:
-        print("No boxscore rows found. Writing empty array to players.json.")
-        with open("players.json", "w") as f:
-            json.dump([], f)
-        return
-
-    # Clean numerical columns
-    stat_cols = ["AB", "H", "BB", "2B", "3B", "HR"]
-    for col in stat_cols:
-        if col in df.columns:
+    # Ensure required numeric columns are present and clean
+    numeric_cols = ["at_bats", "hits", "runs_scored", "rbi", "walks", "strikeouts"]
+    for col in numeric_cols:
+        if col not in df.columns:
+            df[col] = 0
+        else:
             df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
 
-    # Aggregate stats by player for the season
-    player_stats = (
-        df.groupby(["player_name", "team"])
-        .agg({
-            "game_id": "nunique",
-            "AB": "sum",
-            "H": "sum",
-            "BB": "sum",
-            "2B": "sum",
-            "3B": "sum",
-            "HR": "sum",
+    # Create full name for grouping
+    df["full_name"] = df["first_name"].fillna("").astype(str).str.strip() + " " + df["last_name"].fillna("").astype(str).str.strip()
+    df["full_name"] = df["full_name"].str.strip()
+
+    # Aggregate stats per player across all games
+    grouped = df.groupby(["full_name", "team"], as_index=False).agg({
+        "game_id": "count",        # Games played
+        "at_bats": "sum",
+        "hits": "sum",
+        "runs_scored": "sum",
+        "rbi": "sum",
+        "walks": "sum",
+        "strikeouts": "sum"
+    }).rename(columns={"game_id": "G", "at_bats": "AB", "hits": "H", "runs_scored": "R", "rbi": "RBI", "walks": "BB", "strikeouts": "SO"})
+
+    # --- Calculate RC7 / Adjusted Runs Created ---
+    # Formula components:
+    # A = On-Base Factor (H + BB)
+    # B = Total Bases / Advancement Factor (Estimated SLG proxy: 1.125 * H + 0.25 * BB)
+    # C = Opportunity Factor (AB + BB)
+    
+    players_list = []
+    for _, row in grouped.iterrows():
+        ab = row["AB"]
+        h = row["H"]
+        bb = row["BB"]
+        g = row["G"]
+
+        # Basic Runs Created (RC)
+        if (ab + bb) > 0:
+            a = h + bb
+            b = (1.125 * h) + (0.25 * bb)  # Standard approximation when extra-base breakdown isn't isolated
+            c = ab + bb
+            rc = (a * b) / c
+        else:
+            rc = 0.0
+
+        # Adjust per 7 innings / 21 outs (RC7)
+        outs = (ab - h)
+        rc7 = (rc / outs) * 21 if outs > 0 else 0.0
+
+        players_list.append({
+            "name": row["full_name"],
+            "team": row["team"],
+            "games": int(g),
+            "ab": int(ab),
+            "hits": int(h),
+            "runs": int(row["R"]),
+            "rbi": int(row["RBI"]),
+            "walks": int(bb),
+            "strikeouts": int(row["SO"]),
+            "rc": round(rc, 2),
+            "rc7": round(rc7, 2)
         })
-        .reset_index()
-    )
 
-    player_stats.rename(columns={"game_id": "games_played"}, inplace=True)
+    # Sort players by RC7 descending
+    players_list.sort(key=lambda x: x["rc7"], reverse=True)
 
-    # Calculate Total Bases, PA, and Outs
-    player_stats["TB"] = (
-        player_stats["H"]
-        + player_stats["2B"]
-        + (2 * player_stats["3B"])
-        + (3 * player_stats["HR"])
-    )
-    player_stats["PA"] = player_stats["AB"] + player_stats["BB"]
-    player_stats["Outs"] = player_stats["AB"] - player_stats["H"]
+    with open(output_path, "w") as f:
+        json.dump(players_list, f, indent=2)
 
-    # Classic Bill James RC & Raw RC7
-    player_stats["RC"] = player_stats.apply(
-        lambda r: ((r["H"] + r["BB"]) * r["TB"]) / r["PA"]
-        if r["PA"] > 0
-        else 0,
-        axis=1,
-    )
-    player_stats["RC7_raw"] = player_stats.apply(
-        lambda r: (r["RC"] / r["Outs"]) * 21 if r["Outs"] > 0 else 0, axis=1
-    )
-
-    # Filter qualification threshold (minimum 15 PA)
-    qualified_players = player_stats[player_stats["PA"] >= 15].copy()
-
-    # OPAF Baseline setup
-    qualified_players["OPAF"] = 1.00
-    qualified_players["RC7_adj"] = (
-        qualified_players["RC7_raw"] * qualified_players["OPAF"]
-    ).round(2)
-    qualified_players["RC7_raw"] = qualified_players["RC7_raw"].round(2)
-
-    # Sort & Output JSON
-    output_df = qualified_players[[
-        "player_name",
-        "team",
-        "games_played",
-        "PA",
-        "AB",
-        "H",
-        "HR",
-        "RC7_raw",
-        "OPAF",
-        "RC7_adj",
-    ]].sort_values(by="RC7_adj", ascending=False)
-
-    records = output_df.to_dict(orient="records")
-    with open("players.json", "w") as f:
-        json.dump(records, f, indent=2)
-
-    print(
-        f"Successfully processed {len(records)} qualified players into players.json!"
-    )
-
+    print(f"Successfully calculated RC7 for {len(players_list)} players and saved to {output_path}!")
 
 if __name__ == "__main__":
     calculate_rc7()
