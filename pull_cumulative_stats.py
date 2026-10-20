@@ -1,6 +1,6 @@
 import os
-import re
 import time
+import json
 import requests
 import pandas as pd
 from datetime import datetime, timedelta
@@ -8,45 +8,28 @@ from datetime import datetime, timedelta
 BASE_URL = "https://ncaa-api.henrygd.me"
 START_DATE = datetime(2026, 2, 5)
 END_DATE = datetime(2026, 6, 10)
+CACHE_FILE = "boxscore_cache.json"
 
-def parse_extra_bases_from_notes(notes_list):
-    """
-    Parses box score notes/text arrays for 2B, 3B, HR text lines:
-    e.g. ['2B: Smith (2), Johnson (1)', 'HR: Davis (1)']
-    """
-    extra_bases = {}
-    if not notes_list:
-        return extra_bases
+def load_cache():
+    if os.path.exists(CACHE_FILE):
+        try:
+            with open(CACHE_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            return {}
+    return {}
 
-    full_text = " ; ".join([str(n) for n in notes_list])
-    patterns = {
-        "2b": r"2B:\s*([^;<]+)",
-        "3b": r"3B:\s*([^;<]+)",
-        "hr": r"HR:\s*([^;<]+)"
-    }
-    
-    for cat, pattern in patterns.items():
-        matches = re.findall(pattern, full_text, re.IGNORECASE)
-        for match in matches:
-            entries = match.split(",")
-            for entry in entries:
-                entry = entry.strip()
-                if not entry:
-                    continue
-                m = re.match(r"([A-Za-z\s\.'-]+?)\s*\(?(\d+)?\)?$", entry)
-                if m:
-                    pname = m.group(1).strip()
-                    count = int(m.group(2)) if m.group(2) else 1
-                    if pname not in extra_bases:
-                        extra_bases[pname] = {"2b": 0, "3b": 0, "hr": 0}
-                    extra_bases[pname][cat] += count
-
-    return extra_bases
+def save_cache(cache):
+    try:
+        with open(CACHE_FILE, "w") as f:
+            json.dump(cache, f)
+    except Exception as e:
+        print(f"Error saving cache: {e}")
 
 def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
     print(f"Fetching game boxscores ({START_DATE.strftime('%Y-%m-%d')} to {END_DATE.strftime('%Y-%m-%d')})...")
     
-    # 1. Collect game IDs from schedule
+    # 1. Gather Game IDs
     game_ids = []
     current_date = START_DATE
     
@@ -63,84 +46,105 @@ def fetch_cumulative_stats(output_path="cumulative_player_stats.csv"):
                     gid = game_info.get("url", "") or game_info.get("id", "") or game_info.get("gameId", "")
                     if "/" in str(gid):
                         gid = str(gid).strip("/").split("/")[-1]
-                    if gid and gid not in game_ids:
-                        game_ids.append(gid)
+                    if gid and str(gid) not in game_ids:
+                        game_ids.append(str(gid))
         except Exception:
             pass
+
         current_date += timedelta(days=1)
 
-    print(f"Found {len(game_ids)} game box scores across the date range. Aggregating stats...")
+    print(f"Found {len(game_ids)} game box scores across the date range.")
     
+    cache = load_cache()
     player_totals = {}
 
-    # 2. Parse box scores
+    # 2. Process Games
+    fetched_count = 0
     for gid in game_ids:
-        box_url = f"{BASE_URL}/game/{gid}/boxscore"
-        try:
-            time.sleep(0.05)
-            box_res = requests.get(box_url, timeout=10)
-            if box_res.status_code != 200:
+        if gid in cache:
+            box_data = cache[gid]
+        else:
+            box_url = f"{BASE_URL}/game/{gid}/boxscore"
+            try:
+                time.sleep(0.05)
+                box_res = requests.get(box_url, timeout=10)
+                if box_res.status_code != 200:
+                    continue
+                box_data = box_res.json()
+                cache[gid] = box_data
+                fetched_count += 1
+                if fetched_count % 100 == 0:
+                    save_cache(cache)
+            except Exception:
                 continue
-                
-            box_data = box_res.json()
-            
-            # Extract notes / footnotes for 2B, 3B, HR text
-            notes = box_data.get("notes", []) or box_data.get("text", []) or []
-            extra_bases_map = parse_extra_bases_from_notes(notes)
-            
-            # Extract hitting tables
-            tables = box_data.get("tables", []) or box_data.get("teams", [])
-            for tbl in tables:
-                team_name = tbl.get("header", "") or tbl.get("name", "") or "D1_Team"
-                
-                # Player rows are inside 'data' or 'players'
-                rows = tbl.get("data", []) or tbl.get("players", []) or tbl.get("stats", [])
-                
-                for r in rows:
-                    if isinstance(r, dict):
-                        pname = r.get("Player") or r.get("name") or r.get("player") or ""
-                        
-                        # Skip total rows
-                        if not pname or str(pname).lower() in ["totals", "total", "team"]:
-                            continue
-                            
-                        pname = str(pname).strip()
-                        
-                        # Extract numeric stats cleanly
-                        ab = int(pd.to_numeric(r.get("AB", r.get("ab", 0)), errors="coerce") or 0)
-                        h = int(pd.to_numeric(r.get("H", r.get("h", 0)), errors="coerce") or 0)
-                        bb = int(pd.to_numeric(r.get("BB", r.get("bb", 0)), errors="coerce") or 0)
-                        so = int(pd.to_numeric(r.get("SO", r.get("k", r.get("so", 0))), errors="coerce") or 0)
-                        
-                        # Check direct columns first, then fallback to text notes
-                        d2b = int(pd.to_numeric(r.get("2B", r.get("d2b", 0)), errors="coerce") or 0)
-                        d3b = int(pd.to_numeric(r.get("3B", r.get("d3b", 0)), errors="coerce") or 0)
-                        hr = int(pd.to_numeric(r.get("HR", r.get("hr", 0)), errors="coerce") or 0)
-                        
-                        if d2b == 0 and d3b == 0 and hr == 0 and pname in extra_bases_map:
-                            d2b = extra_bases_map[pname]["2b"]
-                            d3b = extra_bases_map[pname]["3b"]
-                            hr = extra_bases_map[pname]["hr"]
 
-                        key = (pname, team_name)
-                        if key not in player_totals:
-                            player_totals[key] = {
-                                "games_played": 0, "ab": 0, "hits": 0,
-                                "doubles": 0, "triples": 0, "hr": 0,
-                                "walks": 0, "strikeouts": 0
-                            }
-                            
-                        player_totals[key]["games_played"] += 1
-                        player_totals[key]["ab"] += ab
-                        player_totals[key]["hits"] += h
-                        player_totals[key]["doubles"] += d2b
-                        player_totals[key]["triples"] += d3b
-                        player_totals[key]["hr"] += hr
-                        player_totals[key]["walks"] += bb
-                        player_totals[key]["strikeouts"] += so
-
-        except Exception:
+        if not box_data:
             continue
+
+        # Flexible schema mapping for henrygd.me
+        teams = (
+            box_data.get("teamsBoxscore") or 
+            box_data.get("teams") or 
+            box_data.get("boxscore", {}).get("teams") or 
+            []
+        )
+        
+        for tdata in teams:
+            team_name = (
+                tdata.get("name") or 
+                tdata.get("teamName") or 
+                tdata.get("team", {}).get("name") or 
+                "D1_Team"
+            )
+            
+            # Locate hitting entries
+            player_entries = []
+            if "players" in tdata:
+                player_entries = tdata["players"]
+            elif "playerStats" in tdata:
+                player_entries = tdata["playerStats"]
+            elif "tables" in tdata:
+                for tbl in tdata["tables"]:
+                    if "hit" in str(tbl.get("title", "")).lower() or "bat" in str(tbl.get("title", "")).lower():
+                        player_entries.extend(tbl.get("data", []))
+            
+            for p in player_entries:
+                pname = p.get("name") or p.get("player") or p.get("playerName") or p.get("firstName", "") + " " + p.get("lastName", "")
+                pname = str(pname).strip()
+                
+                if not pname or pname.lower() in ["totals", "team", "total"]:
+                    continue
+                    
+                stats = p.get("stats", p)
+                if isinstance(stats, list):
+                    continue
+                    
+                ab = int(pd.to_numeric(stats.get("ab", stats.get("AB", 0)), errors="coerce") or 0)
+                h = int(pd.to_numeric(stats.get("h", stats.get("H", 0)), errors="coerce") or 0)
+                d2b = int(pd.to_numeric(stats.get("d2b", stats.get("2b", stats.get("2B", 0))), errors="coerce") or 0)
+                d3b = int(pd.to_numeric(stats.get("d3b", stats.get("3b", stats.get("3B", 0))), errors="coerce") or 0)
+                hr = int(pd.to_numeric(stats.get("hr", stats.get("HR", 0)), errors="coerce") or 0)
+                bb = int(pd.to_numeric(stats.get("bb", stats.get("BB", 0)), errors="coerce") or 0)
+                so = int(pd.to_numeric(stats.get("so", stats.get("k", stats.get("SO", 0))), errors="coerce") or 0)
+                
+                key = (pname, team_name)
+                if key not in player_totals:
+                    player_totals[key] = {
+                        "games_played": 0, "ab": 0, "hits": 0,
+                        "doubles": 0, "triples": 0, "hr": 0,
+                        "walks": 0, "strikeouts": 0
+                    }
+                    
+                player_totals[key]["games_played"] += 1
+                player_totals[key]["ab"] += ab
+                player_totals[key]["hits"] += h
+                player_totals[key]["doubles"] += d2b
+                player_totals[key]["triples"] += d3b
+                player_totals[key]["hr"] += hr
+                player_totals[key]["walks"] += bb
+                player_totals[key]["strikeouts"] += so
+
+    save_cache(cache)
 
     rows = []
     for (pname, team), s in player_totals.items():
