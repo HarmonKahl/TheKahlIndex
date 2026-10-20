@@ -38,13 +38,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Stage output files safely without failing if a file was not generated
-          git add games_season.csv team_games_season.csv cumulative_player_stats.csv players.json qualified_players.json 2>/dev/null || true
+          # Stage output CSVs, JSON leaderboards, and the persistent boxscore cache
+          git add games_season.csv team_games_season.csv cumulative_player_stats.csv boxscore_cache.json players.json qualified_players.json 2>/dev/null || true
           
-          # Only commit and push if data files were modified
           if git diff --staged --quiet; then
             echo "No changes detected in calculated metrics."
           else
-            git commit -m "Auto-update Kahl Index player data [skip ci]"
+            git commit -m "Auto-update Kahl Index player data and cache [skip ci]"
             git push
           fi
