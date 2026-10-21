@@ -201,16 +201,28 @@ def fetch_player_rows_for_game(game_id, date_str):
     return extract_player_rows(data, date_str, game_id)
 
 
-def fetch_player_rows_concurrent(game_ids, date_str, max_workers=5):
-    all_rows = []
-    with ThreadPoolExecutor(max_workers=max_workers) as ex:
-        futures = {ex.submit(fetch_player_rows_for_game, gid, date_str): gid for gid in game_ids}
-        for fut in as_completed(futures):
-            try:
-                all_rows.extend(fut.result())
-            except Exception as e:
-                print(f"  concurrent fetch failed for game {futures[fut]}: {e}")
-    return all_rows
+def fetch_player_rows_for_game(game_id, date_str, box_retries=3):
+    """
+    Retries a single game's box-score fetch on its own (502s and 428s from
+    this API have turned out to be common and often transient -- a retry a
+    couple seconds later frequently succeeds). Without this, a single flaky
+    request would silently and permanently lose that one game's data, since
+    this function used to swallow the error with no retry at all, and the
+    day-level retry in pull_player_stats() never even sees it happen.
+    """
+    last_err = None
+    for attempt in range(box_retries + 1):
+        try:
+            data = _get_json(BOXSCORE_URL.format(game_id=game_id))
+            return extract_player_rows(data, date_str, game_id)
+        except Exception as e:
+            last_err = e
+            if attempt < box_retries:
+                wait = 1.5 * (2 ** attempt)  # 1.5s, 3s, 6s
+                print(f"  game {game_id}: attempt {attempt + 1} failed ({e}), retrying in {wait:.1f}s")
+                time.sleep(wait)
+    print(f"  game {game_id}: FAILED after {box_retries + 1} attempts ({last_err}) -- no player data for this game")
+    return []
 
 
 def _daterange(start, end):
