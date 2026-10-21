@@ -27,8 +27,8 @@ jobs:
       - name: Step 1 - Fetch Team Game Stats & Opponent Data
         run: python pull_season.py
 
-      - name: Step 2 - Fetch Cumulative Player Stats
-        run: python pull_cumulative_stats.py
+      - name: Step 2 - Fetch Per-Game Player Stats
+        run: python pull_player_stats.py 2026-02-05 2026-06-10
 
       - name: Step 3 - Calculate RC7 Metrics & Generate Leaderboards
         run: python calculate_rc7.py
@@ -38,12 +38,12 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          # Stage output CSVs, JSON leaderboards, and the persistent boxscore cache
-          git add games_season.csv team_games_season.csv cumulative_player_stats.csv boxscore_cache.json players.json qualified_players.json 2>/dev/null || true
+          # Stage output CSVs, JSON leaderboards, cache, and progress checkpoints
+          git add games_season.csv team_games_season.csv cumulative_player_stats.csv player_games_season.csv _player_completed_dates.txt boxscore_cache.json players.json qualified_players.json 2>/dev/null || true
           
           if git diff --staged --quiet; then
             echo "No changes detected in calculated metrics."
           else
-            git commit -m "Auto-update Kahl Index player data and cache [skip ci]"
+            git commit -m "Auto-update Kahl Index player data and progress checkpoints [skip ci]"
             git push
           fi
