@@ -1,8 +1,45 @@
 """
 pull_player_stats.py
 
-Pulls per-PLAYER batting and fielding stats for D-I softball games using the NCAA API.
-Only queries games marked as FINAL on the scoreboard to prevent fetching nonexistent box scores.
+Pulls per-PLAYER batting and fielding stats (not just team totals) for D-I
+softball games, using the same NCAA API and the same day-by-day scoreboard
+discovery as pull_season.py. This is built to be dropped alongside that
+file and used the same way -- same rate limiting, same resume/checkpoint
+behavior, same CLI date pattern -- so it fits into the same daily-automation
+plan once the 2027 season starts.
+
+KNOWN LIMITATION (confirmed from a real box score, Nebraska vs LSU):
+every player's `pitcherStats` field came back null, including actual
+pitchers. Individual pitcher metrics may not be reliably available this
+way -- batting and fielding per player were fully populated, though.
+Team-level pitching totals (innings pitched, runs allowed, etc.) are NOT
+duplicated here; use pull_season.py / team_games_season.csv for those.
+
+IMPORTANT, UNRESOLVED QUESTION ABOUT DOUBLES/TRIPLES/HOME RUNS:
+These three fields are NOT present in batterStats at all (confirmed empty
+there). They only exist under a separate section called "hittingSeason".
+In the one real game we've checked, hittingSeason's at-bats/hits/etc. were
+IDENTICAL to that same game's batterStats -- which is consistent with
+either of two very different possibilities:
+  (a) hittingSeason is just a per-game duplicate (safe to sum across games)
+  (b) hittingSeason is a running season-to-date cumulative total (summing
+      across games would wildly overcount -- you'd want to take the LAST
+      game's value for a player, not add every game's value together)
+We could not tell which from a single early-season game. BEFORE building
+any real metric on doubles_hittingSeason / triples_hittingSeason /
+home_runs_hittingSeason, pull a few consecutive games for one player who
+you know hit a double partway through the season, and check: does the
+value jump by 1 in that one game and then STAY THE SAME in every later
+game (per-game), or does it stay elevated/keep climbing (cumulative)?
+Do not trust a season total built from these fields until you've checked.
+
+OUTPUT: player_games_season.csv, one row per player per game.
+
+USAGE
+-----
+    python pull_player_stats.py                      # yesterday only (daily job default)
+    python pull_player_stats.py 2026-02-05            # one specific day
+    python pull_player_stats.py 2026-02-05 2026-06-04 # a date range (backfill)
 """
 
 import os
@@ -19,7 +56,7 @@ import requests
 SCOREBOARD_URL = "https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
 BOXSCORE_URL = "https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
 
-REQUESTS_PER_SECOND_LIMIT = 2.0
+REQUESTS_PER_SECOND_LIMIT = 5
 _MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
 
 
@@ -39,49 +76,23 @@ class RateLimiter:
 
 _limiter = RateLimiter()
 _session = requests.Session()
-_adapter = requests.adapters.HTTPAdapter(pool_connections=10, pool_maxsize=10)
+_adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
 _session.mount("https://", _adapter)
 _session.mount("http://", _adapter)
 
 
-def _get_json_with_retry(url, max_retries=3):
-    """Fetches JSON, skipping non-existent box scores immediately on 404/400."""
-    RETRYABLE_CODES = {428, 500, 502, 503, 504}
-
-    for attempt in range(max_retries):
-        _limiter.wait()
-        try:
-            resp = _session.get(url, timeout=10)
-
-            # If the box score doesn't exist (canceled/unplayed game), don't waste retries
-            if resp.status_code in (400, 404):
-                return None
-
-            if resp.status_code in RETRYABLE_CODES:
-                time.sleep(1.5 * (attempt + 1))
-                continue
-
-            resp.raise_for_status()
-            return resp.json()
-
-        except requests.exceptions.HTTPError as e:
-            if resp.status_code in RETRYABLE_CODES and attempt < max_retries - 1:
-                time.sleep(1.5 * (attempt + 1))
-                continue
-            raise e
-        except Exception as e:
-            if attempt == max_retries - 1:
-                raise e
-            time.sleep(1.0 * (attempt + 1))
-
-    return None
+def _get_json(url):
+    _limiter.wait()
+    resp = _session.get(url, timeout=15)
+    resp.raise_for_status()
+    return resp.json()
 
 
 def _get_scoreboard_page(year, month, day, page):
     url = SCOREBOARD_URL.format(year=year, month=month, day=day)
     if page > 1:
         url += f"?page={page}"
-    return _get_json_with_retry(url)
+    return _get_json(url)
 
 
 def extract_game_id(game):
@@ -95,33 +106,23 @@ def extract_game_id(game):
 
 
 def discover_game_ids(year, month, day, max_pages=20):
-    """Only fetches game IDs for games that were actually completed (FINAL)."""
+    """Same scoreboard walk as pull_season.py, but we only need the game IDs here."""
     seen = set()
     for page in range(1, max_pages + 1):
         data = _get_scoreboard_page(year, month, day, page)
-        if not data:
-            break
-
         raw_games = data.get("games", [])
         if not raw_games:
             break
-
         for entry in raw_games:
             game = entry.get("game", entry)
-            
-            # Check game status -- skip canceled, postponed, or unplayed games
-            state = str(game.get("gameState") or game.get("status") or "").lower()
-            if "final" not in state and "completed" not in state and state != "f":
-                continue
-
             gid = extract_game_id(game)
             if gid:
                 seen.add(gid)
-
     return sorted(seen)
 
 
 def _num(val):
+    """Box score numeric fields come through as strings (e.g. '3', '.412'); convert safely."""
     if val in (None, ""):
         return None
     try:
@@ -131,9 +132,11 @@ def _num(val):
 
 
 def extract_player_rows(boxscore_json, date_str, game_id):
-    if not boxscore_json or not isinstance(boxscore_json, dict):
-        return []
-
+    """
+    Returns one dict per player per game, with their team, opponent, and
+    batting/fielding line. Returns an empty list if the shape doesn't match
+    what we've confirmed (so a weird game gets skipped, not crashed on).
+    """
     teams_meta = boxscore_json.get("teams", [])
     team_by_id = {str(t.get("teamId")): t for t in teams_meta}
     if len(team_by_id) != 2:
@@ -151,6 +154,11 @@ def extract_player_rows(boxscore_json, date_str, game_id):
         for player in tb.get("playerStats", []):
             batter = player.get("batterStats") or {}
             field = player.get("fieldStats") or {}
+            # doubles/triples/home runs are NOT in batterStats -- confirmed
+            # absent there. They only show up under hittingSeason. See the
+            # big warning in this file's docstring about what "Season" means
+            # here before summing these across games.
+            hitting_season = player.get("hittingSeason") or {}
             rows.append({
                 "date": date_str,
                 "game_id": game_id,
@@ -175,29 +183,33 @@ def extract_player_rows(boxscore_json, date_str, game_id):
                 "putouts": _num(field.get("putouts")),
                 "assists": _num(field.get("assists")),
                 "errors": _num(field.get("errors")),
+                # UNVERIFIED whether these three are per-game or cumulative --
+                # see docstring. Do not sum across games until you've checked.
+                "doubles_hittingSeason": _num(hitting_season.get("doubles")),
+                "triples_hittingSeason": _num(hitting_season.get("triples")),
+                "home_runs_hittingSeason": _num(hitting_season.get("homeRuns")),
             })
     return rows
 
 
 def fetch_player_rows_for_game(game_id, date_str):
     try:
-        data = _get_json_with_retry(BOXSCORE_URL.format(game_id=game_id))
-        if not data:
-            return []
-    except Exception:
+        data = _get_json(BOXSCORE_URL.format(game_id=game_id))
+    except Exception as e:
+        print(f"  boxscore fetch failed for game {game_id}: {e}")
         return []
     return extract_player_rows(data, date_str, game_id)
 
 
-def fetch_player_rows_concurrent(game_ids, date_str, max_workers=2):
+def fetch_player_rows_concurrent(game_ids, date_str, max_workers=5):
     all_rows = []
     with ThreadPoolExecutor(max_workers=max_workers) as ex:
         futures = {ex.submit(fetch_player_rows_for_game, gid, date_str): gid for gid in game_ids}
         for fut in as_completed(futures):
             try:
                 all_rows.extend(fut.result())
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"  concurrent fetch failed for game {futures[fut]}: {e}")
     return all_rows
 
 
@@ -208,7 +220,7 @@ def _daterange(start, end):
         d += timedelta(days=1)
 
 
-def pull_player_stats(start, end, out_dir=".", max_retries=2, max_workers=2):
+def pull_player_stats(start, end, out_dir=".", max_retries=2, max_workers=5):
     os.makedirs(out_dir, exist_ok=True)
     out_path = os.path.join(out_dir, "player_games_season.csv")
     progress_path = os.path.join(out_dir, "_player_completed_dates.txt")
@@ -223,16 +235,27 @@ def pull_player_stats(start, end, out_dir=".", max_retries=2, max_workers=2):
     dates = list(_daterange(start, end))
     print(f"{len(dates)} day(s) requested, {len(completed)} already done\n")
 
+    failed_dates = []
     for i, d in enumerate(dates, 1):
         date_str = d.isoformat()
         if date_str in completed:
             continue
 
-        try:
-            game_ids = discover_game_ids(d.year, d.month, d.day)
-            day_rows = fetch_player_rows_concurrent(game_ids, date_str, max_workers=max_workers)
-        except Exception as e:
-            print(f"[{i}/{len(dates)}] {date_str}: error ({e})")
+        day_rows, attempt = None, 0
+        while attempt <= max_retries:
+            try:
+                game_ids = discover_game_ids(d.year, d.month, d.day)
+                day_rows = fetch_player_rows_concurrent(game_ids, date_str, max_workers=max_workers)
+                break
+            except Exception as e:
+                attempt += 1
+                print(f"[{i}/{len(dates)}] {date_str}: error ({e}), retry {attempt}/{max_retries}")
+                time.sleep(2 * attempt)
+
+        if day_rows is None:
+            print(f"[{i}/{len(dates)}] {date_str}: FAILED after {max_retries} retries -- "
+                  f"skipped, will retry on next run")
+            failed_dates.append(date_str)
             continue
 
         all_rows.extend(day_rows)
@@ -245,7 +268,12 @@ def pull_player_stats(start, end, out_dir=".", max_retries=2, max_workers=2):
         print(f"[{i}/{len(dates)}] {date_str}: {len(day_rows)} player-rows "
               f"(running total: {len(all_rows)})")
 
-    print(f"\nDone. {len(all_rows)} player-rows written to {out_path}")
+    if failed_dates:
+        print(f"\n{len(failed_dates)} day(s) failed -- rerun to retry just those:")
+        print(" ", failed_dates)
+    else:
+        print(f"\nDone. {len(all_rows)} player-rows written to {out_path}")
+
     return pd.DataFrame(all_rows)
 
 
