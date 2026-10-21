@@ -192,15 +192,6 @@ def extract_player_rows(boxscore_json, date_str, game_id):
     return rows
 
 
-def fetch_player_rows_for_game(game_id, date_str):
-    try:
-        data = _get_json(BOXSCORE_URL.format(game_id=game_id))
-    except Exception as e:
-        print(f"  boxscore fetch failed for game {game_id}: {e}")
-        return []
-    return extract_player_rows(data, date_str, game_id)
-
-
 def fetch_player_rows_for_game(game_id, date_str, box_retries=3):
     """
     Retries a single game's box-score fetch on its own (502s and 428s from
@@ -223,6 +214,18 @@ def fetch_player_rows_for_game(game_id, date_str, box_retries=3):
                 time.sleep(wait)
     print(f"  game {game_id}: FAILED after {box_retries + 1} attempts ({last_err}) -- no player data for this game")
     return []
+
+
+def fetch_player_rows_concurrent(game_ids, date_str, max_workers=5):
+    all_rows = []
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        futures = {ex.submit(fetch_player_rows_for_game, gid, date_str): gid for gid in game_ids}
+        for fut in as_completed(futures):
+            try:
+                all_rows.extend(fut.result())
+            except Exception as e:
+                print(f"  concurrent fetch failed for game {futures[fut]}: {e}")
+    return all_rows
 
 
 def _daterange(start, end):
