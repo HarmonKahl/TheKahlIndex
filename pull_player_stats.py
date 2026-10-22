@@ -37,14 +37,16 @@ from datetime import date, timedelta
 import pandas as pd
 import requests
 
-# Defaults to the public demo instance, but can be pointed at a self-hosted
-# one (e.g. http://localhost:3000, run as a GitHub Actions service container)
-# by setting the NCAA_API_BASE environment variable. Self-hosting bypasses
-# the public demo's own anti-abuse layer, which has been blocking requests
-# specifically from GitHub Actions' shared IP ranges with 428 errors.
-NCAA_API_BASE = os.environ.get("NCAA_API_BASE", "https://ncaa-api.henrygd.me")
-SCOREBOARD_URL = NCAA_API_BASE + "/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
-BOXSCORE_URL = NCAA_API_BASE + "/game/{game_id}/boxscore"
+# Scoreboard stays on the public demo -- it has never been blocked, only
+# box-score requests have. Box score can be pointed at a self-hosted
+# instance (http://localhost:3000, run as a GitHub Actions service
+# container) via NCAA_BOXSCORE_BASE, to bypass the public demo's anti-abuse
+# layer that was blocking box-score requests specifically from GitHub
+# Actions' shared IP ranges with 428 errors.
+NCAA_SCOREBOARD_BASE = "https://ncaa-api.henrygd.me"
+NCAA_BOXSCORE_BASE = os.environ.get("NCAA_BOXSCORE_BASE", "https://ncaa-api.henrygd.me")
+SCOREBOARD_URL = NCAA_SCOREBOARD_BASE + "/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
+BOXSCORE_URL = NCAA_BOXSCORE_BASE + "/game/{game_id}/boxscore"
 
 REQUESTS_PER_SECOND_LIMIT = 5
 _MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
