@@ -20,7 +20,7 @@ jobs:
           - 3000:3000
 
     env:
-      NCAA_API_BASE: http://localhost:3000
+  NCAA_BOXSCORE_BASE: http://localhost:3000
 
     steps:
       - name: Check out repository
