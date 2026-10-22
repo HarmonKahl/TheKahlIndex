@@ -6,9 +6,21 @@ on:
     - cron: '0 6 * * *'
   workflow_dispatch: # Allows manual triggers from the GitHub Actions UI
 
+permissions:
+  contents: write
+
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+
+    services:
+      ncaa-api:
+        image: henrygd/ncaa-api
+        ports:
+          - 3000:3000
+
+    env:
+      NCAA_API_BASE: http://localhost:3000
 
     steps:
       - name: Check out repository
@@ -25,7 +37,7 @@ jobs:
           pip install pandas requests lxml html5lib beautifulsoup4 curl_cffi
 
       - name: Step 1 - Fetch Team Game Stats & Opponent Data
-        run: python pull_season.py
+        run: python pull_season.py 2026-02-05 2026-06-10
 
       - name: Step 2 - Fetch Per-Game Player Stats
         run: python pull_player_stats.py 2026-02-05 2026-06-10
