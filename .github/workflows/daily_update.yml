@@ -36,10 +36,10 @@ jobs:
           pip install pandas requests lxml html5lib beautifulsoup4 curl_cffi
 
       - name: Step 1 - Fetch Team Game Stats & Opponent Data
-        run: python pull_season.py 2026-02-05 2026-06-10
+        run: python pull_season.py 2026-02-05
 
       - name: Step 2 - Fetch Per-Game Player Stats
-        run: python pull_player_stats.py 2026-02-05 2026-06-10
+        run: python pull_player_stats.py 2026-02-05
 
       - name: Debug - list CSVs on disk after Step 2
         run: ls -la *.csv *.json 2>&1 || echo "no matching files found"
@@ -55,7 +55,7 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          git add games_season.csv team_games_season.csv cumulative_player_stats.csv player_games_season.csv _player_completed_dates.txt boxscore_cache.json players.json qualified_players.json 2>/dev/null || true
+          git add games_season.csv team_games_season.csv player_games_season.csv _completed_dates.txt _player_completed_dates.txt players.json qualified_players.json 2>/dev/null || true
           
           if git diff --staged --quiet; then
             echo "No changes detected in calculated metrics."
