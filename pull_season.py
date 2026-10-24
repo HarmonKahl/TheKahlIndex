@@ -9,12 +9,6 @@ from datetime import date, timedelta
 import pandas as pd
 import requests
 
-# Scoreboard stays on the public demo -- it has never been blocked, only
-# box-score requests have. Box score can be pointed at a self-hosted
-# instance (http://localhost:3000, run as a GitHub Actions service
-# container) via NCAA_BOXSCORE_BASE, to bypass the public demo's anti-abuse
-# layer that was blocking box-score requests specifically from GitHub
-# Actions' shared IP ranges with 428 errors.
 NCAA_SCOREBOARD_BASE = "https://ncaa-api.henrygd.me"
 NCAA_BOXSCORE_BASE = os.environ.get("NCAA_BOXSCORE_BASE", "https://ncaa-api.henrygd.me")
 SCOREBOARD_URL = NCAA_SCOREBOARD_BASE + "/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
@@ -137,10 +131,7 @@ def fetch_innings_for_game(game_id, debug=False, box_retries=3):
             print(f"  game {game_id}: FAILED after {box_retries + 1} attempts ({last_err})")
         return None, None
 
-    # Handle multiple JSON root keys flexibly
     teams_meta = data.get("teams") or data.get("teamsBoxscore") or []
-    
-    # Extract home and away team IDs safely
     home_id, away_id = None, None
     for t in teams_meta:
         tid = str(t.get("teamId") or t.get("id") or t.get("team", {}).get("id", ""))
@@ -150,7 +141,6 @@ def fetch_innings_for_game(game_id, debug=False, box_retries=3):
         elif is_home in (False, "false", "False", 0):
             away_id = tid
 
-    # Fallback to positional order if isHome flag is missing
     if (not home_id or not away_id) and len(teams_meta) >= 2:
         away_id = str(teams_meta[0].get("teamId") or teams_meta[0].get("id", ""))
         home_id = str(teams_meta[1].get("teamId") or teams_meta[1].get("id", ""))
@@ -158,19 +148,16 @@ def fetch_innings_for_game(game_id, debug=False, box_retries=3):
     if not home_id or not away_id:
         return None, None
 
-    # Extract pitcher IP totals across possible boxscore schemas
     ip_by_team = {}
     box_teams = data.get("teamBoxscore") or data.get("teamsBoxscore") or data.get("teams") or []
     
     for tb in box_teams:
         tid = str(tb.get("teamId") or tb.get("id") or tb.get("team", {}).get("id", ""))
-        
         pitcher_totals = (
             (tb.get("teamStats") or {}).get("pitcherTotals") or 
             tb.get("pitchingTotals") or 
             tb.get("pitching") or {}
         )
-        
         ip_raw = pitcher_totals.get("inningsPitched") or pitcher_totals.get("ip") or pitcher_totals.get("IP")
         if ip_raw is not None:
             ip_by_team[tid] = parse_innings_pitched(ip_raw)
@@ -178,7 +165,6 @@ def fetch_innings_for_game(game_id, debug=False, box_retries=3):
     home_ip = ip_by_team.get(home_id)
     away_ip = ip_by_team.get(away_id)
 
-    # Fallback default: standard regulation game (7.0 innings) if pitching stats missing
     if home_ip is None and away_ip is None:
         return 7.0, 7.0
 
@@ -279,17 +265,7 @@ def _daterange(start, end):
         d += timedelta(days=1)
 
 
-def estimate_season_pull(start, end, games_per_day=48, fetch_innings=True):
-    n_days = (end - start).days + 1
-    n_games = n_days * games_per_day
-    n_requests = n_days + (n_games if fetch_innings else 0)
-    seconds = n_requests / REQUESTS_PER_SECOND_LIMIT
-    print(f"~{n_days} days, ~{n_games} games (rough estimate at {games_per_day}/day)")
-    print(f"~{n_requests} requests at the API's 5/sec cap -> at least ~{seconds/60:.0f} minutes")
-
-
-def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
-                max_retries=2, games_per_day_estimate=48):
+def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False, max_retries=2):
     os.makedirs(out_dir, exist_ok=True)
     games_path = os.path.join(out_dir, "games_season.csv")
     team_path = os.path.join(out_dir, "team_games_season.csv")
@@ -304,8 +280,6 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
     all_team_rows = pd.read_csv(team_path).to_dict("records") if os.path.exists(team_path) else []
 
     dates = list(_daterange(start, end))
-    estimate_season_pull(start, end, games_per_day_estimate, fetch_innings)
-    print(f"{len(completed)} day(s) already done, {len(dates) - len(completed)} remaining\n")
 
     failed_dates = []
     for i, d in enumerate(dates, 1):
@@ -324,7 +298,6 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
                 time.sleep(2 * attempt)
 
         if day_games is None:
-            print(f"[{i}/{len(dates)}] {date_str}: FAILED after {max_retries} retries -- skipped")
             failed_dates.append(date_str)
             continue
 
@@ -332,20 +305,19 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
         all_team_rows.extend(games_to_team_rows(day_games))
         completed.add(date_str)
 
-        pd.DataFrame(all_games).to_csv(games_path, index=False)
-        pd.DataFrame(all_team_rows).to_csv(team_path, index=False)
+        # Deduplicate on game_id before saving
+        games_df = pd.DataFrame(all_games).drop_duplicates(subset=["game_id"]) if all_games else pd.DataFrame()
+        team_df = pd.DataFrame(all_team_rows).drop_duplicates(subset=["game_id", "team"]) if all_team_rows else pd.DataFrame()
+
+        games_df.to_csv(games_path, index=False)
+        team_df.to_csv(team_path, index=False)
+
         with open(progress_path, "w") as f:
             f.write("\n".join(sorted(completed)))
 
-        print(f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games "
-              f"(running total: {len(all_games)} games, {len(all_team_rows)} team-rows)")
+        print(f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games processed.")
 
-    if failed_dates:
-        print(f"\n{len(failed_dates)} day(s) failed -- rerun to retry just those:")
-        print(" ", failed_dates)
-    else:
-        print(f"\nDone. {len(all_games)} games, {len(all_team_rows)} team-rows written to {out_dir}/")
-
+    print(f"\nDone. {len(all_games)} games, {len(all_team_rows)} team-rows saved to {out_dir}/")
     return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
 
 
@@ -358,6 +330,4 @@ if __name__ == "__main__":
     else:
         start_date = end_date = date.today() - timedelta(days=1)
 
-    print(f"Pulling games from {start_date.isoformat()} to {end_date.isoformat()}...")
-    games_df, team_df = pull_season(start_date, end_date, out_dir=".", fetch_innings=True, debug=True)
-    print(f"Pulled {len(games_df)} games, {len(team_df)} team-rows total")
+    pull_season(start_date, end_date, out_dir=".", fetch_innings=True, debug=True)
