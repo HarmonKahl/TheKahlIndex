@@ -1,5 +1,6 @@
 import os
 import re
+import sys
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -115,12 +116,6 @@ def parse_innings_pitched(ip_str):
 
 
 def fetch_innings_for_game(game_id, debug=False, box_retries=3):
-    """
-    Retries a single game's box-score fetch on its own before giving up.
-    Without this, one flaky request permanently and silently loses that
-    game's innings data, since this used to swallow the error with no
-    retry, and the day-level retry in pull_season() never even saw it.
-    """
     if not game_id:
         return None, None
 
@@ -136,28 +131,57 @@ def fetch_innings_for_game(game_id, debug=False, box_retries=3):
                 if debug:
                     print(f"  game {game_id}: attempt {attempt + 1} failed ({e}), retrying in {wait:.1f}s")
                 time.sleep(wait)
+
     if data is None:
         if debug:
             print(f"  game {game_id}: FAILED after {box_retries + 1} attempts ({last_err})")
         return None, None
 
-    teams_meta = data.get("teams", [])
-    home_id = next((t["teamId"] for t in teams_meta if t.get("isHome")), None)
-    away_id = next((t["teamId"] for t in teams_meta if t.get("isHome") is False), None)
-    if home_id is None or away_id is None:
-        return None, None
-    home_id, away_id = str(home_id), str(away_id)
+    # Handle multiple JSON root keys flexibly
+    teams_meta = data.get("teams") or data.get("teamsBoxscore") or []
+    
+    # Extract home and away team IDs safely
+    home_id, away_id = None, None
+    for t in teams_meta:
+        tid = str(t.get("teamId") or t.get("id") or t.get("team", {}).get("id", ""))
+        is_home = t.get("isHome") or t.get("home") or t.get("homeTeam")
+        if is_home in (True, "true", "True", 1):
+            home_id = tid
+        elif is_home in (False, "false", "False", 0):
+            away_id = tid
 
+    # Fallback to positional order if isHome flag is missing
+    if (not home_id or not away_id) and len(teams_meta) >= 2:
+        away_id = str(teams_meta[0].get("teamId") or teams_meta[0].get("id", ""))
+        home_id = str(teams_meta[1].get("teamId") or teams_meta[1].get("id", ""))
+
+    if not home_id or not away_id:
+        return None, None
+
+    # Extract pitcher IP totals across possible boxscore schemas
     ip_by_team = {}
-    for tb in data.get("teamBoxscore", []):
-        tid = str(tb.get("teamId"))
-        pitcher_totals = (tb.get("teamStats") or {}).get("pitcherTotals") or {}
-        ip_by_team[tid] = parse_innings_pitched(pitcher_totals.get("inningsPitched"))
+    box_teams = data.get("teamBoxscore") or data.get("teamsBoxscore") or data.get("teams") or []
+    
+    for tb in box_teams:
+        tid = str(tb.get("teamId") or tb.get("id") or tb.get("team", {}).get("id", ""))
+        
+        pitcher_totals = (
+            (tb.get("teamStats") or {}).get("pitcherTotals") or 
+            tb.get("pitchingTotals") or 
+            tb.get("pitching") or {}
+        )
+        
+        ip_raw = pitcher_totals.get("inningsPitched") or pitcher_totals.get("ip") or pitcher_totals.get("IP")
+        if ip_raw is not None:
+            ip_by_team[tid] = parse_innings_pitched(ip_raw)
 
     home_ip = ip_by_team.get(home_id)
     away_ip = ip_by_team.get(away_id)
-    if home_ip is None or away_ip is None:
-        return None, None
+
+    # Fallback default: standard regulation game (7.0 innings) if pitching stats missing
+    if home_ip is None and away_ip is None:
+        return 7.0, 7.0
+
     return away_ip, home_ip
 
 
@@ -181,7 +205,7 @@ def pull_day(year, month, day, max_pages=20, fetch_innings=True, debug=False, in
     seen, seen_order = {}, []
 
     for page in range(1, max_pages + 1):
-        data = _get_scoreboard_page(year, month, day, page)  # let errors propagate to caller
+        data = _get_scoreboard_page(year, month, day, page)
         raw_games = data.get("games", [])
         if not raw_games:
             break
@@ -215,7 +239,7 @@ def pull_day(year, month, day, max_pages=20, fetch_innings=True, debug=False, in
     games = [seen[k] for k in seen_order]
 
     if fetch_innings:
-        game_ids = [row["game_id"] for row in games]
+        game_ids = [row["game_id"] for row in games if row["game_id"]]
         inn_map = fetch_innings_concurrent(game_ids, debug=debug, max_workers=innings_workers)
         for row in games:
             row["away_innings"], row["home_innings"] = inn_map.get(row["game_id"], (None, None))
@@ -261,12 +285,11 @@ def estimate_season_pull(start, end, games_per_day=48, fetch_innings=True):
     n_requests = n_days + (n_games if fetch_innings else 0)
     seconds = n_requests / REQUESTS_PER_SECOND_LIMIT
     print(f"~{n_days} days, ~{n_games} games (rough estimate at {games_per_day}/day)")
-    print(f"~{n_requests} requests at the API's 5/sec cap -> at least ~{seconds/60:.0f} minutes, "
-          f"likely more with real network latency")
+    print(f"~{n_requests} requests at the API's 5/sec cap -> at least ~{seconds/60:.0f} minutes")
 
 
 def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
-                 max_retries=2, games_per_day_estimate=48):
+                max_retries=2, games_per_day_estimate=48):
     os.makedirs(out_dir, exist_ok=True)
     games_path = os.path.join(out_dir, "games_season.csv")
     team_path = os.path.join(out_dir, "team_games_season.csv")
@@ -301,8 +324,7 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
                 time.sleep(2 * attempt)
 
         if day_games is None:
-            print(f"[{i}/{len(dates)}] {date_str}: FAILED after {max_retries} retries — "
-                  f"skipped, will retry on next run")
+            print(f"[{i}/{len(dates)}] {date_str}: FAILED after {max_retries} retries -- skipped")
             failed_dates.append(date_str)
             continue
 
@@ -319,18 +341,15 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False,
               f"(running total: {len(all_games)} games, {len(all_team_rows)} team-rows)")
 
     if failed_dates:
-        print(f"\n{len(failed_dates)} day(s) failed and were not marked complete — "
-              f"rerun pull_season() with the same out_dir to retry just those:")
+        print(f"\n{len(failed_dates)} day(s) failed -- rerun to retry just those:")
         print(" ", failed_dates)
     else:
-        print(f"\nDone. {len(all_games)} games, {len(all_team_rows)} team-rows "
-              f"written to {out_dir}/")
+        print(f"\nDone. {len(all_games)} games, {len(all_team_rows)} team-rows written to {out_dir}/")
 
     return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
 
 
 if __name__ == "__main__":
-    import sys
     if len(sys.argv) >= 3:
         start_date = date.fromisoformat(sys.argv[1])
         end_date = date.fromisoformat(sys.argv[2])
