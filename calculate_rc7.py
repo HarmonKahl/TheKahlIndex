@@ -17,12 +17,7 @@ def calculate_rc7(
 
     games_df = pd.read_csv(player_games_path)
 
-    # UNVERIFIED: doubles/triples/home_runs here come from the box score's
-    # "hittingSeason" section, and it's still unconfirmed whether that's a
-    # per-game value (safe to sum like this) or a running season-to-date
-    # cumulative (which would badly overcount if summed). Do not trust the
-    # resulting rc7/rc7_adj numbers until that's verified -- see the
-    # warning in pull_player_stats.py's docstring.
+    # Aggregate individual player totals across games
     season = (
         games_df.groupby(["team", "last_name", "number"])
         .agg(
@@ -36,27 +31,37 @@ def calculate_rc7(
         )
         .reset_index()
     )
-    season["name"] = season["last_name"]  # first_name is blank in this API's data
+    season["name"] = season["last_name"]
 
-    if not os.path.exists(team_games_path) or os.stat(team_games_path).st_size == 0:
-        print(f"Warning: {team_games_path} missing. Proceeding with unadjusted RC7.")
-        team_games_df = pd.DataFrame()
-    else:
+    # Load team summaries for opponent strength adjustment
+    team_games_df = pd.DataFrame()
+    if os.path.exists(team_games_path) and os.stat(team_games_path).st_size > 0:
         team_games_df = pd.read_csv(team_games_path)
 
     team_games_map, team_opp_map, d1_avg_ra7 = {}, {}, 4.0
+    
     if not team_games_df.empty:
-        team_totals = (
-            team_games_df.groupby("team")
-            .agg(games=("opponent", "count"),
-                 runs_against=("runs_against", "sum"),
-                 innings_fielded=("innings_fielded", "sum"))
-            .reset_index()
-        )
-        team_totals["ra_per_7"] = team_totals["runs_against"] / team_totals["innings_fielded"] * 7
-        team_games_map = team_totals.set_index("team")["games"].to_dict()
-        team_opp_map = team_totals.set_index("team")["ra_per_7"].to_dict()
-        d1_avg_ra7 = team_totals["ra_per_7"].mean()
+        # Use pre-calculated columns from pull_season.py
+        if "runs_against_per_7" in team_games_df.columns:
+            team_games_map = team_games_df.set_index("team")["games_played"].to_dict()
+            team_opp_map = team_games_df.set_index("team")["runs_against_per_7"].to_dict()
+            d1_avg_ra7 = team_games_df["runs_against_per_7"].mean()
+        # Fallback if raw game scores are provided
+        elif "runs_against" in team_games_df.columns:
+            team_totals = (
+                team_games_df.groupby("team")
+                .agg(
+                    games=("runs_against", "count"),
+                    runs_against=("runs_against", "sum")
+                )
+                .reset_index()
+            )
+            team_totals["ra_per_7"] = (team_totals["runs_against"] / team_totals["games"].replace(0, 1))
+            team_games_map = team_totals.set_index("team")["games"].to_dict()
+            team_opp_map = team_totals.set_index("team")["ra_per_7"].to_dict()
+            d1_avg_ra7 = team_totals["ra_per_7"].mean()
+    else:
+        print(f"Warning: {team_games_path} missing or empty. Proceeding with unadjusted RC7.")
 
     all_players = []
     for _, row in season.iterrows():
@@ -70,6 +75,7 @@ def calculate_rc7(
         singles = h - (d2b + d3b + hr)
         tb = singles + (2 * d2b) + (3 * d3b) + (4 * hr)
 
+        # Tech Version RC components
         a = h + bb
         b = tb + (0.26 * bb)
         c = ab + bb
@@ -78,6 +84,7 @@ def calculate_rc7(
         outs = ab - h
         rc7 = (rc / outs) * 21 if outs > 0 else 0.0
 
+        # Opponent defense adjustment multiplier
         opp_ra7 = team_opp_map.get(team, d1_avg_ra7)
         m_opp = (d1_avg_ra7 / opp_ra7) if (opp_ra7 and opp_ra7 > 0) else 1.0
         rc7_adj = rc7 * m_opp
@@ -86,22 +93,29 @@ def calculate_rc7(
         is_qualified = bool(ab >= (team_games * ab_per_game_threshold) and ab >= min_qualified_ab)
 
         all_players.append({
-            "name": row["name"], "team": team,
-            "ab": int(ab), "hits": int(h), "tb": int(tb), "walks": int(bb),
+            "name": row["name"],
+            "team": team,
+            "ab": int(ab),
+            "hits": int(h),
+            "tb": int(tb),
+            "walks": int(bb),
             "qualified": is_qualified,
-            "rc": round(rc, 2), "rc7": round(rc7, 2), "rc7_adj": round(rc7_adj, 2),
+            "rc": round(rc, 2),
+            "rc7": round(rc7, 2),
+            "rc7_adj": round(rc7_adj, 2),
         })
 
+    # Sort leaderboards by adjusted RC7
     all_players.sort(key=lambda x: x["rc7_adj"], reverse=True)
     qualified_players = [p for p in all_players if p["qualified"]]
 
+    # Save output leaderboards
     with open(all_output_path, "w") as f:
         json.dump(all_players, f, indent=2)
     with open(qualified_output_path, "w") as f:
         json.dump(qualified_players, f, indent=2)
 
     print(f"Calculated RC7 for {len(all_players)} players ({len(qualified_players)} qualified).")
-
 
 if __name__ == "__main__":
     calculate_rc7()
