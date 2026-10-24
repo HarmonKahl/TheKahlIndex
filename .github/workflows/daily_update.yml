@@ -36,30 +36,33 @@ jobs:
           pip install pandas requests lxml html5lib beautifulsoup4 curl_cffi
 
       - name: Step 1 - Fetch Team Game Stats & Opponent Data
-        run: python pull_season.py 2026-02-05
+        run: python pull_season.py 2026-02-05 2026-02-20
 
-      - name: Step 2 - Fetch Per-Game Player Stats
-        run: python pull_player_stats.py 2026-02-05
+      - name: Step 2 - Compute Kahl Index Team Ratings
+        run: python compute_ratings.py
 
-      - name: Debug - list CSVs on disk after Step 2
-        run: ls -la *.csv *.json 2>&1 || echo "no matching files found"
-
-      - name: Step 3 - Calculate RC7 Metrics & Generate Leaderboards
-        run: python calculate_rc7.py
+      - name: Step 3 - Fetch Per-Game Player Stats
+        run: python pull_player_stats.py 2026-02-05 2026-02-20
 
       - name: Debug - list CSVs on disk after Step 3
         run: ls -la *.csv *.json 2>&1 || echo "no matching files found"
 
-      - name: Step 4 - Commit and Push Output Data
+      - name: Step 4 - Calculate RC7 Metrics & Generate Leaderboards
+        run: python calculate_rc7.py
+
+      - name: Debug - list CSVs on disk after Step 4
+        run: ls -la *.csv *.json 2>&1 || echo "no matching files found"
+
+      - name: Step 5 - Commit and Push Output Data
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
           
-          git add games_season.csv team_games_season.csv player_games_season.csv _completed_dates.txt _player_completed_dates.txt players.json qualified_players.json 2>/dev/null || true
+          git add games_season.csv team_games_season.csv player_games_season.csv _completed_dates.txt _player_completed_dates.txt ratings.json players.json qualified_players.json 2>/dev/null || true
           
           if git diff --staged --quiet; then
             echo "No changes detected in calculated metrics."
           else
-            git commit -m "Auto-update Kahl Index player data and progress checkpoints [skip ci]"
+            git commit -m "Auto-update Kahl Index team ratings, player data, and progress checkpoints [skip ci]"
             git push
           fi
