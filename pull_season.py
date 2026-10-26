@@ -305,7 +305,7 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False, max_re
         all_team_rows.extend(games_to_team_rows(day_games))
         completed.add(date_str)
 
-        # Deduplicate on game_id before saving
+        # Strict deduplication by game_id before saving
         games_df = pd.DataFrame(all_games).drop_duplicates(subset=["game_id"]) if all_games else pd.DataFrame()
         team_df = pd.DataFrame(all_team_rows).drop_duplicates(subset=["game_id", "team"]) if all_team_rows else pd.DataFrame()
 
@@ -328,6 +328,9 @@ if __name__ == "__main__":
     elif len(sys.argv) == 2:
         start_date = end_date = date.fromisoformat(sys.argv[1])
     else:
-        start_date = end_date = date.today() - timedelta(days=1)
+        # Full 2026 NCAA D-I Softball Season (Feb 5 - Jun 5, 2026)
+        start_date = date(2026, 2, 5)
+        end_date = date(2026, 6, 5)
 
+    print(f"Pulling season from {start_date.isoformat()} to {end_date.isoformat()}...")
     pull_season(start_date, end_date, out_dir=".", fetch_innings=True, debug=True)
