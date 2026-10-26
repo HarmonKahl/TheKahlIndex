@@ -17,22 +17,14 @@ def calculate_rc7(
 
     games_df = pd.read_csv(player_games_path)
 
-    # Standardize column naming across variations
-    col_map = {
-        'doubles_hitting': 'doubles',
-        'triples_hitting': 'triples',
-        'homeRuns_hitting': 'hr',
-        'home_runs': 'hr',
-        'homeRuns': 'hr'
-    }
-    games_df = games_df.rename(columns=col_map)
-
-    # Ensure required per-game columns exist; default to 0 if missing
-    for col in ['doubles', 'triples', 'hr', 'walks', 'hits', 'at_bats']:
-        if col not in games_df.columns:
+    # Convert columns to numeric safely
+    for col in ["at_bats", "hits", "walks", "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"]:
+        if col in games_df.columns:
+            games_df[col] = pd.to_numeric(games_df[col], errors="coerce").fillna(0)
+        else:
             games_df[col] = 0
 
-    # Aggregate PER-GAME stats across the season
+    # Aggregate: sum per-game stats (AB, Hits, Walks), but take MAX for cumulative season XBH stats
     season = (
         games_df.groupby(["team", "last_name", "number"])
         .agg(
@@ -40,9 +32,9 @@ def calculate_rc7(
             ab=("at_bats", "sum"),
             hits=("hits", "sum"),
             walks=("walks", "sum"),
-            doubles=("doubles", "sum"),
-            triples=("triples", "sum"),
-            hr=("hr", "sum"),
+            doubles=("doubles_hittingSeason", "max"),
+            triples=("triples_hittingSeason", "max"),
+            hr=("home_runs_hittingSeason", "max"),
         )
         .reset_index()
     )
@@ -85,20 +77,13 @@ def calculate_rc7(
         if ab < min_ab_cutoff:
             continue
 
-        # Sanity check: Ensure extra-base hits do not exceed total hits
+        # Calculate singles from total hits minus max XBH
         xbh = d2b + d3b + hr
-        if xbh > h:
-            # Fallback scaling if per-game XBH fields contained raw cumulative numbers
-            singles = max(0.0, h * 0.65)
-            d2b = h * 0.20
-            d3b = h * 0.03
-            hr = h * 0.12
-        else:
-            singles = h - xbh
+        singles = max(0.0, h - xbh)
 
         tb = singles + (2 * d2b) + (3 * d3b) + (4 * hr)
 
-        # Tech Version RC calculation
+        # Tech Version RC Formula
         a = h + bb
         b = tb + (0.26 * bb)
         c = ab + bb
