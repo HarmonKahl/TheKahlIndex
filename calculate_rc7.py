@@ -39,7 +39,6 @@ def calculate_rc7(
     team_games_map, team_opp_map, d1_avg_ra7 = {}, {}, 4.0
     
     if not team_games_df.empty:
-        # Normalize team names for matching
         team_games_df["team"] = team_games_df["team"].astype(str).str.strip()
 
         if "runs_against_per_7" in team_games_df.columns:
@@ -60,7 +59,6 @@ def calculate_rc7(
             team_games_map = team_totals.set_index("team")["games"].to_dict()
             team_opp_map = team_totals.set_index("team")["ra_per_7"].to_dict()
             d1_avg_ra7 = team_totals["ra_per_7"].mean()
-            print(f"Loaded opponent data for {len(team_opp_map)} teams (D1 Avg RA/7: {d1_avg_ra7:.2f})")
     else:
         print(f"Warning: {team_games_path} missing or empty. Proceeding with unadjusted RC7.")
 
@@ -76,6 +74,7 @@ def calculate_rc7(
         singles = h - (d2b + d3b + hr)
         tb = singles + (2 * d2b) + (3 * d3b) + (4 * hr)
 
+        # Tech Version RC components
         a = h + bb
         b = tb + (0.26 * bb)
         c = ab + bb
@@ -104,9 +103,19 @@ def calculate_rc7(
             "rc7_adj": round(rc7_adj, 2),
         })
 
+    # Sort all players by adjusted RC7 descending
     all_players.sort(key=lambda x: x["rc7_adj"], reverse=True)
-    qualified_players = [p for p in all_players if p["qualified"]]
 
+    # Assign national overall ranks
+    for rank, player in enumerate(all_players, start=1):
+        player["rank"] = rank
+
+    # Extract and re-rank qualified players relative to each other
+    qualified_players = [dict(p) for p in all_players if p["qualified"]]
+    for rank, player in enumerate(qualified_players, start=1):
+        player["rank"] = rank
+
+    # Output files
     with open(all_output_path, "w") as f:
         json.dump(all_players, f, indent=2)
     with open(qualified_output_path, "w") as f:
