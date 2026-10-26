@@ -11,6 +11,7 @@ permissions:
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     services:
       ncaa-api:
@@ -35,14 +36,18 @@ jobs:
           python -m pip install --upgrade pip
           pip install pandas requests lxml html5lib beautifulsoup4 curl_cffi
 
+      - name: Step 0 - Clear Partial Checkpoints & Stale State
+        run: |
+          rm -f _completed_dates.txt _player_completed_dates.txt games_season.csv team_games_season.csv player_games_season.csv
+
       - name: Step 1 - Fetch Team Game Stats & Opponent Data
-        run: python pull_season.py 2026-02-05 2026-02-20
+        run: python pull_season.py 2026-02-05 2026-06-05
 
       - name: Step 2 - Compute Kahl Index Team Ratings
         run: python compute_ratings.py
 
       - name: Step 3 - Fetch Per-Game Player Stats
-        run: python pull_player_stats.py 2026-02-05 2026-02-20
+        run: python pull_player_stats.py 2026-02-05 2026-06-05
 
       - name: Debug - list CSVs on disk after Step 3
         run: ls -la *.csv *.json 2>&1 || echo "no matching files found"
