@@ -13755,3 +13755,9 @@ date,game_id,team,opponent,role,runs_for,runs_against,innings_batted,innings_fie
 2026-06-03,6599932,Texas,Texas Tech,home,7,3,6.0,7.0,1.0
 2026-06-04,6599933,Texas,Texas Tech,away,4,1,7.0,7.0,1.0
 2026-06-04,6599933,Texas Tech,Texas,home,1,4,7.0,7.0,0.0
+2026-05-24,6599911,Texas Tech,Florida,away,16,7,5.0,5.0,1.0
+2026-05-24,6599911,Florida,Texas Tech,home,7,16,5.0,5.0,0.0
+2026-05-24,6599908,Mississippi St.,Oklahoma,away,6,0,7.0,7.0,1.0
+2026-05-24,6599908,Oklahoma,Mississippi St.,home,0,6,7.0,7.0,0.0
+2026-05-24,6599917,Arizona St.,Texas,away,0,5,7.0,6.0,0.0
+2026-05-24,6599917,Texas,Arizona St.,home,5,0,6.0,7.0,1.0

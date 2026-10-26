@@ -3,13 +3,13 @@
     "rank": 1,
     "team": "Oklahoma",
     "conference": "Southeastern Conference",
-    "raa": 15.06,
-    "games_played": 59,
+    "raa": 14.79,
+    "games_played": 60,
     "wins": 51,
-    "losses": 8,
-    "r_per_7": 13.05,
-    "ra_per_7": 3.29,
-    "sos": 4.96
+    "losses": 9,
+    "r_per_7": 12.77,
+    "ra_per_7": 3.34,
+    "sos": 5.02
   },
   {
     "rank": 2,
@@ -25,63 +25,63 @@
   },
   {
     "rank": 3,
+    "team": "Texas Tech",
+    "conference": "Big 12 Conference",
+    "raa": 13.05,
+    "games_played": 66,
+    "wins": 57,
+    "losses": 9,
+    "r_per_7": 11.11,
+    "ra_per_7": 2.87,
+    "sos": 4.47
+  },
+  {
+    "rank": 4,
     "team": "Arkansas",
     "conference": "Southeastern Conference",
-    "raa": 12.94,
+    "raa": 12.93,
     "games_played": 58,
     "wins": 46,
     "losses": 12,
     "r_per_7": 9.36,
     "ra_per_7": 3.19,
-    "sos": 6.44
-  },
-  {
-    "rank": 4,
-    "team": "Texas Tech",
-    "conference": "Big 12 Conference",
-    "raa": 12.88,
-    "games_played": 65,
-    "wins": 56,
-    "losses": 9,
-    "r_per_7": 10.96,
-    "ra_per_7": 2.79,
-    "sos": 4.37
+    "sos": 6.43
   },
   {
     "rank": 5,
     "team": "Texas",
     "conference": "Southeastern Conference",
-    "raa": 12.34,
-    "games_played": 62,
-    "wins": 50,
+    "raa": 12.38,
+    "games_played": 63,
+    "wins": 51,
     "losses": 12,
-    "r_per_7": 8.07,
-    "ra_per_7": 2.97,
-    "sos": 6.91
+    "r_per_7": 8.03,
+    "ra_per_7": 2.92,
+    "sos": 6.93
   },
   {
     "rank": 6,
-    "team": "Florida",
-    "conference": "Southeastern Conference",
-    "raa": 11.77,
-    "games_played": 62,
-    "wins": 51,
-    "losses": 11,
-    "r_per_7": 9.09,
-    "ra_per_7": 3.05,
-    "sos": 5.39
-  },
-  {
-    "rank": 7,
     "team": "Nebraska",
     "conference": "Big Ten Conference",
-    "raa": 11.75,
+    "raa": 11.76,
     "games_played": 52,
     "wins": 44,
     "losses": 8,
     "r_per_7": 7.64,
     "ra_per_7": 2.35,
     "sos": 6.13
+  },
+  {
+    "rank": 7,
+    "team": "Florida",
+    "conference": "Southeastern Conference",
+    "raa": 11.66,
+    "games_played": 63,
+    "wins": 51,
+    "losses": 12,
+    "r_per_7": 9.1,
+    "ra_per_7": 3.29,
+    "sos": 5.51
   },
   {
     "rank": 8,
@@ -105,7 +105,7 @@
     "losses": 19,
     "r_per_7": 8.16,
     "ra_per_7": 3.63,
-    "sos": 5.91
+    "sos": 5.9
   },
   {
     "rank": 10,
@@ -135,13 +135,13 @@
     "rank": 12,
     "team": "Tennessee",
     "conference": "Southeastern Conference",
-    "raa": 10.2,
+    "raa": 10.21,
     "games_played": 60,
     "wins": 49,
     "losses": 11,
     "r_per_7": 6.07,
     "ra_per_7": 1.88,
-    "sos": 5.68
+    "sos": 5.69
   },
   {
     "rank": 13,
@@ -153,31 +153,31 @@
     "losses": 19,
     "r_per_7": 6.53,
     "ra_per_7": 3.24,
-    "sos": 6.54
+    "sos": 6.53
   },
   {
     "rank": 14,
     "team": "Arizona",
     "conference": "Big 12 Conference",
-    "raa": 9.75,
+    "raa": 9.74,
     "games_played": 51,
     "wins": 34,
     "losses": 17,
     "r_per_7": 9.19,
     "ra_per_7": 5.44,
-    "sos": 5.67
+    "sos": 5.66
   },
   {
     "rank": 15,
     "team": "Oklahoma St.",
     "conference": "Big 12 Conference",
-    "raa": 9.29,
+    "raa": 9.28,
     "games_played": 57,
     "wins": 40,
     "losses": 17,
     "r_per_7": 7.1,
     "ra_per_7": 3.97,
-    "sos": 5.83
+    "sos": 5.82
   },
   {
     "rank": 16,
@@ -195,13 +195,13 @@
     "rank": 17,
     "team": "Arizona St.",
     "conference": "Big 12 Conference",
-    "raa": 8.97,
-    "games_played": 59,
+    "raa": 8.92,
+    "games_played": 60,
     "wins": 44,
-    "losses": 15,
-    "r_per_7": 8.31,
-    "ra_per_7": 4.2,
-    "sos": 4.54
+    "losses": 16,
+    "r_per_7": 8.15,
+    "ra_per_7": 4.23,
+    "sos": 4.67
   },
   {
     "rank": 18,
@@ -219,25 +219,25 @@
     "rank": 19,
     "team": "Duke",
     "conference": "Atlantic Coast Conference",
-    "raa": 8.87,
+    "raa": 8.86,
     "games_played": 59,
     "wins": 42,
     "losses": 17,
     "r_per_7": 8.13,
     "ra_per_7": 5.23,
-    "sos": 5.64
+    "sos": 5.63
   },
   {
     "rank": 20,
     "team": "Mississippi St.",
     "conference": "Southeastern Conference",
-    "raa": 8.66,
-    "games_played": 61,
-    "wins": 41,
+    "raa": 8.85,
+    "games_played": 62,
+    "wins": 42,
     "losses": 20,
-    "r_per_7": 5.13,
-    "ra_per_7": 2.75,
-    "sos": 5.95
+    "r_per_7": 5.15,
+    "ra_per_7": 2.7,
+    "sos": 6.08
   },
   {
     "rank": 21,
@@ -255,13 +255,13 @@
     "rank": 22,
     "team": "South Carolina",
     "conference": "Southeastern Conference",
-    "raa": 8.22,
+    "raa": 8.23,
     "games_played": 59,
     "wins": 31,
     "losses": 28,
     "r_per_7": 5.58,
     "ra_per_7": 3.84,
-    "sos": 6.15
+    "sos": 6.16
   },
   {
     "rank": 23,
@@ -273,7 +273,7 @@
     "losses": 15,
     "r_per_7": 7.75,
     "ra_per_7": 4.32,
-    "sos": 4.43
+    "sos": 4.42
   },
   {
     "rank": 24,
@@ -303,7 +303,7 @@
     "rank": 26,
     "team": "Ole Miss",
     "conference": "Southeastern Conference",
-    "raa": 7.42,
+    "raa": 7.43,
     "games_played": 57,
     "wins": 33,
     "losses": 24,
@@ -345,13 +345,13 @@
     "losses": 28,
     "r_per_7": 6.36,
     "ra_per_7": 4.52,
-    "sos": 4.45
+    "sos": 4.44
   },
   {
     "rank": 30,
     "team": "Omaha",
     "conference": "Summit League",
-    "raa": 6.5,
+    "raa": 6.51,
     "games_played": 45,
     "wins": 34,
     "losses": 11,
@@ -363,37 +363,37 @@
     "rank": 31,
     "team": "Kansas",
     "conference": "Big 12 Conference",
-    "raa": 6.44,
+    "raa": 6.43,
     "games_played": 52,
     "wins": 32,
     "losses": 20,
     "r_per_7": 7.39,
     "ra_per_7": 5.05,
-    "sos": 3.77
+    "sos": 3.76
   },
   {
     "rank": 32,
-    "team": "Missouri",
-    "conference": "Southeastern Conference",
-    "raa": 6.43,
-    "games_played": 56,
-    "wins": 27,
-    "losses": 29,
-    "r_per_7": 4.34,
-    "ra_per_7": 4.13,
-    "sos": 5.88
-  },
-  {
-    "rank": 33,
     "team": "Clemson",
     "conference": "Atlantic Coast Conference",
-    "raa": 6.42,
+    "raa": 6.43,
     "games_played": 56,
     "wins": 34,
     "losses": 22,
     "r_per_7": 5.94,
     "ra_per_7": 4.26,
     "sos": 4.42
+  },
+  {
+    "rank": 33,
+    "team": "Missouri",
+    "conference": "Southeastern Conference",
+    "raa": 6.42,
+    "games_played": 56,
+    "wins": 27,
+    "losses": 29,
+    "r_per_7": 4.34,
+    "ra_per_7": 4.13,
+    "sos": 5.87
   },
   {
     "rank": 34,
@@ -405,7 +405,7 @@
     "losses": 17,
     "r_per_7": 9.02,
     "ra_per_7": 5.75,
-    "sos": 2.81
+    "sos": 2.8
   },
   {
     "rank": 35,
@@ -423,37 +423,37 @@
     "rank": 36,
     "team": "Michigan",
     "conference": "Big Ten Conference",
-    "raa": 6.19,
+    "raa": 6.18,
     "games_played": 56,
     "wins": 36,
     "losses": 20,
     "r_per_7": 7.12,
     "ra_per_7": 4.72,
-    "sos": 3.46
+    "sos": 3.45
   },
   {
     "rank": 37,
-    "team": "Auburn",
-    "conference": "Southeastern Conference",
-    "raa": 6.11,
-    "games_played": 51,
-    "wins": 25,
-    "losses": 26,
-    "r_per_7": 6.48,
-    "ra_per_7": 6.66,
-    "sos": 5.97
-  },
-  {
-    "rank": 38,
     "team": "Utah",
     "conference": "Big 12 Conference",
-    "raa": 6.1,
+    "raa": 6.11,
     "games_played": 54,
     "wins": 33,
     "losses": 20,
     "r_per_7": 6.51,
     "ra_per_7": 4.21,
-    "sos": 3.47
+    "sos": 3.48
+  },
+  {
+    "rank": 38,
+    "team": "Auburn",
+    "conference": "Southeastern Conference",
+    "raa": 6.09,
+    "games_played": 51,
+    "wins": 25,
+    "losses": 26,
+    "r_per_7": 6.48,
+    "ra_per_7": 6.66,
+    "sos": 5.94
   },
   {
     "rank": 39,
@@ -489,7 +489,7 @@
     "losses": 17,
     "r_per_7": 6.53,
     "ra_per_7": 3.35,
-    "sos": 1.96
+    "sos": 1.97
   },
   {
     "rank": 42,
@@ -505,27 +505,27 @@
   },
   {
     "rank": 43,
+    "team": "Baylor",
+    "conference": "Big 12 Conference",
+    "raa": 5.34,
+    "games_played": 55,
+    "wins": 29,
+    "losses": 26,
+    "r_per_7": 5.11,
+    "ra_per_7": 5.12,
+    "sos": 5.01
+  },
+  {
+    "rank": 44,
     "team": "Wichita St.",
     "conference": "American Athletic Conference",
-    "raa": 5.33,
+    "raa": 5.34,
     "games_played": 47,
     "wins": 31,
     "losses": 16,
     "r_per_7": 7.14,
     "ra_per_7": 4.9,
     "sos": 2.76
-  },
-  {
-    "rank": 44,
-    "team": "Baylor",
-    "conference": "Big 12 Conference",
-    "raa": 5.32,
-    "games_played": 55,
-    "wins": 29,
-    "losses": 26,
-    "r_per_7": 5.11,
-    "ra_per_7": 5.12,
-    "sos": 5.0
   },
   {
     "rank": 45,
@@ -585,13 +585,13 @@
     "losses": 14,
     "r_per_7": 5.99,
     "ra_per_7": 3.85,
-    "sos": 2.46
+    "sos": 2.45
   },
   {
     "rank": 50,
     "team": "Texas St.",
     "conference": "Sun Belt Conference",
-    "raa": 4.84,
+    "raa": 4.85,
     "games_played": 57,
     "wins": 36,
     "losses": 21,
@@ -601,18 +601,6 @@
   },
   {
     "rank": 51,
-    "team": "Louisiana",
-    "conference": "Sun Belt Conference",
-    "raa": 4.64,
-    "games_played": 54,
-    "wins": 29,
-    "losses": 25,
-    "r_per_7": 5.87,
-    "ra_per_7": 4.77,
-    "sos": 3.22
-  },
-  {
-    "rank": 52,
     "team": "Wisconsin",
     "conference": "Big Ten Conference",
     "raa": 4.64,
@@ -624,16 +612,28 @@
     "sos": 4.16
   },
   {
+    "rank": 52,
+    "team": "Louisiana",
+    "conference": "Sun Belt Conference",
+    "raa": 4.64,
+    "games_played": 54,
+    "wins": 29,
+    "losses": 25,
+    "r_per_7": 5.87,
+    "ra_per_7": 4.77,
+    "sos": 3.21
+  },
+  {
     "rank": 53,
     "team": "Kentucky",
     "conference": "Southeastern Conference",
-    "raa": 4.62,
+    "raa": 4.6,
     "games_played": 53,
     "wins": 25,
     "losses": 28,
     "r_per_7": 4.91,
     "ra_per_7": 5.68,
-    "sos": 5.06
+    "sos": 5.04
   },
   {
     "rank": 54,
@@ -645,13 +645,13 @@
     "losses": 18,
     "r_per_7": 5.5,
     "ra_per_7": 4.08,
-    "sos": 2.71
+    "sos": 2.7
   },
   {
     "rank": 55,
     "team": "South Fla.",
     "conference": "American Athletic Conference",
-    "raa": 4.39,
+    "raa": 4.38,
     "games_played": 54,
     "wins": 37,
     "losses": 17,
@@ -675,16 +675,28 @@
     "rank": 57,
     "team": "Saint Mary's",
     "conference": "West Coast Conference",
-    "raa": 4.19,
+    "raa": 4.2,
     "games_played": 51,
     "wins": 36,
     "losses": 15,
     "r_per_7": 5.68,
     "ra_per_7": 3.81,
-    "sos": 1.98
+    "sos": 1.99
   },
   {
     "rank": 58,
+    "team": "Iowa St.",
+    "conference": "Big 12 Conference",
+    "raa": 4.07,
+    "games_played": 50,
+    "wins": 29,
+    "losses": 21,
+    "r_per_7": 7.49,
+    "ra_per_7": 6.6,
+    "sos": 2.86
+  },
+  {
+    "rank": 59,
     "team": "NC St.",
     "conference": "Atlantic Coast Conference",
     "raa": 4.07,
@@ -694,18 +706,6 @@
     "r_per_7": 6.01,
     "ra_per_7": 5.69,
     "sos": 3.42
-  },
-  {
-    "rank": 59,
-    "team": "Iowa St.",
-    "conference": "Big 12 Conference",
-    "raa": 4.06,
-    "games_played": 50,
-    "wins": 29,
-    "losses": 21,
-    "r_per_7": 7.49,
-    "ra_per_7": 6.6,
-    "sos": 2.85
   },
   {
     "rank": 60,
@@ -729,37 +729,37 @@
     "losses": 14,
     "r_per_7": 6.68,
     "ra_per_7": 3.58,
-    "sos": 0.35
+    "sos": 0.34
   },
   {
     "rank": 62,
     "team": "Belmont",
     "conference": "Missouri Valley Conference",
-    "raa": 3.66,
+    "raa": 3.67,
     "games_played": 42,
     "wins": 32,
     "losses": 10,
     "r_per_7": 5.2,
     "ra_per_7": 2.47,
-    "sos": 0.6
+    "sos": 0.61
   },
   {
     "rank": 63,
     "team": "Western Ky.",
     "conference": "Conference USA",
-    "raa": 3.6,
+    "raa": 3.59,
     "games_played": 47,
     "wins": 35,
     "losses": 12,
     "r_per_7": 6.95,
     "ra_per_7": 3.47,
-    "sos": -0.22
+    "sos": -0.23
   },
   {
     "rank": 64,
     "team": "Iowa",
     "conference": "Big Ten Conference",
-    "raa": 3.48,
+    "raa": 3.49,
     "games_played": 48,
     "wins": 24,
     "losses": 24,
@@ -771,7 +771,7 @@
     "rank": 65,
     "team": "McNeese",
     "conference": "Southland Conference",
-    "raa": 3.47,
+    "raa": 3.48,
     "games_played": 51,
     "wins": 33,
     "losses": 18,
@@ -781,6 +781,18 @@
   },
   {
     "rank": 66,
+    "team": "Rutgers",
+    "conference": "Big Ten Conference",
+    "raa": 3.45,
+    "games_played": 48,
+    "wins": 24,
+    "losses": 24,
+    "r_per_7": 7.09,
+    "ra_per_7": 6.79,
+    "sos": 2.82
+  },
+  {
+    "rank": 67,
     "team": "Charlotte",
     "conference": "American Athletic Conference",
     "raa": 3.45,
@@ -792,18 +804,6 @@
     "sos": 2.39
   },
   {
-    "rank": 67,
-    "team": "Rutgers",
-    "conference": "Big Ten Conference",
-    "raa": 3.44,
-    "games_played": 48,
-    "wins": 24,
-    "losses": 24,
-    "r_per_7": 7.09,
-    "ra_per_7": 6.79,
-    "sos": 2.82
-  },
-  {
     "rank": 68,
     "team": "FIU",
     "conference": "Conference USA",
@@ -813,13 +813,13 @@
     "losses": 17,
     "r_per_7": 5.97,
     "ra_per_7": 4.2,
-    "sos": 1.23
+    "sos": 1.22
   },
   {
     "rank": 69,
     "team": "South Alabama",
     "conference": "Sun Belt Conference",
-    "raa": 3.31,
+    "raa": 3.32,
     "games_played": 56,
     "wins": 29,
     "losses": 27,
@@ -837,19 +837,19 @@
     "losses": 23,
     "r_per_7": 5.44,
     "ra_per_7": 4.89,
-    "sos": 2.41
+    "sos": 2.4
   },
   {
     "rank": 71,
     "team": "LMU (CA)",
     "conference": "West Coast Conference",
-    "raa": 3.28,
+    "raa": 3.27,
     "games_played": 51,
     "wins": 33,
     "losses": 18,
     "r_per_7": 5.46,
     "ra_per_7": 3.51,
-    "sos": 1.0
+    "sos": 0.99
   },
   {
     "rank": 72,
@@ -861,7 +861,7 @@
     "losses": 20,
     "r_per_7": 5.83,
     "ra_per_7": 3.82,
-    "sos": 0.92
+    "sos": 0.91
   },
   {
     "rank": 73,
@@ -885,7 +885,7 @@
     "losses": 20,
     "r_per_7": 6.66,
     "ra_per_7": 5.07,
-    "sos": 1.27
+    "sos": 1.26
   },
   {
     "rank": 75,
@@ -909,7 +909,7 @@
     "losses": 14,
     "r_per_7": 6.91,
     "ra_per_7": 4.09,
-    "sos": -0.04
+    "sos": -0.05
   },
   {
     "rank": 77,
@@ -927,13 +927,13 @@
     "rank": 78,
     "team": "North Florida",
     "conference": "ASUN Conference",
-    "raa": 3.02,
+    "raa": 3.01,
     "games_played": 48,
     "wins": 29,
     "losses": 19,
     "r_per_7": 6.4,
     "ra_per_7": 4.28,
-    "sos": 0.57
+    "sos": 0.56
   },
   {
     "rank": 79,
@@ -999,13 +999,13 @@
     "rank": 84,
     "team": "New Mexico",
     "conference": "Mountain West Conference",
-    "raa": 2.64,
+    "raa": 2.65,
     "games_played": 47,
     "wins": 25,
     "losses": 22,
     "r_per_7": 5.44,
     "ra_per_7": 4.66,
-    "sos": 1.52
+    "sos": 1.53
   },
   {
     "rank": 85,
@@ -1017,7 +1017,7 @@
     "losses": 30,
     "r_per_7": 5.13,
     "ra_per_7": 5.5,
-    "sos": 2.64
+    "sos": 2.63
   },
   {
     "rank": 86,
@@ -1035,13 +1035,13 @@
     "rank": 87,
     "team": "Fresno St.",
     "conference": "Mountain West Conference",
-    "raa": 2.53,
+    "raa": 2.54,
     "games_played": 42,
     "wins": 21,
     "losses": 21,
     "r_per_7": 4.56,
     "ra_per_7": 4.69,
-    "sos": 2.33
+    "sos": 2.34
   },
   {
     "rank": 88,
@@ -1065,13 +1065,13 @@
     "losses": 18,
     "r_per_7": 6.95,
     "ra_per_7": 4.98,
-    "sos": -0.07
+    "sos": -0.08
   },
   {
     "rank": 90,
     "team": "UNC Greensboro",
     "conference": "Southern Conference",
-    "raa": 2.14,
+    "raa": 2.15,
     "games_played": 52,
     "wins": 34,
     "losses": 18,
@@ -1131,16 +1131,28 @@
     "rank": 95,
     "team": "North Texas",
     "conference": "American Athletic Conference",
-    "raa": 2.01,
+    "raa": 2.02,
     "games_played": 50,
     "wins": 24,
     "losses": 26,
     "r_per_7": 5.85,
     "ra_per_7": 6.03,
-    "sos": 1.86
+    "sos": 1.87
   },
   {
     "rank": 96,
+    "team": "BYU",
+    "conference": "Big 12 Conference",
+    "raa": 2.0,
+    "games_played": 50,
+    "wins": 17,
+    "losses": 33,
+    "r_per_7": 5.0,
+    "ra_per_7": 8.62,
+    "sos": 5.3
+  },
+  {
+    "rank": 97,
     "team": "Campbell",
     "conference": "Coastal Athletic Association",
     "raa": 2.0,
@@ -1150,18 +1162,6 @@
     "r_per_7": 7.57,
     "ra_per_7": 4.43,
     "sos": -1.47
-  },
-  {
-    "rank": 97,
-    "team": "BYU",
-    "conference": "Big 12 Conference",
-    "raa": 2.0,
-    "games_played": 50,
-    "wins": 17,
-    "losses": 33,
-    "r_per_7": 5.0,
-    "ra_per_7": 8.62,
-    "sos": 5.29
   },
   {
     "rank": 98,
@@ -1185,7 +1185,7 @@
     "losses": 16,
     "r_per_7": 5.11,
     "ra_per_7": 3.97,
-    "sos": 0.51
+    "sos": 0.5
   },
   {
     "rank": 100,
@@ -1209,7 +1209,7 @@
     "losses": 30,
     "r_per_7": 4.64,
     "ra_per_7": 5.84,
-    "sos": 2.84
+    "sos": 2.83
   },
   {
     "rank": 102,
@@ -1227,40 +1227,28 @@
     "rank": 103,
     "team": "Sam Houston",
     "conference": "Conference USA",
-    "raa": 1.88,
+    "raa": 1.87,
     "games_played": 54,
     "wins": 29,
     "losses": 25,
     "r_per_7": 5.3,
     "ra_per_7": 4.82,
-    "sos": 1.07
+    "sos": 1.06
   },
   {
     "rank": 104,
     "team": "Jacksonville",
     "conference": "ASUN Conference",
-    "raa": 1.86,
+    "raa": 1.85,
     "games_played": 42,
     "wins": 27,
     "losses": 15,
     "r_per_7": 5.59,
     "ra_per_7": 4.67,
-    "sos": 0.61
+    "sos": 0.6
   },
   {
     "rank": 105,
-    "team": "Long Beach St.",
-    "conference": "Big West Conference",
-    "raa": 1.81,
-    "games_played": 42,
-    "wins": 23,
-    "losses": 19,
-    "r_per_7": 5.64,
-    "ra_per_7": 5.09,
-    "sos": 0.94
-  },
-  {
-    "rank": 106,
     "team": "Oregon St.",
     "conference": "West Coast Conference",
     "raa": 1.81,
@@ -1269,7 +1257,19 @@
     "losses": 30,
     "r_per_7": 5.54,
     "ra_per_7": 6.43,
-    "sos": 2.38
+    "sos": 2.37
+  },
+  {
+    "rank": 106,
+    "team": "Long Beach St.",
+    "conference": "Big West Conference",
+    "raa": 1.81,
+    "games_played": 42,
+    "wins": 23,
+    "losses": 19,
+    "r_per_7": 5.64,
+    "ra_per_7": 5.09,
+    "sos": 0.93
   },
   {
     "rank": 107,
@@ -1287,37 +1287,37 @@
     "rank": 108,
     "team": "UAB",
     "conference": "American Athletic Conference",
-    "raa": 1.7,
+    "raa": 1.71,
     "games_played": 51,
     "wins": 20,
     "losses": 31,
     "r_per_7": 4.22,
     "ra_per_7": 5.31,
-    "sos": 2.45
+    "sos": 2.46
   },
   {
     "rank": 109,
     "team": "Southern Miss.",
     "conference": "Sun Belt Conference",
-    "raa": 1.68,
+    "raa": 1.69,
     "games_played": 55,
     "wins": 32,
     "losses": 23,
     "r_per_7": 5.21,
     "ra_per_7": 4.87,
-    "sos": 1.01
+    "sos": 1.02
   },
   {
     "rank": 110,
     "team": "Houston",
     "conference": "Big 12 Conference",
-    "raa": 1.66,
+    "raa": 1.67,
     "games_played": 50,
     "wins": 20,
     "losses": 30,
     "r_per_7": 5.77,
     "ra_per_7": 8.31,
-    "sos": 3.87
+    "sos": 3.88
   },
   {
     "rank": 111,
@@ -1335,28 +1335,16 @@
     "rank": 112,
     "team": "New Mexico St.",
     "conference": "Conference USA",
-    "raa": 1.64,
+    "raa": 1.63,
     "games_played": 51,
     "wins": 26,
     "losses": 25,
     "r_per_7": 6.37,
     "ra_per_7": 6.48,
-    "sos": 1.42
+    "sos": 1.41
   },
   {
     "rank": 113,
-    "team": "Seattle U",
-    "conference": "West Coast Conference",
-    "raa": 1.59,
-    "games_played": 47,
-    "wins": 18,
-    "losses": 29,
-    "r_per_7": 6.01,
-    "ra_per_7": 5.97,
-    "sos": 1.23
-  },
-  {
-    "rank": 114,
     "team": "Creighton",
     "conference": "Big East Conference",
     "raa": 1.59,
@@ -1368,16 +1356,28 @@
     "sos": 0.49
   },
   {
+    "rank": 114,
+    "team": "Seattle U",
+    "conference": "West Coast Conference",
+    "raa": 1.59,
+    "games_played": 47,
+    "wins": 18,
+    "losses": 29,
+    "r_per_7": 6.01,
+    "ra_per_7": 5.97,
+    "sos": 1.23
+  },
+  {
     "rank": 115,
     "team": "California",
     "conference": "Atlantic Coast Conference",
-    "raa": 1.56,
+    "raa": 1.55,
     "games_played": 50,
     "wins": 15,
     "losses": 35,
     "r_per_7": 5.1,
     "ra_per_7": 8.52,
-    "sos": 4.65
+    "sos": 4.64
   },
   {
     "rank": 116,
@@ -1395,7 +1395,7 @@
     "rank": 117,
     "team": "Delaware",
     "conference": "Coastal Athletic Association",
-    "raa": 1.42,
+    "raa": 1.41,
     "games_played": 49,
     "wins": 28,
     "losses": 21,
@@ -1407,28 +1407,40 @@
     "rank": 118,
     "team": "Ga. Southern",
     "conference": "Sun Belt Conference",
-    "raa": 1.38,
+    "raa": 1.39,
     "games_played": 52,
     "wins": 23,
     "losses": 29,
     "r_per_7": 4.32,
     "ra_per_7": 5.01,
-    "sos": 1.74
+    "sos": 1.75
   },
   {
     "rank": 119,
     "team": "Wofford",
     "conference": "Southern Conference",
-    "raa": 1.37,
+    "raa": 1.38,
     "games_played": 40,
     "wins": 28,
     "losses": 12,
     "r_per_7": 7.75,
     "ra_per_7": 4.67,
-    "sos": -2.05
+    "sos": -2.04
   },
   {
     "rank": 120,
+    "team": "Samford",
+    "conference": "Southern Conference",
+    "raa": 1.37,
+    "games_played": 48,
+    "wins": 21,
+    "losses": 27,
+    "r_per_7": 4.81,
+    "ra_per_7": 5.11,
+    "sos": 1.33
+  },
+  {
+    "rank": 121,
     "team": "Illinois St.",
     "conference": "Missouri Valley Conference",
     "raa": 1.37,
@@ -1440,22 +1452,10 @@
     "sos": 0.01
   },
   {
-    "rank": 121,
-    "team": "Samford",
-    "conference": "Southern Conference",
-    "raa": 1.36,
-    "games_played": 48,
-    "wins": 21,
-    "losses": 27,
-    "r_per_7": 4.81,
-    "ra_per_7": 5.11,
-    "sos": 1.32
-  },
-  {
     "rank": 122,
     "team": "Lamar University",
     "conference": "Southland Conference",
-    "raa": 1.29,
+    "raa": 1.3,
     "games_played": 47,
     "wins": 25,
     "losses": 22,
@@ -1485,7 +1485,7 @@
     "losses": 25,
     "r_per_7": 4.82,
     "ra_per_7": 5.26,
-    "sos": 1.37
+    "sos": 1.36
   },
   {
     "rank": 125,
@@ -1497,7 +1497,7 @@
     "losses": 20,
     "r_per_7": 5.12,
     "ra_per_7": 5.15,
-    "sos": 0.94
+    "sos": 0.93
   },
   {
     "rank": 126,
@@ -1549,6 +1549,18 @@
   },
   {
     "rank": 130,
+    "team": "Tarleton St.",
+    "conference": "Western Athletic Conference",
+    "raa": 0.93,
+    "games_played": 47,
+    "wins": 29,
+    "losses": 18,
+    "r_per_7": 7.05,
+    "ra_per_7": 6.03,
+    "sos": -0.42
+  },
+  {
+    "rank": 131,
     "team": "NIU",
     "conference": "Mid-American Conference",
     "raa": 0.93,
@@ -1558,18 +1570,6 @@
     "r_per_7": 7.07,
     "ra_per_7": 6.07,
     "sos": -0.41
-  },
-  {
-    "rank": 131,
-    "team": "Tarleton St.",
-    "conference": "Western Athletic Conference",
-    "raa": 0.92,
-    "games_played": 47,
-    "wins": 29,
-    "losses": 18,
-    "r_per_7": 7.05,
-    "ra_per_7": 6.03,
-    "sos": -0.42
   },
   {
     "rank": 132,
@@ -1593,7 +1593,7 @@
     "losses": 13,
     "r_per_7": 5.78,
     "ra_per_7": 3.98,
-    "sos": -1.39
+    "sos": -1.4
   },
   {
     "rank": 134,
@@ -1611,7 +1611,7 @@
     "rank": 135,
     "team": "FGCU",
     "conference": "ASUN Conference",
-    "raa": 0.71,
+    "raa": 0.7,
     "games_played": 41,
     "wins": 16,
     "losses": 25,
@@ -1647,13 +1647,13 @@
     "rank": 138,
     "team": "Providence",
     "conference": "Big East Conference",
-    "raa": 0.64,
+    "raa": 0.65,
     "games_played": 41,
     "wins": 25,
     "losses": 16,
     "r_per_7": 6.48,
     "ra_per_7": 5.58,
-    "sos": -0.59
+    "sos": -0.58
   },
   {
     "rank": 139,
@@ -1665,7 +1665,7 @@
     "losses": 28,
     "r_per_7": 6.4,
     "ra_per_7": 6.56,
-    "sos": 0.46
+    "sos": 0.45
   },
   {
     "rank": 140,
@@ -1689,7 +1689,7 @@
     "losses": 26,
     "r_per_7": 4.64,
     "ra_per_7": 5.49,
-    "sos": 0.99
+    "sos": 0.98
   },
   {
     "rank": 142,
@@ -1743,7 +1743,7 @@
     "rank": 146,
     "team": "UTSA",
     "conference": "American Athletic Conference",
-    "raa": 0.27,
+    "raa": 0.28,
     "games_played": 51,
     "wins": 23,
     "losses": 28,
@@ -1755,19 +1755,19 @@
     "rank": 147,
     "team": "Murray St.",
     "conference": "Ohio Valley Conference",
-    "raa": 0.27,
+    "raa": 0.28,
     "games_played": 40,
     "wins": 21,
     "losses": 19,
     "r_per_7": 4.87,
     "ra_per_7": 4.33,
-    "sos": -0.6
+    "sos": -0.59
   },
   {
     "rank": 148,
     "team": "Robert Morris",
     "conference": "Horizon League",
-    "raa": 0.26,
+    "raa": 0.27,
     "games_played": 33,
     "wins": 21,
     "losses": 12,
@@ -1809,13 +1809,13 @@
     "losses": 26,
     "r_per_7": 4.65,
     "ra_per_7": 6.15,
-    "sos": 1.34
+    "sos": 1.33
   },
   {
     "rank": 152,
     "team": "San Diego",
     "conference": "West Coast Conference",
-    "raa": 0.07,
+    "raa": 0.06,
     "games_played": 47,
     "wins": 21,
     "losses": 26,
@@ -1857,7 +1857,7 @@
     "losses": 24,
     "r_per_7": 5.82,
     "ra_per_7": 5.9,
-    "sos": -0.25
+    "sos": -0.26
   },
   {
     "rank": 156,
@@ -1875,7 +1875,7 @@
     "rank": 157,
     "team": "Pacific",
     "conference": "West Coast Conference",
-    "raa": -0.06,
+    "raa": -0.07,
     "games_played": 48,
     "wins": 16,
     "losses": 32,
@@ -1905,13 +1905,13 @@
     "losses": 30,
     "r_per_7": 4.72,
     "ra_per_7": 5.83,
-    "sos": 0.65
+    "sos": 0.64
   },
   {
     "rank": 160,
     "team": "Northwestern St.",
     "conference": "Southland Conference",
-    "raa": -0.3,
+    "raa": -0.29,
     "games_played": 43,
     "wins": 20,
     "losses": 23,
@@ -1953,7 +1953,7 @@
     "losses": 37,
     "r_per_7": 4.0,
     "ra_per_7": 7.63,
-    "sos": 2.67
+    "sos": 2.66
   },
   {
     "rank": 164,
@@ -1965,13 +1965,13 @@
     "losses": 22,
     "r_per_7": 4.78,
     "ra_per_7": 5.03,
-    "sos": -0.91
+    "sos": -0.92
   },
   {
     "rank": 165,
     "team": "South Dakota",
     "conference": "Summit League",
-    "raa": -0.87,
+    "raa": -0.88,
     "games_played": 49,
     "wins": 15,
     "losses": 33,
@@ -2001,7 +2001,7 @@
     "losses": 21,
     "r_per_7": 5.38,
     "ra_per_7": 7.34,
-    "sos": 0.68
+    "sos": 0.67
   },
   {
     "rank": 168,
@@ -2085,7 +2085,7 @@
     "losses": 18,
     "r_per_7": 6.25,
     "ra_per_7": 5.63,
-    "sos": -2.18
+    "sos": -2.19
   },
   {
     "rank": 175,
@@ -2097,7 +2097,7 @@
     "losses": 24,
     "r_per_7": 4.4,
     "ra_per_7": 5.08,
-    "sos": -0.93
+    "sos": -0.94
   },
   {
     "rank": 176,
@@ -2139,7 +2139,7 @@
     "rank": 179,
     "team": "UT Martin",
     "conference": "Ohio Valley Conference",
-    "raa": -1.38,
+    "raa": -1.37,
     "games_played": 42,
     "wins": 25,
     "losses": 17,
@@ -2157,7 +2157,7 @@
     "losses": 17,
     "r_per_7": 4.44,
     "ra_per_7": 4.04,
-    "sos": -2.21
+    "sos": -2.22
   },
   {
     "rank": 181,
@@ -2181,7 +2181,7 @@
     "losses": 20,
     "r_per_7": 5.19,
     "ra_per_7": 5.7,
-    "sos": -1.35
+    "sos": -1.36
   },
   {
     "rank": 183,
@@ -2223,13 +2223,13 @@
     "rank": 186,
     "team": "Portland St.",
     "conference": "Big Sky Conference",
-    "raa": -1.65,
+    "raa": -1.66,
     "games_played": 38,
     "wins": 12,
     "losses": 26,
     "r_per_7": 3.91,
     "ra_per_7": 6.59,
-    "sos": 0.7
+    "sos": 0.69
   },
   {
     "rank": 187,
@@ -2301,7 +2301,7 @@
     "losses": 15,
     "r_per_7": 4.99,
     "ra_per_7": 4.13,
-    "sos": -3.04
+    "sos": -3.05
   },
   {
     "rank": 193,
@@ -2341,18 +2341,6 @@
   },
   {
     "rank": 196,
-    "team": "Bryant",
-    "conference": "America East Conference",
-    "raa": -1.91,
-    "games_played": 34,
-    "wins": 18,
-    "losses": 16,
-    "r_per_7": 5.42,
-    "ra_per_7": 5.76,
-    "sos": -1.9
-  },
-  {
-    "rank": 197,
     "team": "Marist",
     "conference": "Metro Atlantic Athletic Conference",
     "raa": -1.91,
@@ -2364,16 +2352,28 @@
     "sos": -1.98
   },
   {
+    "rank": 197,
+    "team": "Bryant",
+    "conference": "America East Conference",
+    "raa": -1.91,
+    "games_played": 34,
+    "wins": 18,
+    "losses": 16,
+    "r_per_7": 5.42,
+    "ra_per_7": 5.76,
+    "sos": -1.9
+  },
+  {
     "rank": 198,
     "team": "Lindenwood",
     "conference": "Ohio Valley Conference",
-    "raa": -1.91,
+    "raa": -1.92,
     "games_played": 42,
     "wins": 23,
     "losses": 19,
     "r_per_7": 5.34,
     "ra_per_7": 5.04,
-    "sos": -2.55
+    "sos": -2.56
   },
   {
     "rank": 199,
@@ -2385,7 +2385,7 @@
     "losses": 15,
     "r_per_7": 8.11,
     "ra_per_7": 5.93,
-    "sos": -4.49
+    "sos": -4.5
   },
   {
     "rank": 200,
@@ -2397,7 +2397,7 @@
     "losses": 31,
     "r_per_7": 4.26,
     "ra_per_7": 7.19,
-    "sos": 0.58
+    "sos": 0.57
   },
   {
     "rank": 201,
@@ -2469,7 +2469,7 @@
     "losses": 18,
     "r_per_7": 5.75,
     "ra_per_7": 4.74,
-    "sos": -3.5
+    "sos": -3.51
   },
   {
     "rank": 207,
@@ -2481,34 +2481,22 @@
     "losses": 22,
     "r_per_7": 4.79,
     "ra_per_7": 5.98,
-    "sos": -1.31
+    "sos": -1.32
   },
   {
     "rank": 208,
     "team": "Binghamton",
     "conference": "America East Conference",
-    "raa": -2.28,
+    "raa": -2.29,
     "games_played": 35,
     "wins": 14,
     "losses": 21,
     "r_per_7": 6.11,
     "ra_per_7": 7.9,
-    "sos": -0.82
+    "sos": -0.83
   },
   {
     "rank": 209,
-    "team": "Cal Poly",
-    "conference": "Big West Conference",
-    "raa": -2.35,
-    "games_played": 35,
-    "wins": 7,
-    "losses": 28,
-    "r_per_7": 2.65,
-    "ra_per_7": 5.38,
-    "sos": 0.05
-  },
-  {
-    "rank": 210,
     "team": "DePaul",
     "conference": "Big East Conference",
     "raa": -2.35,
@@ -2518,6 +2506,18 @@
     "r_per_7": 4.47,
     "ra_per_7": 6.42,
     "sos": -0.72
+  },
+  {
+    "rank": 210,
+    "team": "Cal Poly",
+    "conference": "Big West Conference",
+    "raa": -2.35,
+    "games_played": 35,
+    "wins": 7,
+    "losses": 28,
+    "r_per_7": 2.65,
+    "ra_per_7": 5.38,
+    "sos": 0.05
   },
   {
     "rank": 211,
@@ -2601,7 +2601,7 @@
     "losses": 8,
     "r_per_7": 6.31,
     "ra_per_7": 2.91,
-    "sos": -6.22
+    "sos": -6.23
   },
   {
     "rank": 218,
@@ -2631,13 +2631,13 @@
     "rank": 220,
     "team": "Southeast Mo. St.",
     "conference": "Ohio Valley Conference",
-    "raa": -2.75,
+    "raa": -2.74,
     "games_played": 39,
     "wins": 14,
     "losses": 25,
     "r_per_7": 4.42,
     "ra_per_7": 6.19,
-    "sos": -1.32
+    "sos": -1.31
   },
   {
     "rank": 221,
@@ -2667,13 +2667,13 @@
     "rank": 223,
     "team": "UMass Lowell",
     "conference": "America East Conference",
-    "raa": -2.79,
+    "raa": -2.8,
     "games_played": 40,
     "wins": 19,
     "losses": 21,
     "r_per_7": 5.03,
     "ra_per_7": 4.9,
-    "sos": -3.26
+    "sos": -3.27
   },
   {
     "rank": 224,
@@ -2715,7 +2715,7 @@
     "rank": 227,
     "team": "Longwood",
     "conference": "Big South Conference",
-    "raa": -2.91,
+    "raa": -2.92,
     "games_played": 45,
     "wins": 19,
     "losses": 26,
@@ -2727,25 +2727,25 @@
     "rank": 228,
     "team": "Florida A&M",
     "conference": "Southwestern Athletic Conference",
-    "raa": -3.06,
+    "raa": -3.07,
     "games_played": 42,
     "wins": 23,
     "losses": 19,
     "r_per_7": 6.6,
     "ra_per_7": 6.08,
-    "sos": -3.92
+    "sos": -3.93
   },
   {
     "rank": 229,
     "team": "Bradley",
     "conference": "Missouri Valley Conference",
-    "raa": -3.07,
+    "raa": -3.08,
     "games_played": 40,
     "wins": 13,
     "losses": 27,
     "r_per_7": 5.92,
     "ra_per_7": 8.42,
-    "sos": -0.91
+    "sos": -0.92
   },
   {
     "rank": 230,
@@ -2757,7 +2757,7 @@
     "losses": 41,
     "r_per_7": 3.52,
     "ra_per_7": 9.4,
-    "sos": 2.44
+    "sos": 2.43
   },
   {
     "rank": 231,
@@ -2781,7 +2781,7 @@
     "losses": 32,
     "r_per_7": 3.84,
     "ra_per_7": 6.88,
-    "sos": -0.45
+    "sos": -0.46
   },
   {
     "rank": 233,
@@ -2799,7 +2799,7 @@
     "rank": 234,
     "team": "West Ga.",
     "conference": "ASUN Conference",
-    "raa": -3.25,
+    "raa": -3.26,
     "games_played": 44,
     "wins": 11,
     "losses": 33,
@@ -2811,7 +2811,7 @@
     "rank": 235,
     "team": "Mercer",
     "conference": "Southern Conference",
-    "raa": -3.3,
+    "raa": -3.29,
     "games_played": 39,
     "wins": 17,
     "losses": 22,
@@ -2835,7 +2835,7 @@
     "rank": 237,
     "team": "Iona",
     "conference": "Metro Atlantic Athletic Conference",
-    "raa": -3.34,
+    "raa": -3.33,
     "games_played": 35,
     "wins": 18,
     "losses": 17,
@@ -2877,7 +2877,7 @@
     "losses": 13,
     "r_per_7": 5.61,
     "ra_per_7": 4.94,
-    "sos": -4.66
+    "sos": -4.67
   },
   {
     "rank": 241,
@@ -2991,13 +2991,13 @@
     "rank": 250,
     "team": "A&M-Corpus Christi",
     "conference": "Southland Conference",
-    "raa": -4.11,
+    "raa": -4.1,
     "games_played": 43,
     "wins": 11,
     "losses": 32,
     "r_per_7": 3.15,
     "ra_per_7": 8.63,
-    "sos": 1.04
+    "sos": 1.05
   },
   {
     "rank": 251,
@@ -3009,7 +3009,7 @@
     "losses": 23,
     "r_per_7": 3.33,
     "ra_per_7": 5.72,
-    "sos": -2.15
+    "sos": -2.16
   },
   {
     "rank": 252,
@@ -3087,7 +3087,7 @@
     "rank": 258,
     "team": "Detroit Mercy",
     "conference": "Horizon League",
-    "raa": -4.53,
+    "raa": -4.52,
     "games_played": 36,
     "wins": 12,
     "losses": 24,
@@ -3201,7 +3201,7 @@
     "losses": 27,
     "r_per_7": 4.36,
     "ra_per_7": 5.98,
-    "sos": -4.19
+    "sos": -4.2
   },
   {
     "rank": 268,
@@ -3217,18 +3217,6 @@
   },
   {
     "rank": 269,
-    "team": "Alabama St.",
-    "conference": "Southwestern Athletic Conference",
-    "raa": -5.75,
-    "games_played": 45,
-    "wins": 17,
-    "losses": 28,
-    "r_per_7": 5.66,
-    "ra_per_7": 8.41,
-    "sos": -3.34
-  },
-  {
-    "rank": 270,
     "team": "Wagner",
     "conference": "Northeast Conference",
     "raa": -5.75,
@@ -3238,6 +3226,18 @@
     "r_per_7": 3.94,
     "ra_per_7": 5.64,
     "sos": -4.38
+  },
+  {
+    "rank": 270,
+    "team": "Alabama St.",
+    "conference": "Southwestern Athletic Conference",
+    "raa": -5.76,
+    "games_played": 45,
+    "wins": 17,
+    "losses": 28,
+    "r_per_7": 5.66,
+    "ra_per_7": 8.41,
+    "sos": -3.36
   },
   {
     "rank": 271,
@@ -3297,7 +3297,7 @@
     "losses": 16,
     "r_per_7": 5.5,
     "ra_per_7": 5.89,
-    "sos": -6.0
+    "sos": -6.01
   },
   {
     "rank": 276,
@@ -3333,7 +3333,7 @@
     "losses": 21,
     "r_per_7": 5.09,
     "ra_per_7": 6.75,
-    "sos": -5.12
+    "sos": -5.13
   },
   {
     "rank": 279,
@@ -3345,7 +3345,7 @@
     "losses": 29,
     "r_per_7": 3.65,
     "ra_per_7": 7.47,
-    "sos": -2.97
+    "sos": -2.98
   },
   {
     "rank": 280,
@@ -3357,7 +3357,7 @@
     "losses": 29,
     "r_per_7": 4.73,
     "ra_per_7": 9.02,
-    "sos": -2.81
+    "sos": -2.82
   },
   {
     "rank": 281,
@@ -3369,7 +3369,7 @@
     "losses": 28,
     "r_per_7": 4.34,
     "ra_per_7": 9.4,
-    "sos": -2.06
+    "sos": -2.07
   },
   {
     "rank": 282,
@@ -3381,7 +3381,7 @@
     "losses": 26,
     "r_per_7": 5.01,
     "ra_per_7": 7.74,
-    "sos": -4.53
+    "sos": -4.54
   },
   {
     "rank": 283,
@@ -3411,13 +3411,13 @@
     "rank": 285,
     "team": "Delaware St.",
     "conference": "Mid-Eastern Athletic Conference",
-    "raa": -7.72,
+    "raa": -7.71,
     "games_played": 27,
     "wins": 13,
     "losses": 14,
     "r_per_7": 3.6,
     "ra_per_7": 6.67,
-    "sos": -4.98
+    "sos": -4.97
   },
   {
     "rank": 286,
@@ -3459,13 +3459,13 @@
     "rank": 289,
     "team": "Ark.-Pine Bluff",
     "conference": "Southwestern Athletic Conference",
-    "raa": -8.2,
+    "raa": -8.21,
     "games_played": 30,
     "wins": 9,
     "losses": 21,
     "r_per_7": 4.17,
     "ra_per_7": 8.58,
-    "sos": -4.13
+    "sos": -4.14
   },
   {
     "rank": 290,
@@ -3525,7 +3525,7 @@
     "losses": 24,
     "r_per_7": 3.19,
     "ra_per_7": 9.21,
-    "sos": -3.26
+    "sos": -3.27
   },
   {
     "rank": 295,
@@ -3645,7 +3645,7 @@
     "losses": 35,
     "r_per_7": 4.26,
     "ra_per_7": 12.32,
-    "sos": -3.66
+    "sos": -3.67
   },
   {
     "rank": 305,
@@ -3663,24 +3663,24 @@
     "rank": 306,
     "team": "Alabama A&M",
     "conference": "Southwestern Athletic Conference",
-    "raa": -12.25,
+    "raa": -12.26,
     "games_played": 28,
     "wins": 8,
     "losses": 20,
     "r_per_7": 6.88,
     "ra_per_7": 11.51,
-    "sos": -7.96
+    "sos": -7.97
   },
   {
     "rank": 307,
     "team": "Mississippi Val.",
     "conference": "Southwestern Athletic Conference",
-    "raa": -18.45,
+    "raa": -18.46,
     "games_played": 24,
     "wins": 0,
     "losses": 24,
     "r_per_7": 3.4,
     "ra_per_7": 15.26,
-    "sos": -6.93
+    "sos": -6.94
   }
 ]
