@@ -2,12 +2,63 @@ import os
 import json
 import pandas as pd
 
+def resolve_team_player_names(df, name_col="name"):
+    """
+    Two-pass resolver to merge standalone last names ('Manos') 
+    with full/initialed names ('B. Manos' / 'Bailey Manos') on the same team.
+    """
+    # Helper to clean individual strings
+    def format_name(raw):
+        if not isinstance(raw, str) or not raw.strip():
+            return "Unknown"
+        s = raw.strip()
+        if "," in s:
+            parts = s.split(",", 1)
+            last, first = parts[0].strip().title(), parts[1].strip().title()
+            return f"{first[0]}. {last}" if first else last
+        parts = s.split()
+        if len(parts) == 1:
+            return parts[0].capitalize()
+        first, last = parts[0], " ".join(parts[1:])
+        return f"{first[0].upper()}. {last.title()}"
+
+    df["formatted_name"] = df[name_col].astype(str).apply(format_name)
+
+    # Build a lookup map per team: last_name -> best full name
+    # e.g., for team 'Miami (OH)', last name 'Manos' maps to 'B. Manos'
+    team_name_maps = {}
+    for (team), group in df.groupby("team"):
+        last_to_full = {}
+        unique_names = group["formatted_name"].unique()
+        
+        # First collect names with initials or full names (e.g. 'B. Manos')
+        for n in unique_names:
+            parts = n.split()
+            if len(parts) > 1:
+                last_name = parts[-1].lower()
+                last_to_full[last_name] = n
+                
+        team_name_maps[team] = last_to_full
+
+    # Pass 2: Map single last names to their full counterpart if available
+    def final_resolve(row):
+        team = row["team"]
+        fname = row["formatted_name"]
+        parts = fname.split()
+        if len(parts) == 1:
+            last_name = parts[0].lower()
+            return team_name_maps.get(team, {}).get(last_name, fname)
+        return fname
+
+    df["clean_name"] = df.apply(final_resolve, axis=1)
+    return df
+
+
 def calculate_rc7(
     player_games_path="player_games_season.csv",
     team_games_path="team_games_season.csv",
     all_output_path="players.json",
     qualified_output_path="qualified_players.json",
-    min_ab_cutoff=10,
     min_qualified_ab=40,
     ab_per_game_threshold=2.0,
 ):
@@ -17,16 +68,29 @@ def calculate_rc7(
 
     games_df = pd.read_csv(player_games_path)
 
-    # Convert columns to numeric safely
+    # 1. Identify Name Column
+    name_col = None
+    for col in ["last_name", "name", "player_name", "player"]:
+        if col in games_df.columns:
+            name_col = col
+            break
+            
+    if not name_col:
+        games_df["clean_name"] = "Unknown"
+    else:
+        # Resolve 'Manos', 'B. Manos', and 'Bailey Manos' into 'B. Manos'
+        games_df = resolve_team_player_names(games_df, name_col=name_col)
+
+    # 2. Convert stats to numeric safely
     for col in ["at_bats", "hits", "walks", "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"]:
         if col in games_df.columns:
             games_df[col] = pd.to_numeric(games_df[col], errors="coerce").fillna(0)
         else:
             games_df[col] = 0
 
-    # Aggregate: sum per-game stats (AB, Hits, Walks), but take MAX for cumulative season XBH stats
+    # 3. Aggregate by Team and Resolved Clean Name
     season = (
-        games_df.groupby(["team", "last_name", "number"])
+        games_df.groupby(["team", "clean_name"])
         .agg(
             games=("game_id", "count"),
             ab=("at_bats", "sum"),
@@ -38,7 +102,7 @@ def calculate_rc7(
         )
         .reset_index()
     )
-    season["name"] = season["last_name"]
+    season["name"] = season["clean_name"]
 
     team_games_df = pd.DataFrame()
     if os.path.exists(team_games_path) and os.stat(team_games_path).st_size > 0:
@@ -74,10 +138,9 @@ def calculate_rc7(
         ab, h = float(row["ab"]), float(row["hits"])
         d2b, d3b, hr, bb = float(row["doubles"]), float(row["triples"]), float(row["hr"]), float(row["walks"])
 
-        if ab < min_ab_cutoff:
+        if (ab + bb) == 0:
             continue
 
-        # Calculate singles from total hits minus max XBH
         xbh = d2b + d3b + hr
         singles = max(0.0, h - xbh)
 
@@ -112,24 +175,24 @@ def calculate_rc7(
             "rc7_adj": round(rc7_adj, 2),
         })
 
-    # Sort all players by adjusted RC7 descending
+    # Sort all players by adjusted RC7 descending & assign rank
     all_players.sort(key=lambda x: x["rc7_adj"], reverse=True)
-
-    # Assign national overall ranks
     for rank, player in enumerate(all_players, start=1):
         player["rank"] = rank
 
-    # Extract and re-rank qualified players
+    # Extract & re-rank qualified players
     qualified_players = [dict(p) for p in all_players if p["qualified"]]
     for rank, player in enumerate(qualified_players, start=1):
         player["rank"] = rank
 
     with open(all_output_path, "w") as f:
         json.dump(all_players, f, indent=2)
+
     with open(qualified_output_path, "w") as f:
         json.dump(qualified_players, f, indent=2)
 
-    print(f"Calculated RC7 for {len(all_players)} players ({len(qualified_players)} qualified).")
+    print(f"Exported {len(all_players)} total players to {all_output_path}")
+    print(f"Exported {len(qualified_players)} qualified players to {qualified_output_path}")
 
 if __name__ == "__main__":
     calculate_rc7()
