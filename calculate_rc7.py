@@ -7,7 +7,6 @@ def resolve_team_player_names(df, name_col="name"):
     Two-pass resolver to merge standalone last names ('Manos') 
     with full/initialed names ('B. Manos' / 'Bailey Manos') on the same team.
     """
-    # Helper to clean individual strings
     def format_name(raw):
         if not isinstance(raw, str) or not raw.strip():
             return "Unknown"
@@ -24,14 +23,11 @@ def resolve_team_player_names(df, name_col="name"):
 
     df["formatted_name"] = df[name_col].astype(str).apply(format_name)
 
-    # Build a lookup map per team: last_name -> best full name
-    # e.g., for team 'Miami (OH)', last name 'Manos' maps to 'B. Manos'
     team_name_maps = {}
-    for (team), group in df.groupby("team"):
+    for team, group in df.groupby("team"):
         last_to_full = {}
         unique_names = group["formatted_name"].unique()
         
-        # First collect names with initials or full names (e.g. 'B. Manos')
         for n in unique_names:
             parts = n.split()
             if len(parts) > 1:
@@ -40,7 +36,6 @@ def resolve_team_player_names(df, name_col="name"):
                 
         team_name_maps[team] = last_to_full
 
-    # Pass 2: Map single last names to their full counterpart if available
     def final_resolve(row):
         team = row["team"]
         fname = row["formatted_name"]
@@ -68,7 +63,7 @@ def calculate_rc7(
 
     games_df = pd.read_csv(player_games_path)
 
-    # 1. Identify Name Column
+    # 1. Standardize Names
     name_col = None
     for col in ["last_name", "name", "player_name", "player"]:
         if col in games_df.columns:
@@ -78,28 +73,54 @@ def calculate_rc7(
     if not name_col:
         games_df["clean_name"] = "Unknown"
     else:
-        # Resolve 'Manos', 'B. Manos', and 'Bailey Manos' into 'B. Manos'
         games_df = resolve_team_player_names(games_df, name_col=name_col)
 
-    # 2. Convert stats to numeric safely
-    for col in ["at_bats", "hits", "walks", "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"]:
+    # 2. Ensure numeric types for core stats
+    for col in ["at_bats", "hits", "walks", "doubles", "triples", "home_runs", "2b", "3b", "hr",
+                "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"]:
         if col in games_df.columns:
             games_df[col] = pd.to_numeric(games_df[col], errors="coerce").fillna(0)
         else:
             games_df[col] = 0
 
-    # 3. Aggregate by Team and Resolved Clean Name
+    # Ensure sorting by date for accurate delta calculations
+    if "date" in games_df.columns:
+        games_df = games_df.sort_values("date")
+
+    # 3. Calculate per-game XBH (direct box score stats OR cumulative deltas)
+    def compute_player_totals(group):
+        ab = group["at_bats"].sum()
+        hits = group["hits"].sum()
+        walks = group["walks"].sum()
+        
+        # Check if direct per-game XBH columns exist
+        d2b_direct = (group["doubles"] + group["2b"]).sum()
+        d3b_direct = (group["triples"] + group["3b"]).sum()
+        hr_direct = (group["home_runs"] + group["hr"]).sum()
+
+        # Check cumulative season fields (take max minus initial or sum positive changes)
+        d2b_cum = group["doubles_hittingSeason"].max()
+        d3b_cum = group["triples_hittingSeason"].max()
+        hr_cum = group["home_runs_hittingSeason"].max()
+
+        # Pick whichever metric captures her actual extra-base hits without undercounting
+        d2b = max(d2b_direct, d2b_cum)
+        d3b = max(d3b_direct, d3b_cum)
+        hr = max(hr_direct, hr_cum)
+
+        return pd.Series({
+            "games": len(group),
+            "ab": ab,
+            "hits": hits,
+            "walks": walks,
+            "doubles": d2b,
+            "triples": d3b,
+            "hr": hr,
+        })
+
     season = (
         games_df.groupby(["team", "clean_name"])
-        .agg(
-            games=("game_id", "count"),
-            ab=("at_bats", "sum"),
-            hits=("hits", "sum"),
-            walks=("walks", "sum"),
-            doubles=("doubles_hittingSeason", "max"),
-            triples=("triples_hittingSeason", "max"),
-            hr=("home_runs_hittingSeason", "max"),
-        )
+        .apply(compute_player_totals, include_groups=False)
         .reset_index()
     )
     season["name"] = season["clean_name"]
@@ -142,8 +163,16 @@ def calculate_rc7(
             continue
 
         xbh = d2b + d3b + hr
-        singles = max(0.0, h - xbh)
+        
+        # Guard clause: Extra-base hits cannot exceed total hits
+        if xbh > h and h > 0:
+            # Fallback scaling if cumulative fields contained corrupt data
+            d2b = min(d2b, h)
+            d3b = min(d3b, max(0.0, h - d2b))
+            hr = min(hr, max(0.0, h - d2b - d3b))
+            xbh = d2b + d3b + hr
 
+        singles = max(0.0, h - xbh)
         tb = singles + (2 * d2b) + (3 * d3b) + (4 * hr)
 
         # Tech Version RC Formula
