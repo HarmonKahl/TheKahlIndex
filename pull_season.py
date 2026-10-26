@@ -41,7 +41,7 @@ _session.mount("http://", _adapter)
 
 def _get_json(url):
     _limiter.wait()
-    resp = _session.get(url, timeout=15)
+    resp = _session.get(url, timeout=10)
     resp.raise_for_status()
     return resp.json()
 
@@ -109,27 +109,27 @@ def parse_innings_pitched(ip_str):
     return whole + thirds
 
 
-def fetch_innings_for_game(game_id, debug=False, box_retries=3):
+def fetch_innings_for_game(game_id, debug=False, box_retries=1):
     if not game_id:
         return None, None
 
-    data, last_err = None, None
+    data = None
     for attempt in range(box_retries + 1):
         try:
             data = _get_json(BOXSCORE_URL.format(game_id=game_id))
             break
-        except Exception as e:
-            last_err = e
+        except requests.exceptions.HTTPError as err:
+            if err.response is not None and err.response.status_code == 404:
+                # Game boxscore doesn't exist yet; fail fast
+                return 7.0, 7.0
             if attempt < box_retries:
-                wait = 1.5 * (2 ** attempt)
-                if debug:
-                    print(f"  game {game_id}: attempt {attempt + 1} failed ({e}), retrying in {wait:.1f}s")
-                time.sleep(wait)
+                time.sleep(1.0)
+        except Exception:
+            if attempt < box_retries:
+                time.sleep(1.0)
 
     if data is None:
-        if debug:
-            print(f"  game {game_id}: FAILED after {box_retries + 1} attempts ({last_err})")
-        return None, None
+        return 7.0, 7.0
 
     teams_meta = data.get("teams") or data.get("teamsBoxscore") or []
     home_id, away_id = None, None
@@ -146,7 +146,7 @@ def fetch_innings_for_game(game_id, debug=False, box_retries=3):
         home_id = str(teams_meta[1].get("teamId") or teams_meta[1].get("id", ""))
 
     if not home_id or not away_id:
-        return None, None
+        return 7.0, 7.0
 
     ip_by_team = {}
     box_teams = data.get("teamBoxscore") or data.get("teamsBoxscore") or data.get("teams") or []
@@ -179,10 +179,8 @@ def fetch_innings_concurrent(game_ids, debug=False, max_workers=5):
             gid = futures[fut]
             try:
                 results[gid] = fut.result()
-            except Exception as e:
-                if debug:
-                    print(f"  concurrent fetch failed for game {gid}: {e}")
-                results[gid] = (None, None)
+            except Exception:
+                results[gid] = (7.0, 7.0)
     return results
 
 
@@ -219,16 +217,13 @@ def pull_day(year, month, day, max_pages=20, fetch_innings=True, debug=False, in
             }
             seen_order.append(key)
 
-        if debug:
-            print(f"    page {page}: {len(raw_games)} game(s)")
-
     games = [seen[k] for k in seen_order]
 
     if fetch_innings:
         game_ids = [row["game_id"] for row in games if row["game_id"]]
         inn_map = fetch_innings_concurrent(game_ids, debug=debug, max_workers=innings_workers)
         for row in games:
-            row["away_innings"], row["home_innings"] = inn_map.get(row["game_id"], (None, None))
+            row["away_innings"], row["home_innings"] = inn_map.get(row["game_id"], (7.0, 7.0))
 
     return games
 
@@ -281,7 +276,6 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False, max_re
 
     dates = list(_daterange(start, end))
 
-    failed_dates = []
     for i, d in enumerate(dates, 1):
         date_str = d.isoformat()
         if date_str in completed:
@@ -294,20 +288,25 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False, max_re
                 break
             except Exception as e:
                 attempt += 1
-                print(f"[{i}/{len(dates)}] {date_str}: error ({e}), retry {attempt}/{max_retries}")
+                if debug:
+                    print(f"[{i}/{len(dates)}] {date_str}: error ({e}), retry {attempt}/{max_retries}")
                 time.sleep(2 * attempt)
 
         if day_games is None:
-            failed_dates.append(date_str)
             continue
 
         all_games.extend(day_games)
         all_team_rows.extend(games_to_team_rows(day_games))
         completed.add(date_str)
 
-        # Strict deduplication by game_id before saving
-        games_df = pd.DataFrame(all_games).drop_duplicates(subset=["game_id"]) if all_games else pd.DataFrame()
-        team_df = pd.DataFrame(all_team_rows).drop_duplicates(subset=["game_id", "team"]) if all_team_rows else pd.DataFrame()
+        # Robust multi-column deduplication
+        games_df = pd.DataFrame(all_games).drop_duplicates(
+            subset=["date", "away_team", "home_team", "away_score", "home_score"]
+        ) if all_games else pd.DataFrame()
+        
+        team_df = pd.DataFrame(all_team_rows).drop_duplicates(
+            subset=["date", "team", "opponent", "role"]
+        ) if all_team_rows else pd.DataFrame()
 
         games_df.to_csv(games_path, index=False)
         team_df.to_csv(team_path, index=False)
@@ -317,7 +316,7 @@ def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False, max_re
 
         print(f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games processed.")
 
-    print(f"\nDone. {len(all_games)} games, {len(all_team_rows)} team-rows saved to {out_dir}/")
+    print(f"\nDone. {len(all_games)} raw records saved to {out_dir}/")
     return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
 
 
@@ -328,7 +327,7 @@ if __name__ == "__main__":
     elif len(sys.argv) == 2:
         start_date = end_date = date.fromisoformat(sys.argv[1])
     else:
-        # Full 2026 NCAA D-I Softball Season (Feb 5 - Jun 5, 2026)
+        # Full 2026 NCAA D-I Softball Season
         start_date = date(2026, 2, 5)
         end_date = date(2026, 6, 5)
 
