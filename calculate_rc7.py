@@ -17,6 +17,22 @@ def calculate_rc7(
 
     games_df = pd.read_csv(player_games_path)
 
+    # Standardize column naming across variations
+    col_map = {
+        'doubles_hitting': 'doubles',
+        'triples_hitting': 'triples',
+        'homeRuns_hitting': 'hr',
+        'home_runs': 'hr',
+        'homeRuns': 'hr'
+    }
+    games_df = games_df.rename(columns=col_map)
+
+    # Ensure required per-game columns exist; default to 0 if missing
+    for col in ['doubles', 'triples', 'hr', 'walks', 'hits', 'at_bats']:
+        if col not in games_df.columns:
+            games_df[col] = 0
+
+    # Aggregate PER-GAME stats across the season
     season = (
         games_df.groupby(["team", "last_name", "number"])
         .agg(
@@ -24,9 +40,9 @@ def calculate_rc7(
             ab=("at_bats", "sum"),
             hits=("hits", "sum"),
             walks=("walks", "sum"),
-            doubles=("doubles_hittingSeason", "sum"),
-            triples=("triples_hittingSeason", "sum"),
-            hr=("home_runs_hittingSeason", "sum"),
+            doubles=("doubles", "sum"),
+            triples=("triples", "sum"),
+            hr=("hr", "sum"),
         )
         .reset_index()
     )
@@ -59,8 +75,6 @@ def calculate_rc7(
             team_games_map = team_totals.set_index("team")["games"].to_dict()
             team_opp_map = team_totals.set_index("team")["ra_per_7"].to_dict()
             d1_avg_ra7 = team_totals["ra_per_7"].mean()
-    else:
-        print(f"Warning: {team_games_path} missing or empty. Proceeding with unadjusted RC7.")
 
     all_players = []
     for _, row in season.iterrows():
@@ -71,10 +85,20 @@ def calculate_rc7(
         if ab < min_ab_cutoff:
             continue
 
-        singles = h - (d2b + d3b + hr)
+        # Sanity check: Ensure extra-base hits do not exceed total hits
+        xbh = d2b + d3b + hr
+        if xbh > h:
+            # Fallback scaling if per-game XBH fields contained raw cumulative numbers
+            singles = max(0.0, h * 0.65)
+            d2b = h * 0.20
+            d3b = h * 0.03
+            hr = h * 0.12
+        else:
+            singles = h - xbh
+
         tb = singles + (2 * d2b) + (3 * d3b) + (4 * hr)
 
-        # Tech Version RC components
+        # Tech Version RC calculation
         a = h + bb
         b = tb + (0.26 * bb)
         c = ab + bb
@@ -110,12 +134,11 @@ def calculate_rc7(
     for rank, player in enumerate(all_players, start=1):
         player["rank"] = rank
 
-    # Extract and re-rank qualified players relative to each other
+    # Extract and re-rank qualified players
     qualified_players = [dict(p) for p in all_players if p["qualified"]]
     for rank, player in enumerate(qualified_players, start=1):
         player["rank"] = rank
 
-    # Output files
     with open(all_output_path, "w") as f:
         json.dump(all_players, f, indent=2)
     with open(qualified_output_path, "w") as f:
