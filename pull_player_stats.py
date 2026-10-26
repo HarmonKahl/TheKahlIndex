@@ -1,277 +1,144 @@
-"""
-pull_player_stats.py
-
-Pulls per-PLAYER batting and fielding stats (not just team totals) for D-I
-softball games, using the same NCAA API and the same day-by-day scoreboard
-discovery as pull_season.py.
-
-KNOWN LIMITATION (confirmed from a real box score, Nebraska vs LSU):
-every player's `pitcherStats` field came back null, including actual
-pitchers. Individual pitcher metrics may not be reliably available this
-way -- batting and fielding per player were fully populated, though.
-
-IMPORTANT, UNRESOLVED QUESTION ABOUT DOUBLES/TRIPLES/HOME RUNS:
-These three fields are NOT present in batterStats at all. They only exist
-under a separate section called "hittingSeason". It's unverified whether
-hittingSeason is a per-game value or a running season-to-date cumulative --
-confirm this with real consecutive-game data before summing these across
-games for any player.
-
-OUTPUT: player_games_season.csv, one row per player per game.
-
-USAGE
------
-    python pull_player_stats.py                      # yesterday only (daily job default)
-    python pull_player_stats.py 2026-02-05            # one specific day
-    python pull_player_stats.py 2026-02-05 2026-06-04 # a date range (backfill)
-"""
-
 import os
 import re
-import sys
-import threading
+import csv
+import json
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import date, timedelta
-
-import pandas as pd
 import requests
+from datetime import datetime, timedelta
 
-# Scoreboard stays on the public demo -- it has never been blocked, only
-# box-score requests have. Box score can be pointed at a self-hosted
-# instance (http://localhost:3000, run as a GitHub Actions service
-# container) via NCAA_BOXSCORE_BASE, to bypass the public demo's anti-abuse
-# layer that was blocking box-score requests specifically from GitHub
-# Actions' shared IP ranges with 428 errors.
-NCAA_SCOREBOARD_BASE = "https://ncaa-api.henrygd.me"
-NCAA_BOXSCORE_BASE = os.environ.get("NCAA_BOXSCORE_BASE", "https://ncaa-api.henrygd.me")
-SCOREBOARD_URL = NCAA_SCOREBOARD_BASE + "/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
-BOXSCORE_URL = NCAA_BOXSCORE_BASE + "/game/{game_id}/boxscore"
+def parse_xbh_from_notes(notes_list):
+    """
+    Parses NCAA text notes (e.g., '2B - SHAW, G. 1; VOGEL, K. 1. HR - LANGFORD, H. 2.')
+    Returns dictionaries mapping upper-case LASTNAME -> per_game_count
+    """
+    doubles, triples, hrs = {}, {}, {}
+    if not notes_list:
+        return doubles, triples, hrs
 
-REQUESTS_PER_SECOND_LIMIT = 5
-_MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
-
-
-class RateLimiter:
-    def __init__(self, min_interval=_MIN_INTERVAL):
-        self.min_interval = min_interval
-        self._last = 0.0
-        self._lock = threading.Lock()
-
-    def wait(self):
-        with self._lock:
-            elapsed = time.time() - self._last
-            if elapsed < self.min_interval:
-                time.sleep(self.min_interval - elapsed)
-            self._last = time.time()
-
-
-_limiter = RateLimiter()
-_session = requests.Session()
-_adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
-_session.mount("https://", _adapter)
-_session.mount("http://", _adapter)
+    text_block = " ".join([n.get("text", "") if isinstance(n, dict) else str(n) for n in notes_list])
+    
+    patterns = {
+        '2b': (r'(?:2B|2b|Doubles)[:\-]\s*([^.]+)', doubles),
+        '3b': (r'(?:3B|3b|Triples)[:\-]\s*([^.]+)', triples),
+        'hr': (r'(?:HR|hr|Home Runs)[:\-]\s*([^.]+)', hrs),
+    }
+    
+    for key, (pattern, target_dict) in patterns.items():
+        match = re.search(pattern, text_block)
+        if match:
+            entries = match.group(1).split(';')
+            for entry in entries:
+                player_match = re.search(r'([A-Za-z\s\'\-]+)(?:\,\s*[A-Z]\.)?\s*(\d+)?', entry.strip())
+                if player_match:
+                    p_name = player_match.group(1).strip().upper()
+                    count = int(player_match.group(2)) if player_match.group(2) else 1
+                    target_dict[p_name] = count
+                    
+    return doubles, triples, hrs
 
 
-def _get_json(url):
-    _limiter.wait()
-    resp = _session.get(url, timeout=15)
-    resp.raise_for_status()
-    return resp.json()
-
-
-def _get_scoreboard_page(year, month, day, page):
-    url = SCOREBOARD_URL.format(year=year, month=month, day=day)
-    if page > 1:
-        url += f"?page={page}"
-    return _get_json(url)
-
-
-def extract_game_id(game):
-    for key in ("gameID", "id", "contestId", "contestID"):
-        val = game.get(key)
-        if val:
-            return str(val)
-    url = game.get("url") or game.get("link") or ""
-    m = re.search(r"/game/(\d+)", str(url))
-    return m.group(1) if m else None
-
-
-def discover_game_ids(year, month, day, max_pages=20):
-    seen = set()
-    for page in range(1, max_pages + 1):
-        data = _get_scoreboard_page(year, month, day, page)
-        raw_games = data.get("games", [])
-        if not raw_games:
-            break
-        for entry in raw_games:
-            game = entry.get("game", entry)
-            gid = extract_game_id(game)
-            if gid:
-                seen.add(gid)
-    return sorted(seen)
-
-
-def _num(val):
-    if val in (None, ""):
-        return None
+def fetch_boxscore(game_id):
+    url = f"https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
     try:
-        return float(val)
-    except ValueError:
-        return None
+        resp = requests.get(url, timeout=10)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception as e:
+        print(f"Error fetching game {game_id}: {e}")
+    return None
 
 
-def extract_player_rows(boxscore_json, date_str, game_id):
-    teams_meta = boxscore_json.get("teams", [])
-    team_by_id = {str(t.get("teamId")): t for t in teams_meta}
-    if len(team_by_id) != 2:
-        return []
+def extract_player_games(startDate="2026-02-05", endDate="2026-06-05", output_csv="player_games_season.csv"):
+    start = datetime.strptime(startDate, "%Y-%m-%d")
+    end = datetime.strptime(endDate, "%Y-%m-%d")
+    delta = timedelta(days=1)
 
-    team_boxscores = boxscore_json.get("teamBoxscore", [])
-    rows = []
-    for tb in team_boxscores:
-        tid = str(tb.get("teamId"))
-        team_meta = team_by_id.get(tid, {})
-        team_name = team_meta.get("nameShort") or team_meta.get("nameFull") or tid
-        opp_meta = next((t for oid, t in team_by_id.items() if oid != tid), {})
-        opp_name = opp_meta.get("nameShort") or opp_meta.get("nameFull") or ""
+    fieldnames = [
+        "date", "game_id", "team", "opponent", "last_name", "first_name", 
+        "position", "number", "starter", "participated", "at_bats", "runs_scored", 
+        "hits", "rbi", "walks", "strikeouts", "batting_average", "on_base_pct", 
+        "putouts", "assists", "errors", "doubles", "triples", "home_runs",
+        "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"
+    ]
 
-        for player in tb.get("playerStats", []):
-            batter = player.get("batterStats") or {}
-            field = player.get("fieldStats") or {}
-            hitting_season = player.get("hittingSeason") or {}
-            rows.append({
-                "date": date_str,
-                "game_id": game_id,
-                "team": team_name,
-                "opponent": opp_name,
-                "last_name": player.get("lastName", ""),
-                "first_name": player.get("firstName", ""),
-                "position": player.get("position", ""),
-                "number": player.get("number"),
-                "starter": player.get("starter"),
-                "participated": player.get("participated"),
-                "at_bats": _num(batter.get("atBats")),
-                "runs_scored": _num(batter.get("runsScored")),
-                "hits": _num(batter.get("hits")),
-                "rbi": _num(batter.get("runsBattedIn")),
-                "walks": _num(batter.get("walks")),
-                "strikeouts": _num(batter.get("strikeouts")),
-                "batting_average": _num(batter.get("battingAverage")),
-                "on_base_pct": _num(
-                    str(batter.get("onBasePercentage", "")).replace("%", "")
-                ),
-                "putouts": _num(field.get("putouts")),
-                "assists": _num(field.get("assists")),
-                "errors": _num(field.get("errors")),
-                "doubles_hittingSeason": _num(hitting_season.get("doubles")),
-                "triples_hittingSeason": _num(hitting_season.get("triples")),
-                "home_runs_hittingSeason": _num(hitting_season.get("homeRuns")),
-            })
-    return rows
+    file_exists = os.path.exists(output_csv)
+    
+    with open(output_csv, "a", newline="", encoding="utf-8") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
 
-
-def fetch_player_rows_for_game(game_id, date_str, box_retries=3):
-    last_err = None
-    for attempt in range(box_retries + 1):
-        try:
-            data = _get_json(BOXSCORE_URL.format(game_id=game_id))
-            return extract_player_rows(data, date_str, game_id)
-        except Exception as e:
-            last_err = e
-            if attempt < box_retries:
-                wait = 1.5 * (2 ** attempt)
-                print(f"  game {game_id}: attempt {attempt + 1} failed ({e}), retrying in {wait:.1f}s")
-                time.sleep(wait)
-    print(f"  game {game_id}: FAILED after {box_retries + 1} attempts ({last_err}) -- no player data for this game")
-    return []
-
-
-def fetch_player_rows_concurrent(game_ids, date_str, max_workers=5):
-    all_rows = []
-    with ThreadPoolExecutor(max_workers=max_workers) as ex:
-        futures = {ex.submit(fetch_player_rows_for_game, gid, date_str): gid for gid in game_ids}
-        for fut in as_completed(futures):
+        curr = start
+        while curr <= end:
+            date_str = curr.strftime("%Y-%m-%d")
+            year, month, day = curr.strftime("%Y"), curr.strftime("%m"), curr.strftime("%d")
+            sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month}/{day}"
+            
             try:
-                all_rows.extend(fut.result())
+                sb_resp = requests.get(sb_url, timeout=10)
+                if sb_resp.status_code == 200:
+                    games = sb_resp.json().get("games", [])
+                    for entry in games:
+                        game = entry.get("game", entry)
+                        game_id = game.get("gameID")
+                        if not game_id:
+                            continue
+
+                        box_data = fetch_boxscore(game_id)
+                        if not box_data:
+                            continue
+
+                        teams = box_data.get("teams", []) or box_data.get("teamBoxscore", [])
+                        for team_idx, team_data in enumerate(teams):
+                            team_name = team_data.get("name") or team_data.get("team", {}).get("name", "Unknown")
+                            opp_idx = 1 if team_idx == 0 else 0
+                            opp_name = "Unknown"
+                            if len(teams) > opp_idx:
+                                opp_name = teams[opp_idx].get("name") or teams[opp_idx].get("team", {}).get("name", "Unknown")
+
+                            notes = team_data.get("notes", []) or team_data.get("hittingNotes", [])
+                            d2b_map, d3b_map, hr_map = parse_xbh_from_notes(notes)
+
+                            players = team_data.get("playerStats") or team_data.get("stats") or []
+                            for p in players:
+                                last_name = p.get("lastName") or p.get("last_name") or p.get("name") or "Unknown"
+                                first_name = p.get("firstName") or p.get("first_name") or ""
+                                last_name_upper = str(last_name).strip().upper()
+
+                                row = {
+                                    "date": date_str,
+                                    "game_id": game_id,
+                                    "team": team_name,
+                                    "opponent": opp_name,
+                                    "last_name": last_name,
+                                    "first_name": first_name,
+                                    "position": p.get("position", ""),
+                                    "number": p.get("number", ""),
+                                    "starter": p.get("starter", False),
+                                    "participated": p.get("participated", True),
+                                    "at_bats": float(p.get("ab") or p.get("atBats") or 0),
+                                    "runs_scored": float(p.get("r") or p.get("runs") or 0),
+                                    "hits": float(p.get("h") or p.get("hits") or 0),
+                                    "rbi": float(p.get("rbi") or 0),
+                                    "walks": float(p.get("bb") or p.get("walks") or 0),
+                                    "strikeouts": float(p.get("so") or p.get("strikeouts") or 0),
+                                    "batting_average": float(p.get("ba") or 0),
+                                    "on_base_pct": float(p.get("obp") or 0),
+                                    "putouts": float(p.get("po") or 0),
+                                    "assists": float(p.get("a") or 0),
+                                    "errors": float(p.get("e") or 0),
+                                    "doubles": float(p.get("2b") or p.get("doubles") or d2b_map.get(last_name_upper, 0)),
+                                    "triples": float(p.get("3b") or p.get("triples") or d3b_map.get(last_name_upper, 0)),
+                                    "home_runs": float(p.get("hr") or p.get("homeRuns") or hr_map.get(last_name_upper, 0)),
+                                    "doubles_hittingSeason": float(p.get("doubles_hittingSeason") or 0),
+                                    "triples_hittingSeason": float(p.get("triples_hittingSeason") or 0),
+                                    "home_runs_hittingSeason": float(p.get("home_runs_hittingSeason") or 0),
+                                }
+                                writer.writerow(row)
             except Exception as e:
-                print(f"  concurrent fetch failed for game {futures[fut]}: {e}")
-    return all_rows
+                print(f"Error processing {date_str}: {e}")
 
-
-def _daterange(start, end):
-    d = start
-    while d <= end:
-        yield d
-        d += timedelta(days=1)
-
-
-def pull_player_stats(start, end, out_dir=".", max_retries=2, max_workers=5):
-    os.makedirs(out_dir, exist_ok=True)
-    out_path = os.path.join(out_dir, "player_games_season.csv")
-    progress_path = os.path.join(out_dir, "_player_completed_dates.txt")
-
-    completed = set()
-    if os.path.exists(progress_path):
-        with open(progress_path) as f:
-            completed = set(line.strip() for line in f if line.strip())
-
-    all_rows = pd.read_csv(out_path).to_dict("records") if os.path.exists(out_path) else []
-
-    dates = list(_daterange(start, end))
-    print(f"{len(dates)} day(s) requested, {len(completed)} already done\n")
-
-    failed_dates = []
-    for i, d in enumerate(dates, 1):
-        date_str = d.isoformat()
-        if date_str in completed:
-            continue
-
-        day_rows, attempt = None, 0
-        while attempt <= max_retries:
-            try:
-                game_ids = discover_game_ids(d.year, d.month, d.day)
-                day_rows = fetch_player_rows_concurrent(game_ids, date_str, max_workers=max_workers)
-                break
-            except Exception as e:
-                attempt += 1
-                print(f"[{i}/{len(dates)}] {date_str}: error ({e}), retry {attempt}/{max_retries}")
-                time.sleep(2 * attempt)
-
-        if day_rows is None:
-            print(f"[{i}/{len(dates)}] {date_str}: FAILED after {max_retries} retries -- "
-                  f"skipped, will retry on next run")
-            failed_dates.append(date_str)
-            continue
-
-        all_rows.extend(day_rows)
-        completed.add(date_str)
-
-        pd.DataFrame(all_rows).to_csv(out_path, index=False)
-        with open(progress_path, "w") as f:
-            f.write("\n".join(sorted(completed)))
-
-        print(f"[{i}/{len(dates)}] {date_str}: {len(day_rows)} player-rows "
-              f"(running total: {len(all_rows)})")
-
-    if failed_dates:
-        print(f"\n{len(failed_dates)} day(s) failed -- rerun to retry just those:")
-        print(" ", failed_dates)
-    else:
-        print(f"\nDone. {len(all_rows)} player-rows written to {out_path}")
-
-    return pd.DataFrame(all_rows)
-
+            curr += delta
 
 if __name__ == "__main__":
-    if len(sys.argv) >= 3:
-        start_date = date.fromisoformat(sys.argv[1])
-        end_date = date.fromisoformat(sys.argv[2])
-    elif len(sys.argv) == 2:
-        start_date = end_date = date.fromisoformat(sys.argv[1])
-    else:
-        start_date = end_date = date.today() - timedelta(days=1)
-
-    print(f"Pulling player stats from {start_date.isoformat()} to {end_date.isoformat()}...")
-    df = pull_player_stats(start_date, end_date, out_dir=".")
-    print(f"Pulled {len(df)} player-rows total")
+    extract_player_games()
