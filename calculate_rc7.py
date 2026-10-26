@@ -2,7 +2,7 @@ import os
 import json
 import pandas as pd
 
-def resolve_team_player_names(df, name_col="name"):
+def resolve_team_player_names(df, name_col="last_name"):
     """
     Two-pass resolver to merge standalone last names ('Manos') 
     with full/initialed names ('B. Manos' / 'Bailey Manos') on the same team.
@@ -27,13 +27,11 @@ def resolve_team_player_names(df, name_col="name"):
     for team, group in df.groupby("team"):
         last_to_full = {}
         unique_names = group["formatted_name"].unique()
-        
         for n in unique_names:
             parts = n.split()
             if len(parts) > 1:
                 last_name = parts[-1].lower()
                 last_to_full[last_name] = n
-                
         team_name_maps[team] = last_to_full
 
     def final_resolve(row):
@@ -63,50 +61,39 @@ def calculate_rc7(
 
     games_df = pd.read_csv(player_games_path)
 
-    # 1. Standardize Names
-    name_col = None
-    for col in ["last_name", "name", "player_name", "player"]:
-        if col in games_df.columns:
-            name_col = col
-            break
-            
-    if not name_col:
-        games_df["clean_name"] = "Unknown"
-    else:
-        games_df = resolve_team_player_names(games_df, name_col=name_col)
+    # 1. Deduplicate & Resolve Names
+    name_col = "last_name" if "last_name" in games_df.columns else "name"
+    games_df = resolve_team_player_names(games_df, name_col=name_col)
 
-    # 2. Ensure numeric types for core stats
-    for col in ["at_bats", "hits", "walks", "doubles", "triples", "home_runs", "2b", "3b", "hr",
-                "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"]:
+    # 2. Ensure numeric types for both per-game and cumulative fields
+    cols = ["at_bats", "hits", "walks", "doubles", "triples", "home_runs",
+            "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"]
+    for col in cols:
         if col in games_df.columns:
             games_df[col] = pd.to_numeric(games_df[col], errors="coerce").fillna(0)
         else:
             games_df[col] = 0
 
-    # Ensure sorting by date for accurate delta calculations
-    if "date" in games_df.columns:
-        games_df = games_df.sort_values("date")
-
-    # 3. Calculate per-game XBH (direct box score stats OR cumulative deltas)
+    # 3. Aggregate Player Stats safely
     def compute_player_totals(group):
         ab = group["at_bats"].sum()
         hits = group["hits"].sum()
         walks = group["walks"].sum()
         
-        # Check if direct per-game XBH columns exist
-        d2b_direct = (group["doubles"] + group["2b"]).sum()
-        d3b_direct = (group["triples"] + group["3b"]).sum()
-        hr_direct = (group["home_runs"] + group["hr"]).sum()
+        # Direct per-game sums
+        d2b_pg = group["doubles"].sum()
+        d3b_pg = group["triples"].sum()
+        hr_pg = group["home_runs"].sum()
 
-        # Check cumulative season fields (take max minus initial or sum positive changes)
+        # Cumulative max values
         d2b_cum = group["doubles_hittingSeason"].max()
         d3b_cum = group["triples_hittingSeason"].max()
         hr_cum = group["home_runs_hittingSeason"].max()
 
         # Pick whichever metric captures her actual extra-base hits without undercounting
-        d2b = max(d2b_direct, d2b_cum)
-        d3b = max(d3b_direct, d3b_cum)
-        hr = max(hr_direct, hr_cum)
+        d2b = max(d2b_pg, d2b_cum)
+        d3b = max(d3b_pg, d3b_cum)
+        hr = max(hr_pg, hr_cum)
 
         return pd.Series({
             "games": len(group),
@@ -125,6 +112,7 @@ def calculate_rc7(
     )
     season["name"] = season["clean_name"]
 
+    # 4. Opponent Strength Mapping
     team_games_df = pd.DataFrame()
     if os.path.exists(team_games_path) and os.stat(team_games_path).st_size > 0:
         team_games_df = pd.read_csv(team_games_path)
@@ -162,11 +150,9 @@ def calculate_rc7(
         if (ab + bb) == 0:
             continue
 
+        # Sanity cap: Extra-base hits cannot exceed total hits
         xbh = d2b + d3b + hr
-        
-        # Guard clause: Extra-base hits cannot exceed total hits
         if xbh > h and h > 0:
-            # Fallback scaling if cumulative fields contained corrupt data
             d2b = min(d2b, h)
             d3b = min(d3b, max(0.0, h - d2b))
             hr = min(hr, max(0.0, h - d2b - d3b))
@@ -204,12 +190,12 @@ def calculate_rc7(
             "rc7_adj": round(rc7_adj, 2),
         })
 
-    # Sort all players by adjusted RC7 descending & assign rank
+    # Sort & Rank All Players
     all_players.sort(key=lambda x: x["rc7_adj"], reverse=True)
     for rank, player in enumerate(all_players, start=1):
         player["rank"] = rank
 
-    # Extract & re-rank qualified players
+    # Sort & Rank Qualified Players
     qualified_players = [dict(p) for p in all_players if p["qualified"]]
     for rank, player in enumerate(qualified_players, start=1):
         player["rank"] = rank
