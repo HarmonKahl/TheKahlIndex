@@ -73,4 +73,112 @@ def process_single_game(game_id, date_str):
         opp_idx = 1 if team_idx == 0 else 0
         opp_name = "Unknown"
         if len(teams) > opp_idx:
-            opp_name = teams[opp_idx].get("name") or teams
+            opp_name = teams[opp_idx].get("name") or teams[opp_idx].get("team", {}).get("name", "Unknown")
+
+        notes = team_data.get("notes", []) or team_data.get("hittingNotes", [])
+        d2b_map, d3b_map, hr_map = parse_xbh_from_notes(notes)
+
+        players = team_data.get("playerStats") or team_data.get("stats") or []
+        for p in players:
+            last_name = p.get("lastName") or p.get("last_name") or p.get("name") or "Unknown"
+            first_name = p.get("firstName") or p.get("first_name") or ""
+            last_name_upper = str(last_name).strip().upper()
+
+            rows.append({
+                "date": date_str,
+                "game_id": game_id,
+                "team": team_name,
+                "opponent": opp_name,
+                "last_name": last_name,
+                "first_name": first_name,
+                "position": p.get("position", ""),
+                "number": p.get("number", ""),
+                "starter": p.get("starter", False),
+                "participated": p.get("participated", True),
+                "at_bats": float(p.get("ab") or p.get("atBats") or 0),
+                "runs_scored": float(p.get("r") or p.get("runs") or 0),
+                "hits": float(p.get("h") or p.get("hits") or 0),
+                "rbi": float(p.get("rbi") or 0),
+                "walks": float(p.get("bb") or p.get("walks") or 0),
+                "strikeouts": float(p.get("so") or p.get("strikeouts") or 0),
+                "batting_average": float(p.get("ba") or 0),
+                "on_base_pct": float(p.get("obp") or 0),
+                "putouts": float(p.get("po") or 0),
+                "assists": float(p.get("a") or 0),
+                "errors": float(p.get("e") or 0),
+                "doubles": float(p.get("2b") or p.get("doubles") or d2b_map.get(last_name_upper, 0)),
+                "triples": float(p.get("3b") or p.get("triples") or d3b_map.get(last_name_upper, 0)),
+                "home_runs": float(p.get("hr") or p.get("homeRuns") or hr_map.get(last_name_upper, 0)),
+                "doubles_hittingSeason": float(p.get("doubles_hittingSeason") or 0),
+                "triples_hittingSeason": float(p.get("triples_hittingSeason") or 0),
+                "home_runs_hittingSeason": float(p.get("home_runs_hittingSeason") or 0),
+            })
+    return game_id, rows
+
+def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
+    processed_games = load_processed_games()
+    start = datetime.strptime(startDate, "%Y-%m-%d")
+    end = datetime.strptime(endDate, "%Y-%m-%d")
+    delta = timedelta(days=1)
+
+    fieldnames = [
+        "date", "game_id", "team", "opponent", "last_name", "first_name", 
+        "position", "number", "starter", "participated", "at_bats", "runs_scored", 
+        "hits", "rbi", "walks", "strikeouts", "batting_average", "on_base_pct", 
+        "putouts", "assists", "errors", "doubles", "triples", "home_runs",
+        "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"
+    ]
+
+    file_exists = os.path.exists(OUTPUT_CSV) and os.path.getsize(OUTPUT_CSV) > 0
+
+    with open(OUTPUT_CSV, "a", newline="", encoding="utf-8") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+            csvfile.flush()
+
+        curr = start
+        while curr <= end:
+            date_str = curr.strftime("%Y-%m-%d")
+            year, month, day = curr.strftime("%Y"), curr.strftime("%m"), curr.strftime("%d")
+            sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month}/{day}"
+            
+            try:
+                sb_resp = requests.get(sb_url, timeout=5)
+                if sb_resp.status_code == 200:
+                    games = sb_resp.json().get("games", [])
+                    games_to_process = []
+
+                    for entry in games:
+                        game = entry.get("game", entry)
+                        game_id = str(game.get("gameID", ""))
+                        game_state = str(game.get("gameState", "")).lower()
+
+                        # Skip unplayed games or already processed games
+                        if not game_id or game_id in processed_games or game_state in ["cancelled", "canceled", "postponed", "pre"]:
+                            continue
+
+                        games_to_process.append(game_id)
+
+                    if games_to_process:
+                        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
+                            futures = [executor.submit(process_single_game, gid, date_str) for gid in games_to_process]
+                            
+                            for future in as_completed(futures):
+                                gid, rows = future.result()
+                                if rows:
+                                    writer.writerows(rows)
+                                    csvfile.flush()
+                                processed_games.add(gid)
+
+                        save_processed_games(processed_games)
+                        print(f"[{date_str}] Processed {len(games_to_process)} games.")
+            except Exception as e:
+                print(f"Error processing schedule for {date_str}: {e}")
+
+            curr += delta
+
+    print("Scraper execution finished successfully.")
+
+if __name__ == "__main__":
+    extract_player_games()
