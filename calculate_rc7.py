@@ -23,7 +23,6 @@ def resolve_team_player_names(df, name_col="last_name"):
 
     df["formatted_name"] = df[name_col].astype(str).apply(format_name)
 
-    # Pass 1: Build a lookup map for each team (last_name -> full_formatted_name)
     team_name_maps = {}
     for team, group in df.groupby("team"):
         last_to_full = {}
@@ -35,7 +34,6 @@ def resolve_team_player_names(df, name_col="last_name"):
                 last_to_full[last_name] = str(n)
         team_name_maps[team] = last_to_full
 
-    # Pass 2: Safely map row values ensuring scalar string returns
     def final_resolve(row):
         team = row["team"]
         fname = str(row["formatted_name"])
@@ -85,17 +83,14 @@ def calculate_rc7(
         hits = group["hits"].sum()
         walks = group["walks"].sum()
         
-        # Direct per-game sums
         d2b_pg = group["doubles"].sum()
         d3b_pg = group["triples"].sum()
         hr_pg = group["home_runs"].sum()
 
-        # Cumulative max values
         d2b_cum = group["doubles_hittingSeason"].max()
         d3b_cum = group["triples_hittingSeason"].max()
         hr_cum = group["home_runs_hittingSeason"].max()
 
-        # Pick whichever metric captures her actual extra-base hits without undercounting
         d2b = max(d2b_pg, d2b_cum)
         d3b = max(d3b_pg, d3b_cum)
         hr = max(hr_pg, hr_cum)
@@ -195,12 +190,10 @@ def calculate_rc7(
             "rc7_adj": round(rc7_adj, 2),
         })
 
-    # Sort & Rank All Players
     all_players.sort(key=lambda x: x["rc7_adj"], reverse=True)
     for rank, player in enumerate(all_players, start=1):
         player["rank"] = rank
 
-    # Sort & Rank Qualified Players
     qualified_players = [dict(p) for p in all_players if p["qualified"]]
     for rank, player in enumerate(qualified_players, start=1):
         player["rank"] = rank
