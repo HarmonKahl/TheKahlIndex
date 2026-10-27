@@ -5,11 +5,9 @@ import json
 import time
 import requests
 from datetime import datetime, timedelta
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 CHECKPOINT_FILE = "processed_games.json"
 OUTPUT_CSV = "player_games_season.csv"
-MAX_WORKERS = 3  # Matches public API limit (3 req/sec)
 
 def load_processed_games():
     if os.path.exists(CHECKPOINT_FILE):
@@ -25,6 +23,10 @@ def save_processed_games(processed_set):
         json.dump(list(processed_set), f)
 
 def parse_xbh_from_notes(notes_list):
+    """
+    Parses NCAA text notes (e.g., '2B - SHAW, G. 1; VOGEL, K. 1. HR - LANGFORD, H. 2.')
+    Returns dictionaries mapping upper-case LASTNAME -> per_game_count
+    """
     doubles, triples, hrs = {}, {}, {}
     if not notes_list:
         return doubles, triples, hrs
@@ -54,19 +56,19 @@ def fetch_boxscore(game_id):
     url = f"https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
     for attempt in range(2):
         try:
-            resp = requests.get(url, timeout=8)
+            resp = requests.get(url, timeout=10)
             if resp.status_code == 200:
-                return game_id, resp.json()
+                return resp.json()
             elif resp.status_code == 429:
-                time.sleep(1.5)  # Rate limit cooldown
-        except Exception:
+                time.sleep(1.5)
+        except Exception as e:
             time.sleep(0.5)
-    return game_id, None
+    return None
 
-def process_single_game(game_id, date_str, game_entry):
-    _, box_data = fetch_boxscore(game_id)
+def process_game(game_id, date_str):
+    box_data = fetch_boxscore(game_id)
     if not box_data:
-        return game_id, []
+        return []
 
     rows = []
     teams = box_data.get("teams", []) or box_data.get("teamBoxscore", [])
@@ -115,7 +117,7 @@ def process_single_game(game_id, date_str, game_entry):
                 "triples_hittingSeason": float(p.get("triples_hittingSeason") or 0),
                 "home_runs_hittingSeason": float(p.get("home_runs_hittingSeason") or 0),
             })
-    return game_id, rows
+    return rows
 
 def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
     processed_games = load_processed_games()
@@ -131,57 +133,53 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
         "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"
     ]
 
-    file_exists = os.path.exists(OUTPUT_CSV)
-    csv_file = open(OUTPUT_CSV, "a", newline="", encoding="utf-8")
-    writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-    if not file_exists:
-        writer.writeheader()
+    file_exists = os.path.exists(OUTPUT_CSV) and os.path.getsize(OUTPUT_CSV) > 0
 
-    curr = start
-    print(f"Starting pipeline from {startDate} to {endDate}...")
+    with open(OUTPUT_CSV, "a", newline="", encoding="utf-8") as csvfile:
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        if not file_exists:
+            writer.writeheader()
+            csvfile.flush()
 
-    while curr <= end:
-        date_str = curr.strftime("%Y-%m-%d")
-        year, month, day = curr.strftime("%Y"), curr.strftime("%m"), curr.strftime("%d")
-        sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month}/{day}"
-        
-        try:
-            sb_resp = requests.get(sb_url, timeout=10)
-            if sb_resp.status_code == 200:
-                games = sb_resp.json().get("games", [])
-                
-                # Filter out games already completed or unplayable
-                games_to_fetch = []
-                for entry in games:
-                    game = entry.get("game", entry)
-                    game_id = str(game.get("gameID", ""))
-                    if game_id and game_id not in processed_games:
-                        games_to_fetch.append((game_id, date_str, game))
+        curr = start
+        total_rows_added = 0
 
-                if games_to_fetch:
-                    print(f"Processing {len(games_to_fetch)} games for {date_str}...")
-                    
-                    with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-                        futures = [
-                            executor.submit(process_single_game, gid, dstr, g)
-                            for gid, dstr, g in games_to_fetch
-                        ]
-                        
-                        for future in as_completed(futures):
-                            gid, rows = future.result()
-                            if rows:
-                                writer.writerows(rows)
-                                csv_file.flush()
-                            processed_games.add(gid)
-                    
+        while curr <= end:
+            date_str = curr.strftime("%Y-%m-%d")
+            year, month, day = curr.strftime("%Y"), curr.strftime("%m"), curr.strftime("%d")
+            sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month}/{day}"
+            
+            try:
+                sb_resp = requests.get(sb_url, timeout=10)
+                if sb_resp.status_code == 200:
+                    games = sb_resp.json().get("games", [])
+                    games_written = 0
+
+                    for entry in games:
+                        game = entry.get("game", entry)
+                        game_id = str(game.get("gameID", ""))
+                        if not game_id or game_id in processed_games:
+                            continue
+
+                        rows = process_game(game_id, date_str)
+                        if rows:
+                            writer.writerows(rows)
+                            csvfile.flush()
+                            total_rows_added += len(rows)
+                            games_written += 1
+
+                        processed_games.add(game_id)
+                        time.sleep(0.35)  # Enforce ~3 req/sec rate limit
+
                     save_processed_games(processed_games)
-        except Exception as e:
-            print(f"Error processing schedule for {date_str}: {e}")
+                    if games_written > 0:
+                        print(f"[{date_str}] Saved {games_written} games ({total_rows_added} total rows in CSV).")
+            except Exception as e:
+                print(f"Error processing {date_str}: {e}")
 
-        curr += delta
+            curr += delta
 
-    csv_file.close()
-    print("Execution complete. All processed games saved.")
+    print(f"Scraper finished. Total player rows saved: {total_rows_added}")
 
 if __name__ == "__main__":
     extract_player_games()
