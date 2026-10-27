@@ -5,11 +5,9 @@ import json
 import time
 import requests
 from datetime import datetime, timedelta
-from concurrent.futures import ThreadPoolExecutor, as_completed
 
 CHECKPOINT_FILE = "processed_games.json"
 OUTPUT_CSV = "player_games_season.csv"
-MAX_WORKERS = 3  # Matches NCAA API safe rate limit
 
 def load_processed_games():
     if os.path.exists(CHECKPOINT_FILE):
@@ -25,6 +23,10 @@ def save_processed_games(processed_set):
         json.dump(list(processed_set), f)
 
 def parse_xbh_from_notes(notes_list):
+    """
+    Parses NCAA text notes (e.g., '2B - SHAW, G. 1; VOGEL, K. 1. HR - LANGFORD, H. 2.')
+    Returns dictionaries mapping upper-case LASTNAME -> per_game_count
+    """
     doubles, triples, hrs = {}, {}, {}
     if not notes_list:
         return doubles, triples, hrs
@@ -52,22 +54,30 @@ def parse_xbh_from_notes(notes_list):
 
 def fetch_boxscore(game_id):
     url = f"https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
-    try:
-        # Strict 3-second timeout to prevent hanging connections
-        resp = requests.get(url, timeout=3)
-        if resp.status_code == 200:
-            return resp.json()
-    except Exception:
-        pass
+    for attempt in range(2):
+        try:
+            resp = requests.get(url, timeout=4)
+            if resp.status_code == 200:
+                return resp.json()
+            elif resp.status_code == 429:
+                time.sleep(1.5)
+        except Exception:
+            time.sleep(0.5)
     return None
 
-def process_single_game(game_id, date_str):
+def process_game(game_id, date_str):
     box_data = fetch_boxscore(game_id)
     if not box_data:
-        return game_id, []
+        return []
 
     rows = []
-    teams = box_data.get("teams", []) or box_data.get("teamBoxscore", [])
+    
+    # 1. Handle nested boxscore dictionaries
+    if "boxscore" in box_data and isinstance(box_data["boxscore"], dict):
+        box_data = box_data["boxscore"]
+
+    teams = box_data.get("teams") or box_data.get("teamBoxscore") or []
+    
     for team_idx, team_data in enumerate(teams):
         team_name = team_data.get("name") or team_data.get("team", {}).get("name", "Unknown")
         opp_idx = 1 if team_idx == 0 else 0
@@ -75,14 +85,30 @@ def process_single_game(game_id, date_str):
         if len(teams) > opp_idx:
             opp_name = teams[opp_idx].get("name") or teams[opp_idx].get("team", {}).get("name", "Unknown")
 
-        notes = team_data.get("notes", []) or team_data.get("hittingNotes", [])
+        notes = team_data.get("notes") or team_data.get("hittingNotes") or []
         d2b_map, d3b_map, hr_map = parse_xbh_from_notes(notes)
 
-        players = team_data.get("playerStats") or team_data.get("stats") or []
+        # 2. Check all variant player keys in NCAA JSON responses
+        players = (
+            team_data.get("playerStats") 
+            or team_data.get("stats") 
+            or team_data.get("players")
+            or team_data.get("hittingStats")
+            or []
+        )
+
         for p in players:
-            last_name = p.get("lastName") or p.get("last_name") or p.get("name") or "Unknown"
-            first_name = p.get("firstName") or p.get("first_name") or ""
+            p_obj = p.get("player", p) if isinstance(p, dict) else {}
+            
+            last_name = p_obj.get("lastName") or p_obj.get("last_name") or p_obj.get("name") or "Unknown"
+            first_name = p_obj.get("firstName") or p_obj.get("first_name") or ""
             last_name_upper = str(last_name).strip().upper()
+
+            def safe_float(val):
+                try:
+                    return float(val) if val is not None else 0.0
+                except (ValueError, TypeError):
+                    return 0.0
 
             rows.append({
                 "date": date_str,
@@ -91,29 +117,29 @@ def process_single_game(game_id, date_str):
                 "opponent": opp_name,
                 "last_name": last_name,
                 "first_name": first_name,
-                "position": p.get("position", ""),
-                "number": p.get("number", ""),
-                "starter": p.get("starter", False),
-                "participated": p.get("participated", True),
-                "at_bats": float(p.get("ab") or p.get("atBats") or 0),
-                "runs_scored": float(p.get("r") or p.get("runs") or 0),
-                "hits": float(p.get("h") or p.get("hits") or 0),
-                "rbi": float(p.get("rbi") or 0),
-                "walks": float(p.get("bb") or p.get("walks") or 0),
-                "strikeouts": float(p.get("so") or p.get("strikeouts") or 0),
-                "batting_average": float(p.get("ba") or 0),
-                "on_base_pct": float(p.get("obp") or 0),
-                "putouts": float(p.get("po") or 0),
-                "assists": float(p.get("a") or 0),
-                "errors": float(p.get("e") or 0),
-                "doubles": float(p.get("2b") or p.get("doubles") or d2b_map.get(last_name_upper, 0)),
-                "triples": float(p.get("3b") or p.get("triples") or d3b_map.get(last_name_upper, 0)),
-                "home_runs": float(p.get("hr") or p.get("homeRuns") or hr_map.get(last_name_upper, 0)),
-                "doubles_hittingSeason": float(p.get("doubles_hittingSeason") or 0),
-                "triples_hittingSeason": float(p.get("triples_hittingSeason") or 0),
-                "home_runs_hittingSeason": float(p.get("home_runs_hittingSeason") or 0),
+                "position": p_obj.get("position", ""),
+                "number": p_obj.get("number", ""),
+                "starter": p_obj.get("starter", False),
+                "participated": p_obj.get("participated", True),
+                "at_bats": safe_float(p_obj.get("ab") or p_obj.get("atBats")),
+                "runs_scored": safe_float(p_obj.get("r") or p_obj.get("runs")),
+                "hits": safe_float(p_obj.get("h") or p_obj.get("hits")),
+                "rbi": safe_float(p_obj.get("rbi")),
+                "walks": safe_float(p_obj.get("bb") or p_obj.get("walks")),
+                "strikeouts": safe_float(p_obj.get("so") or p_obj.get("strikeouts")),
+                "batting_average": safe_float(p_obj.get("ba")),
+                "on_base_pct": safe_float(p_obj.get("obp")),
+                "putouts": safe_float(p_obj.get("po")),
+                "assists": safe_float(p_obj.get("a")),
+                "errors": safe_float(p_obj.get("e")),
+                "doubles": safe_float(p_obj.get("2b") or p_obj.get("doubles") or d2b_map.get(last_name_upper, 0)),
+                "triples": safe_float(p_obj.get("3b") or p_obj.get("triples") or d3b_map.get(last_name_upper, 0)),
+                "home_runs": safe_float(p_obj.get("hr") or p_obj.get("homeRuns") or hr_map.get(last_name_upper, 0)),
+                "doubles_hittingSeason": safe_float(p_obj.get("doubles_hittingSeason")),
+                "triples_hittingSeason": safe_float(p_obj.get("triples_hittingSeason")),
+                "home_runs_hittingSeason": safe_float(p_obj.get("home_runs_hittingSeason")),
             })
-    return game_id, rows
+    return rows
 
 def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
     processed_games = load_processed_games()
@@ -138,47 +164,52 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
             csvfile.flush()
 
         curr = start
+        total_rows = 0
+
         while curr <= end:
             date_str = curr.strftime("%Y-%m-%d")
-            year, month, day = curr.strftime("%Y"), curr.strftime("%m"), curr.strftime("%d")
+            year = str(curr.year)
+            month = str(curr.month)
+            day = str(curr.day)
+            
             sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month}/{day}"
             
             try:
-                sb_resp = requests.get(sb_url, timeout=5)
+                sb_resp = requests.get(sb_url, timeout=10)
                 if sb_resp.status_code == 200:
                     games = sb_resp.json().get("games", [])
-                    games_to_process = []
+                    games_processed_today = 0
 
                     for entry in games:
                         game = entry.get("game", entry)
-                        game_id = str(game.get("gameID", ""))
-                        game_state = str(game.get("gameState", "")).lower()
+                        game_id = str(game.get("gameID") or game.get("id") or "").strip()
+                        
+                        if "/" in game_id:
+                            game_id = game_id.split("/")[-1]
 
-                        # Skip unplayed games or already processed games
-                        if not game_id or game_id in processed_games or game_state in ["cancelled", "canceled", "postponed", "pre"]:
+                        if not game_id or game_id in processed_games:
                             continue
 
-                        games_to_process.append(game_id)
+                        rows = process_game(game_id, date_str)
+                        if rows:
+                            writer.writerows(rows)
+                            csvfile.flush()
+                            total_rows += len(rows)
+                            games_processed_today += 1
 
-                    if games_to_process:
-                        with ThreadPoolExecutor(max_workers=MAX_WORKERS) as executor:
-                            futures = [executor.submit(process_single_game, gid, date_str) for gid in games_to_process]
-                            
-                            for future in as_completed(futures):
-                                gid, rows = future.result()
-                                if rows:
-                                    writer.writerows(rows)
-                                    csvfile.flush()
-                                processed_games.add(gid)
+                        processed_games.add(game_id)
+                        time.sleep(0.35)
 
-                        save_processed_games(processed_games)
-                        print(f"[{date_str}] Processed {len(games_to_process)} games.")
+                    save_processed_games(processed_games)
+                    print(f"[{date_str}] Processed {games_processed_today} games ({total_rows} total rows saved).")
+                else:
+                    print(f"[{date_str}] Status Code: {sb_resp.status_code}")
             except Exception as e:
-                print(f"Error processing schedule for {date_str}: {e}")
+                print(f"Error on {date_str}: {e}")
 
             curr += delta
 
-    print("Scraper execution finished successfully.")
+    print(f"Finished. Saved a total of {total_rows} player rows to {OUTPUT_CSV}.")
 
 if __name__ == "__main__":
     extract_player_games()
