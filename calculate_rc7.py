@@ -23,27 +23,32 @@ def resolve_team_player_names(df, name_col="last_name"):
 
     df["formatted_name"] = df[name_col].astype(str).apply(format_name)
 
+    # Pass 1: Build a lookup map for each team (last_name -> full_formatted_name)
     team_name_maps = {}
     for team, group in df.groupby("team"):
         last_to_full = {}
         unique_names = group["formatted_name"].unique()
         for n in unique_names:
-            parts = n.split()
+            parts = str(n).split()
             if len(parts) > 1:
                 last_name = parts[-1].lower()
-                last_to_full[last_name] = n
+                last_to_full[last_name] = str(n)
         team_name_maps[team] = last_to_full
 
+    # Pass 2: Safely map row values ensuring scalar string returns
     def final_resolve(row):
         team = row["team"]
-        fname = row["formatted_name"]
+        fname = str(row["formatted_name"])
         parts = fname.split()
         if len(parts) == 1:
             last_name = parts[0].lower()
-            return team_name_maps.get(team, {}).get(last_name, fname)
+            resolved = team_name_maps.get(team, {}).get(last_name, fname)
+            if isinstance(resolved, (list, tuple, pd.Series)):
+                return str(resolved[0])
+            return str(resolved)
         return fname
 
-    df["clean_name"] = df.apply(final_resolve, axis=1)
+    df["clean_name"] = df.apply(final_resolve, axis=1).astype(str)
     return df
 
 
@@ -65,7 +70,7 @@ def calculate_rc7(
     name_col = "last_name" if "last_name" in games_df.columns else "name"
     games_df = resolve_team_player_names(games_df, name_col=name_col)
 
-    # 2. Ensure numeric types for both per-game and cumulative fields
+    # 2. Ensure numeric types for core stats
     cols = ["at_bats", "hits", "walks", "doubles", "triples", "home_runs",
             "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"]
     for col in cols:
