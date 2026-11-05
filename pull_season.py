@@ -19,16 +19,6 @@ def save_completed_date(date_str):
     with open(CHECKPOINT_FILE, "a", encoding="utf-8") as f:
         f.write(f"{date_str}\n")
 
-def fetch_game_boxscore(game_id):
-    url = f"https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
-    try:
-        resp = requests.get(url, timeout=5)
-        if resp.status_code == 200:
-            return resp.json()
-    except Exception:
-        pass
-    return None
-
 def pull_season(start_date="2026-02-05", end_date="2026-06-05"):
     completed = load_completed_dates()
     start = datetime.strptime(start_date, "%Y-%m-%d")
@@ -54,7 +44,12 @@ def pull_season(start_date="2026-02-05", end_date="2026-06-05"):
             curr += delta
             continue
 
-        sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{curr.year}/{curr.month}/{curr.day}"
+        # Use padded month (%m) and day (%d)
+        year_str = curr.strftime("%Y")
+        month_str = curr.strftime("%m")
+        day_str = curr.strftime("%d")
+
+        sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year_str}/{month_str}/{day_str}"
         try:
             resp = requests.get(sb_url, timeout=10)
             if resp.status_code == 200:
@@ -90,12 +85,10 @@ def pull_season(start_date="2026-02-05", end_date="2026-06-05"):
                                 "status": g_data.get("gameState", "final")
                             })
 
-                            # Team A perspective
                             t_writer.writerow({
                                 "date": date_str, "game_id": gid, "team": away_name, "opponent": home_name,
                                 "role": "away", "runs_for": a_sc, "runs_against": h_sc, "win": int(a_sc > h_sc)
                             })
-                            # Team B perspective
                             t_writer.writerow({
                                 "date": date_str, "game_id": gid, "team": home_name, "opponent": away_name,
                                 "role": "home", "runs_for": h_sc, "runs_against": a_sc, "win": int(h_sc > a_sc)
