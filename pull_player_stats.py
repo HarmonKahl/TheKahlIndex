@@ -53,7 +53,7 @@ def fetch_boxscore(game_id):
             if resp.status_code == 200:
                 return resp.json()
         except Exception:
-            time.sleep(0.3)
+            time.sleep(0.4)
     return None
 
 def process_game(game_id, date_str):
@@ -156,12 +156,15 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
         while curr <= end:
             date_str = curr.strftime("%Y-%m-%d")
             
-            # Clear _completed_dates_players.txt if you want to force full re-scraping
             if date_str in completed:
                 curr += delta
                 continue
 
-            sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{curr.year}/{curr.month}/{curr.day}"
+            year_str = curr.strftime("%Y")
+            month_str = curr.strftime("%m")
+            day_str = curr.strftime("%d")
+
+            sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year_str}/{month_str}/{day_str}"
             try:
                 sb_resp = requests.get(sb_url, timeout=10)
                 if sb_resp.status_code == 200:
@@ -184,7 +187,7 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
                             writer.writerows(rows)
                             csvfile.flush()
                             day_rows += len(rows)
-                        time.sleep(0.2)
+                        time.sleep(0.35)
 
                     save_completed_date(date_str)
                     total_rows_written += day_rows
