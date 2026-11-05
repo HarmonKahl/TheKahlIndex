@@ -11,11 +11,8 @@ OUTPUT_CSV = "player_games_season.csv"
 
 def load_completed_dates():
     if os.path.exists(CHECKPOINT_FILE):
-        try:
-            with open(CHECKPOINT_FILE, "r", encoding="utf-8") as f:
-                return {line.strip() for line in f if line.strip()}
-        except Exception:
-            return set()
+        with open(CHECKPOINT_FILE, "r", encoding="utf-8") as f:
+            return {line.strip() for line in f if line.strip()}
     return set()
 
 def save_completed_date(date_str):
@@ -55,10 +52,8 @@ def fetch_boxscore(game_id):
             resp = requests.get(url, timeout=5)
             if resp.status_code == 200:
                 return resp.json()
-            elif resp.status_code == 429:
-                time.sleep(1.5)
         except Exception:
-            time.sleep(0.5)
+            time.sleep(0.3)
     return None
 
 def process_game(game_id, date_str):
@@ -66,11 +61,11 @@ def process_game(game_id, date_str):
     if not box_data:
         return []
 
-    rows = []
     if "boxscore" in box_data and isinstance(box_data["boxscore"], dict):
         box_data = box_data["boxscore"]
 
     teams = box_data.get("teams") or box_data.get("teamBoxscore") or []
+    rows = []
     
     for team_idx, team_data in enumerate(teams):
         team_name = team_data.get("name") or team_data.get("team", {}).get("name", "Unknown")
@@ -92,7 +87,6 @@ def process_game(game_id, date_str):
 
         for p in players:
             p_obj = p.get("player", p) if isinstance(p, dict) else {}
-            
             last_name = p_obj.get("lastName") or p_obj.get("last_name") or p_obj.get("name") or "Unknown"
             first_name = p_obj.get("firstName") or p_obj.get("first_name") or ""
             last_name_upper = str(last_name).strip().upper()
@@ -135,7 +129,7 @@ def process_game(game_id, date_str):
     return rows
 
 def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
-    completed_dates = load_completed_dates()
+    completed = load_completed_dates()
     start = datetime.strptime(startDate, "%Y-%m-%d")
     end = datetime.strptime(endDate, "%Y-%m-%d")
     delta = timedelta(days=1)
@@ -157,37 +151,31 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
             csvfile.flush()
 
         curr = start
-        total_rows_saved = 0
+        total_rows_written = 0
 
         while curr <= end:
             date_str = curr.strftime("%Y-%m-%d")
             
-            # Delete checkpoint check if you want to force re-running skipped days:
-            if date_str in completed_dates:
+            # Clear _completed_dates_players.txt if you want to force full re-scraping
+            if date_str in completed:
                 curr += delta
                 continue
 
-            year = str(curr.year)
-            month = str(curr.month)
-            day = str(curr.day)
-            
-            sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year}/{month}/{day}"
-            
+            sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{curr.year}/{curr.month}/{curr.day}"
             try:
                 sb_resp = requests.get(sb_url, timeout=10)
                 if sb_resp.status_code == 200:
-                    games_list = sb_resp.json().get("games", [])
+                    payload = sb_resp.json()
+                    games_list = payload.get("games", []) if isinstance(payload, dict) else []
+                    
                     game_ids = []
-
-                    # Extract game ID safely from top-level or nested 'game' keys
                     for entry in games_list:
-                        g_obj = entry.get("game") if isinstance(entry, dict) and "game" in entry else entry
-                        if isinstance(g_obj, dict):
-                            gid = str(g_obj.get("gameID") or g_obj.get("id") or "").strip()
-                            if "/" in gid:
-                                gid = gid.split("/")[-1]
-                            if gid:
-                                game_ids.append(gid)
+                        g_obj = entry.get("game", entry) if isinstance(entry, dict) else {}
+                        gid = str(g_obj.get("gameID") or g_obj.get("id") or "").strip()
+                        if "/" in gid:
+                            gid = gid.rstrip("/").split("/")[-1]
+                        if gid:
+                            game_ids.append(gid)
 
                     day_rows = 0
                     for gid in game_ids:
@@ -196,19 +184,19 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
                             writer.writerows(rows)
                             csvfile.flush()
                             day_rows += len(rows)
-                        time.sleep(0.3)  # Enforce API rate limit
+                        time.sleep(0.2)
 
                     save_completed_date(date_str)
-                    total_rows_saved += day_rows
-                    print(f"[{date_str}] Found {len(game_ids)} games; saved {day_rows} player rows (Total: {total_rows_saved}).")
+                    total_rows_written += day_rows
+                    print(f"[{date_str}] Found {len(game_ids)} games; saved {day_rows} player rows (Total: {total_rows_written}).")
                 else:
-                    print(f"[{date_str}] HTTP Status {sb_resp.status_code}")
+                    print(f"[{date_str}] Status {sb_resp.status_code}")
             except Exception as e:
-                print(f"Error processing {date_str}: {e}")
+                print(f"Error on {date_str}: {e}")
 
             curr += delta
 
-    print(f"Extraction completed. Total player rows written: {total_rows_saved}")
+    print(f"Player stats extraction finished. Total rows saved: {total_rows_written}")
 
 if __name__ == "__main__":
     extract_player_games()
