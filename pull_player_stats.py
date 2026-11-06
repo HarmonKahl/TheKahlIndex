@@ -6,11 +6,19 @@ import time
 import requests
 from datetime import datetime, timedelta
 
+# Set to True to ignore existing checkpoint text files and perform a fresh pull
+FORCE_RESET = True
+
 CHECKPOINT_FILE = "_completed_dates_players.txt"
 OUTPUT_CSV = "player_games_season.csv"
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "application/json"
+}
+
 def load_completed_dates():
-    if os.path.exists(CHECKPOINT_FILE):
+    if not FORCE_RESET and os.path.exists(CHECKPOINT_FILE):
         with open(CHECKPOINT_FILE, "r", encoding="utf-8") as f:
             return {line.strip() for line in f if line.strip()}
     return set()
@@ -47,36 +55,41 @@ def parse_xbh_from_notes(notes_list):
 
 def fetch_boxscore(game_id):
     url = f"https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
-    for attempt in range(2):
-        try:
-            resp = requests.get(url, timeout=5)
-            if resp.status_code == 200:
-                return resp.json()
-        except Exception:
-            time.sleep(0.4)
+    try:
+        resp = requests.get(url, headers=HEADERS, timeout=4)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
     return None
 
 def process_game(game_id, date_str):
     box_data = fetch_boxscore(game_id)
-    if not box_data:
+    if not box_data or not isinstance(box_data, dict):
         return []
 
     if "boxscore" in box_data and isinstance(box_data["boxscore"], dict):
         box_data = box_data["boxscore"]
 
     teams = box_data.get("teams") or box_data.get("teamBoxscore") or []
+    if isinstance(teams, dict):
+        teams = teams.get("team") or teams.get("teams") or []
+
     rows = []
-    
     for team_idx, team_data in enumerate(teams):
+        if not isinstance(team_data, dict):
+            continue
+
         team_name = team_data.get("name") or team_data.get("team", {}).get("name", "Unknown")
         opp_idx = 1 if team_idx == 0 else 0
         opp_name = "Unknown"
-        if len(teams) > opp_idx:
+        if len(teams) > opp_idx and isinstance(teams[opp_idx], dict):
             opp_name = teams[opp_idx].get("name") or teams[opp_idx].get("team", {}).get("name", "Unknown")
 
         notes = team_data.get("notes") or team_data.get("hittingNotes") or []
         d2b_map, d3b_map, hr_map = parse_xbh_from_notes(notes)
 
+        # Multi-key player array detection
         players = (
             team_data.get("playerStats") 
             or team_data.get("stats") 
@@ -86,7 +99,11 @@ def process_game(game_id, date_str):
         )
 
         for p in players:
-            p_obj = p.get("player", p) if isinstance(p, dict) else {}
+            if not isinstance(p, dict):
+                continue
+
+            p_obj = p.get("player", p) if isinstance(p.get("player"), dict) else p
+            
             last_name = p_obj.get("lastName") or p_obj.get("last_name") or p_obj.get("name") or "Unknown"
             first_name = p_obj.get("firstName") or p_obj.get("first_name") or ""
             last_name_upper = str(last_name).strip().upper()
@@ -142,13 +159,14 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
         "doubles_hittingSeason", "triples_hittingSeason", "home_runs_hittingSeason"
     ]
 
-    file_exists = os.path.exists(OUTPUT_CSV) and os.path.getsize(OUTPUT_CSV) > 0
+    # Clean existing CSV file if resetting
+    if FORCE_RESET and os.path.exists(OUTPUT_CSV):
+        os.remove(OUTPUT_CSV)
 
-    with open(OUTPUT_CSV, "a", newline="", encoding="utf-8") as csvfile:
+    with open(OUTPUT_CSV, "w", newline="", encoding="utf-8") as csvfile:
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        if not file_exists:
-            writer.writeheader()
-            csvfile.flush()
+        writer.writeheader()
+        csvfile.flush()
 
         curr = start
         total_rows_written = 0
@@ -166,7 +184,7 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
 
             sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year_str}/{month_str}/{day_str}"
             try:
-                sb_resp = requests.get(sb_url, timeout=10)
+                sb_resp = requests.get(sb_url, headers=HEADERS, timeout=6)
                 if sb_resp.status_code == 200:
                     payload = sb_resp.json()
                     games_list = payload.get("games", []) if isinstance(payload, dict) else []
@@ -187,11 +205,11 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
                             writer.writerows(rows)
                             csvfile.flush()
                             day_rows += len(rows)
-                        time.sleep(0.35)
+                        time.sleep(0.2)
 
                     save_completed_date(date_str)
                     total_rows_written += day_rows
-                    print(f"[{date_str}] Found {len(game_ids)} games; saved {day_rows} player rows (Total: {total_rows_written}).")
+                    print(f"[{date_str}] Processed {len(game_ids)} games -> saved {day_rows} player rows (Total: {total_rows_written}).")
                 else:
                     print(f"[{date_str}] Status {sb_resp.status_code}")
             except Exception as e:
@@ -199,7 +217,7 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
 
             curr += delta
 
-    print(f"Player stats extraction finished. Total rows saved: {total_rows_written}")
+    print(f"Done. Saved a total of {total_rows_written} player rows.")
 
 if __name__ == "__main__":
     extract_player_games()
