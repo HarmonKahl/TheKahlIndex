@@ -5,12 +5,18 @@ import time
 import requests
 from datetime import datetime, timedelta
 
+FORCE_RESET = True
+
 CHECKPOINT_FILE = "_completed_dates.txt"
 OUTPUT_GAMES = "games_season.csv"
 OUTPUT_TEAMS = "team_games_season.csv"
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+}
+
 def load_completed_dates():
-    if os.path.exists(CHECKPOINT_FILE):
+    if not FORCE_RESET and os.path.exists(CHECKPOINT_FILE):
         with open(CHECKPOINT_FILE, "r", encoding="utf-8") as f:
             return {line.strip() for line in f if line.strip()}
     return set()
@@ -25,17 +31,18 @@ def pull_season(start_date="2026-02-05", end_date="2026-06-05"):
     end = datetime.strptime(end_date, "%Y-%m-%d")
     delta = timedelta(days=1)
 
-    games_exists = os.path.exists(OUTPUT_GAMES) and os.path.getsize(OUTPUT_GAMES) > 0
-    teams_exists = os.path.exists(OUTPUT_TEAMS) and os.path.getsize(OUTPUT_TEAMS) > 0
+    if FORCE_RESET:
+        if os.path.exists(OUTPUT_GAMES): os.remove(OUTPUT_GAMES)
+        if os.path.exists(OUTPUT_TEAMS): os.remove(OUTPUT_TEAMS)
 
-    g_file = open(OUTPUT_GAMES, "a", newline="", encoding="utf-8")
-    t_file = open(OUTPUT_TEAMS, "a", newline="", encoding="utf-8")
+    g_file = open(OUTPUT_GAMES, "w", newline="", encoding="utf-8")
+    t_file = open(OUTPUT_TEAMS, "w", newline="", encoding="utf-8")
 
     g_writer = csv.DictWriter(g_file, fieldnames=["date", "game_id", "away_team", "away_score", "home_team", "home_score", "status"])
     t_writer = csv.DictWriter(t_file, fieldnames=["date", "game_id", "team", "opponent", "role", "runs_for", "runs_against", "win"])
 
-    if not games_exists: g_writer.writeheader()
-    if not teams_exists: t_writer.writeheader()
+    g_writer.writeheader()
+    t_writer.writeheader()
 
     curr = start
     while curr <= end:
@@ -44,14 +51,13 @@ def pull_season(start_date="2026-02-05", end_date="2026-06-05"):
             curr += delta
             continue
 
-        # Use padded month (%m) and day (%d)
         year_str = curr.strftime("%Y")
         month_str = curr.strftime("%m")
         day_str = curr.strftime("%d")
 
         sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year_str}/{month_str}/{day_str}"
         try:
-            resp = requests.get(sb_url, timeout=10)
+            resp = requests.get(sb_url, headers=HEADERS, timeout=6)
             if resp.status_code == 200:
                 payload = resp.json()
                 raw_games = payload.get("games", []) if isinstance(payload, dict) else []
@@ -101,7 +107,7 @@ def pull_season(start_date="2026-02-05", end_date="2026-06-05"):
                 t_file.flush()
                 save_completed_date(date_str)
                 print(f"[{date_str}] Processed {day_games} team games.")
-            time.sleep(0.2)
+            time.sleep(0.15)
         except Exception as e:
             print(f"Error on {date_str}: {e}")
 
