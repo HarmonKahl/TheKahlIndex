@@ -71,6 +71,35 @@ def fetch_boxscore(game_id):
         pass
     return None
 
+def extract_players_from_team(team_data):
+    """Broadly extracts player rows from any team boxscore format."""
+    players = []
+    
+    # 1. Direct key checks
+    for key in ["stats", "playerStats", "players", "hittingStats", "batting", "roster"]:
+        val = team_data.get(key)
+        if isinstance(val, list) and len(val) > 0:
+            return val
+        elif isinstance(val, dict):
+            sub_val = val.get("player") or val.get("players") or val.get("stats")
+            if isinstance(sub_val, list) and len(sub_val) > 0:
+                return sub_val
+
+    # 2. Deep dictionary scan fallback
+    def find_lists(obj):
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                if isinstance(v, list) and len(v) > 0:
+                    # Check if first element looks like a player dict
+                    if isinstance(v[0], dict) and any(x in v[0] for x in ["lastName", "last_name", "name", "ab", "h", "r", "player"]):
+                        players.extend(v)
+                        return
+                elif isinstance(v, dict):
+                    find_lists(v)
+
+    find_lists(team_data)
+    return players
+
 def process_game(game_id, date_str):
     box_data = fetch_boxscore(game_id)
     if not box_data or not isinstance(box_data, dict):
@@ -79,7 +108,7 @@ def process_game(game_id, date_str):
     if "boxscore" in box_data and isinstance(box_data["boxscore"], dict):
         box_data = box_data["boxscore"]
 
-    teams = box_data.get("teams") or box_data.get("teamBoxscore") or []
+    teams = box_data.get("teams") or box_data.get("teamBoxscore") or box_data.get("team_boxscore") or []
     if isinstance(teams, dict):
         teams = teams.get("team") or teams.get("teams") or []
 
@@ -97,32 +126,48 @@ def process_game(game_id, date_str):
         notes = team_data.get("notes") or team_data.get("hittingNotes") or []
         d2b_map, d3b_map, hr_map = parse_xbh_from_notes(notes)
 
-        players = []
-        for key in ["playerStats", "stats", "players", "hittingStats", "batting"]:
-            val = team_data.get(key)
-            if isinstance(val, list) and len(val) > 0:
-                players = val
-                break
-            elif isinstance(val, dict):
-                players = val.get("player") or val.get("players") or []
-                if len(players) > 0:
-                    break
+        players = extract_players_from_team(team_data)
 
         for p in players:
             if not isinstance(p, dict):
                 continue
 
-            p_obj = p.get("player", p) if isinstance(p.get("player"), dict) else p
+            # Resolve nested player object or direct dict
+            p_obj = p.get("player") if isinstance(p.get("player"), dict) else p
             
-            last_name = p_obj.get("lastName") or p_obj.get("last_name") or p_obj.get("name") or "Unknown"
-            first_name = p_obj.get("firstName") or p_obj.get("first_name") or ""
+            # Extract player names
+            last_name = p_obj.get("lastName") or p_obj.get("last_name") or p_obj.get("name") or p.get("lastName") or p.get("name") or ""
+            first_name = p_obj.get("firstName") or p_obj.get("first_name") or p.get("firstName") or ""
+            
+            # If name is formatted as "Full Name" in a single string, split it
+            if not last_name and first_name:
+                last_name = first_name
+                first_name = ""
+            elif " " in str(last_name) and not first_name:
+                parts = str(last_name).strip().split(" ")
+                first_name = " ".join(parts[:-1])
+                last_name = parts[-1]
+
+            if not last_name:
+                continue
+
             last_name_upper = str(last_name).strip().upper()
 
             def safe_float(val):
+                if val is None or val == "":
+                    return 0.0
                 try:
-                    return float(val) if val is not None else 0.0
+                    return float(val)
                 except (ValueError, TypeError):
                     return 0.0
+
+            # Pull stats from inner or outer object level
+            ab = safe_float(p.get("ab") or p_obj.get("ab") or p.get("atBats") or p_obj.get("atBats"))
+            r = safe_float(p.get("r") or p_obj.get("r") or p.get("runs") or p_obj.get("runs"))
+            h = safe_float(p.get("h") or p_obj.get("h") or p.get("hits") or p_obj.get("hits"))
+            rbi = safe_float(p.get("rbi") or p_obj.get("rbi"))
+            bb = safe_float(p.get("bb") or p_obj.get("bb") or p.get("walks") or p_obj.get("walks"))
+            so = safe_float(p.get("so") or p_obj.get("so") or p.get("strikeouts") or p_obj.get("strikeouts"))
 
             rows.append({
                 "date": date_str,
@@ -131,27 +176,27 @@ def process_game(game_id, date_str):
                 "opponent": opp_name,
                 "last_name": last_name,
                 "first_name": first_name,
-                "position": p_obj.get("position", ""),
-                "number": p_obj.get("number", ""),
-                "starter": p_obj.get("starter", False),
-                "participated": p_obj.get("participated", True),
-                "at_bats": safe_float(p_obj.get("ab") or p_obj.get("atBats")),
-                "runs_scored": safe_float(p_obj.get("r") or p_obj.get("runs")),
-                "hits": safe_float(p_obj.get("h") or p_obj.get("hits")),
-                "rbi": safe_float(p_obj.get("rbi")),
-                "walks": safe_float(p_obj.get("bb") or p_obj.get("walks")),
-                "strikeouts": safe_float(p_obj.get("so") or p_obj.get("strikeouts")),
-                "batting_average": safe_float(p_obj.get("ba")),
-                "on_base_pct": safe_float(p_obj.get("obp")),
-                "putouts": safe_float(p_obj.get("po")),
-                "assists": safe_float(p_obj.get("a")),
-                "errors": safe_float(p_obj.get("e")),
-                "doubles": safe_float(p_obj.get("2b") or p_obj.get("doubles") or d2b_map.get(last_name_upper, 0)),
-                "triples": safe_float(p_obj.get("3b") or p_obj.get("triples") or d3b_map.get(last_name_upper, 0)),
-                "home_runs": safe_float(p_obj.get("hr") or p_obj.get("homeRuns") or hr_map.get(last_name_upper, 0)),
-                "doubles_hittingSeason": safe_float(p_obj.get("doubles_hittingSeason")),
-                "triples_hittingSeason": safe_float(p_obj.get("triples_hittingSeason")),
-                "home_runs_hittingSeason": safe_float(p_obj.get("home_runs_hittingSeason")),
+                "position": str(p_obj.get("position") or p.get("position") or ""),
+                "number": str(p_obj.get("number") or p.get("number") or ""),
+                "starter": bool(p_obj.get("starter") or p.get("starter") or False),
+                "participated": True,
+                "at_bats": ab,
+                "runs_scored": r,
+                "hits": h,
+                "rbi": rbi,
+                "walks": bb,
+                "strikeouts": so,
+                "batting_average": safe_float(p_obj.get("ba") or p.get("ba")),
+                "on_base_pct": safe_float(p_obj.get("obp") or p.get("obp")),
+                "putouts": safe_float(p_obj.get("po") or p.get("po")),
+                "assists": safe_float(p_obj.get("a") or p.get("a")),
+                "errors": safe_float(p_obj.get("e") or p.get("e")),
+                "doubles": safe_float(p.get("2b") or p_obj.get("2b") or d2b_map.get(last_name_upper, 0)),
+                "triples": safe_float(p.get("3b") or p_obj.get("3b") or d3b_map.get(last_name_upper, 0)),
+                "home_runs": safe_float(p.get("hr") or p_obj.get("hr") or hr_map.get(last_name_upper, 0)),
+                "doubles_hittingSeason": safe_float(p.get("doubles_hittingSeason")),
+                "triples_hittingSeason": safe_float(p.get("triples_hittingSeason")),
+                "home_runs_hittingSeason": safe_float(p.get("home_runs_hittingSeason")),
             })
     return rows
 
@@ -206,7 +251,7 @@ def extract_player_games(startDate="2026-02-05", endDate="2026-06-05"):
                             writer.writerows(rows)
                             csvfile.flush()
                             day_rows += len(rows)
-                        time.sleep(0.15)
+                        time.sleep(0.05) # Optimized sleep speed
 
                     save_completed_date(date_str)
                     total_rows_written += day_rows
