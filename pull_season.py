@@ -93,4 +93,4 @@ GAME_COLUMNS = [
 ]
 
 TEAM_GAME_COLUMNS = [
-    "date",
+    "date",]
