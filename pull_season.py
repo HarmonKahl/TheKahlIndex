@@ -1,123 +1,346 @@
 import os
-import csv
-import json
+import re
+import sys
+import threading
 import time
+from concurrent.futures import ThreadPoolExecutor, as_completed
+from datetime import date, timedelta
+
+import pandas as pd
 import requests
-from datetime import datetime, timedelta
 
-FORCE_RESET = True
+# Scoreboard stays on the public demo (never blocked). Box scores can be routed
+# to a self-hosted container via NCAA_BOXSCORE_BASE (set in the workflow).
+NCAA_SCOREBOARD_BASE = "https://ncaa-api.henrygd.me"
+NCAA_BOXSCORE_BASE = os.environ.get("NCAA_BOXSCORE_BASE", "https://ncaa-api.henrygd.me")
+SCOREBOARD_URL = NCAA_SCOREBOARD_BASE + "/scoreboard/softball/d1/{year}/{month:02d}/{day:02d}"
+BOXSCORE_URL = NCAA_BOXSCORE_BASE + "/game/{game_id}/boxscore"
 
-CHECKPOINT_FILE = "_completed_dates.txt"
-OUTPUT_GAMES = "games_season.csv"
-OUTPUT_TEAMS = "team_games_season.csv"
+REQUESTS_PER_SECOND_LIMIT = 5
+_MIN_INTERVAL = 1.0 / REQUESTS_PER_SECOND_LIMIT
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-}
 
-def load_completed_dates():
-    if not FORCE_RESET and os.path.exists(CHECKPOINT_FILE):
-        with open(CHECKPOINT_FILE, "r", encoding="utf-8") as f:
-            return {line.strip() for line in f if line.strip()}
-    return set()
+class RateLimiter:
+    def __init__(self, min_interval=_MIN_INTERVAL):
+        self.min_interval = min_interval
+        self._last = 0.0
+        self._lock = threading.Lock()
 
-def save_completed_date(date_str):
-    with open(CHECKPOINT_FILE, "a", encoding="utf-8") as f:
-        f.write(f"{date_str}\n")
+    def wait(self):
+        with self._lock:
+            elapsed = time.time() - self._last
+            if elapsed < self.min_interval:
+                time.sleep(self.min_interval - elapsed)
+            self._last = time.time()
 
-def pull_season(start_date="2026-02-05", end_date="2026-06-05"):
-    completed = load_completed_dates()
-    start = datetime.strptime(start_date, "%Y-%m-%d")
-    end = datetime.strptime(end_date, "%Y-%m-%d")
-    delta = timedelta(days=1)
 
-    if FORCE_RESET:
-        if os.path.exists(OUTPUT_GAMES): os.remove(OUTPUT_GAMES)
-        if os.path.exists(OUTPUT_TEAMS): os.remove(OUTPUT_TEAMS)
+_limiter = RateLimiter()
+_session = requests.Session()
+_adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20)
+_session.mount("https://", _adapter)
+_session.mount("http://", _adapter)
 
-    g_file = open(OUTPUT_GAMES, "w", newline="", encoding="utf-8")
-    t_file = open(OUTPUT_TEAMS, "w", newline="", encoding="utf-8")
 
-    g_writer = csv.DictWriter(g_file, fieldnames=["date", "game_id", "away_team", "away_score", "home_team", "home_score", "status"])
-    t_writer = csv.DictWriter(t_file, fieldnames=["date", "game_id", "team", "opponent", "role", "runs_for", "runs_against", "win"])
+def _get_json(url):
+    _limiter.wait()
+    resp = _session.get(url, timeout=15)
+    resp.raise_for_status()
+    return resp.json()
 
-    g_writer.writeheader()
-    t_writer.writeheader()
 
-    curr = start
-    while curr <= end:
-        date_str = curr.strftime("%Y-%m-%d")
-        if date_str in completed:
-            curr += delta
+def _get_scoreboard_page(year, month, day, page):
+    url = SCOREBOARD_URL.format(year=year, month=month, day=day)
+    if page > 1:
+        url += f"?page={page}"
+    return _get_json(url)
+
+
+def extract_team(side_data, fallback):
+    if not isinstance(side_data, dict):
+        return fallback
+    names = side_data.get("names", {})
+    return names.get("short") or names.get("full") or side_data.get("description") or fallback
+
+
+def extract_score(side_data):
+    if not isinstance(side_data, dict):
+        return None
+    for key in ("score", "currentScore", "runs"):
+        val = side_data.get(key)
+        if val not in (None, ""):
+            return val
+    return None
+
+
+def extract_game_id(game):
+    for key in ("gameID", "id", "contestId", "contestID"):
+        val = game.get(key)
+        if val:
+            return str(val)
+    url = game.get("url") or game.get("link") or ""
+    m = re.search(r"/game/(\d+)", str(url))
+    return m.group(1) if m else None
+
+
+def unique_key(game, away_team, home_team, away_score, home_score, date_str):
+    game_id = extract_game_id(game)
+    if game_id:
+        return f"id:{game_id}"
+    url = game.get("url") or game.get("link")
+    if url:
+        return f"url:{url}"
+    start = game.get("startTime") or game.get("startTimeEpoch") or game.get("gameTime") or ""
+    return f"fallback:{date_str}|{away_team}|{home_team}|{away_score}|{home_score}|{start}"
+
+
+def parse_innings_pitched(ip_str):
+    if ip_str in (None, ""):
+        return None
+    s = str(ip_str).strip()
+    if "." not in s:
+        try:
+            return float(int(s))
+        except ValueError:
+            return None
+    whole_s, _, frac_s = s.partition(".")
+    try:
+        whole = int(whole_s)
+    except ValueError:
+        return None
+    thirds = {"0": 0.0, "1": 1 / 3, "2": 2 / 3}.get(frac_s[:1], 0.0)
+    return whole + thirds
+
+
+def fetch_innings_for_game(game_id, debug=False, box_retries=3):
+    """
+    Retries a single box-score fetch with backoff. If it still fails, returns
+    (None, None) -- the game is KEPT (score, teams) but flagged as missing
+    innings. We deliberately do NOT invent 7.0 innings: a run-rule game
+    assumed to be 7 innings would quietly bias that team's runs-per-7.
+    """
+    if not game_id:
+        return None, None
+
+    data, last_err = None, None
+    for attempt in range(box_retries + 1):
+        try:
+            data = _get_json(BOXSCORE_URL.format(game_id=game_id))
+            break
+        except requests.exceptions.HTTPError as e:
+            last_err = e
+            if e.response is not None and e.response.status_code == 404:
+                break  # no box score exists for this game; retrying won't help
+        except Exception as e:
+            last_err = e
+        if attempt < box_retries:
+            wait = 1.5 * (2 ** attempt)
+            if debug:
+                print(f"  game {game_id}: attempt {attempt + 1} failed ({last_err}), retrying in {wait:.1f}s")
+            time.sleep(wait)
+    if data is None:
+        if debug:
+            print(f"  game {game_id}: no innings ({last_err})")
+        return None, None
+
+    teams_meta = data.get("teams", [])
+    home_id = next((t["teamId"] for t in teams_meta if t.get("isHome")), None)
+    away_id = next((t["teamId"] for t in teams_meta if t.get("isHome") is False), None)
+    if home_id is None or away_id is None:
+        return None, None
+    home_id, away_id = str(home_id), str(away_id)
+
+    ip_by_team = {}
+    for tb in data.get("teamBoxscore", []):
+        tid = str(tb.get("teamId"))
+        pitcher_totals = (tb.get("teamStats") or {}).get("pitcherTotals") or {}
+        ip_by_team[tid] = parse_innings_pitched(pitcher_totals.get("inningsPitched"))
+
+    home_ip = ip_by_team.get(home_id)  # home pitched = away batted
+    away_ip = ip_by_team.get(away_id)  # away pitched = home batted
+    if home_ip is None or away_ip is None:
+        return None, None
+    return away_ip, home_ip
+
+
+def fetch_innings_concurrent(game_ids, debug=False, max_workers=5):
+    results = {}
+    with ThreadPoolExecutor(max_workers=max_workers) as ex:
+        futures = {ex.submit(fetch_innings_for_game, gid, debug): gid for gid in game_ids}
+        for fut in as_completed(futures):
+            gid = futures[fut]
+            try:
+                results[gid] = fut.result()
+            except Exception as e:
+                if debug:
+                    print(f"  concurrent fetch failed for game {gid}: {e}")
+                results[gid] = (None, None)
+    return results
+
+
+def pull_day(year, month, day, max_pages=20, fetch_innings=True, debug=False, innings_workers=5):
+    date_str = f"{year}-{month:02d}-{day:02d}"
+    seen, seen_order = {}, []
+
+    for page in range(1, max_pages + 1):
+        data = _get_scoreboard_page(year, month, day, page)  # errors propagate -> day is retried
+        raw_games = data.get("games", [])
+        if not raw_games:
+            break
+
+        before = len(seen)
+        for entry in raw_games:
+            game = entry.get("game", entry)
+            away_data, home_data = game.get("away", {}), game.get("home", {})
+            away_team = extract_team(away_data, "Away")
+            home_team = extract_team(home_data, "Home")
+            away_score = extract_score(away_data)
+            home_score = extract_score(home_data)
+            state = game.get("gameState", "unknown")
+            status = game.get("status", "")
+            game_id = extract_game_id(game)
+
+            key = unique_key(game, away_team, home_team, away_score, home_score, date_str)
+            if key in seen:
+                continue
+            seen[key] = {
+                "date": date_str, "game_id": game_id,
+                "away_team": away_team, "away_score": away_score,
+                "home_team": home_team, "home_score": home_score,
+                "state": state, "status": status,
+                "away_innings": None, "home_innings": None,
+            }
+            seen_order.append(key)
+
+        if debug:
+            print(f"    page {page}: {len(raw_games)} game(s)")
+        if len(seen) == before:  # page added nothing new -> stop paging
+            break
+
+    games = [seen[k] for k in seen_order]
+
+    if fetch_innings:
+        game_ids = [row["game_id"] for row in games if row["game_id"]]
+        inn_map = fetch_innings_concurrent(game_ids, debug=debug, max_workers=innings_workers)
+        for row in games:
+            row["away_innings"], row["home_innings"] = inn_map.get(row["game_id"], (None, None))
+
+    return games
+
+
+def games_to_team_rows(games):
+    rows = []
+    for g in games:
+        if g["away_score"] is None or g["home_score"] is None:
+            continue
+        try:
+            away_score, home_score = int(g["away_score"]), int(g["home_score"])
+        except (TypeError, ValueError):
             continue
 
-        year_str = curr.strftime("%Y")
-        month_str = curr.strftime("%m")
-        day_str = curr.strftime("%d")
+        pairs = [
+            ("away", g["away_team"], g["home_team"], away_score, home_score, g["away_innings"], g["home_innings"]),
+            ("home", g["home_team"], g["away_team"], home_score, away_score, g["home_innings"], g["away_innings"]),
+        ]
+        for role, team, opponent, runs_for, runs_against, inn_batted, inn_fielded in pairs:
+            rows.append({
+                "date": g["date"], "game_id": g["game_id"],
+                "team": team, "opponent": opponent, "role": role,
+                "runs_for": runs_for, "runs_against": runs_against,
+                "innings_batted": inn_batted, "innings_fielded": inn_fielded,
+                "win": None if runs_for == runs_against else int(runs_for > runs_against),
+            })
+    return rows
 
-        sb_url = f"https://ncaa-api.henrygd.me/scoreboard/softball/d1/{year_str}/{month_str}/{day_str}"
-        try:
-            resp = requests.get(sb_url, headers=HEADERS, timeout=6)
-            if resp.status_code == 200:
-                payload = resp.json()
-                raw_games = payload.get("games", []) if isinstance(payload, dict) else []
-                
-                day_games = 0
-                for item in raw_games:
-                    g_data = item.get("game", item) if isinstance(item, dict) else {}
-                    
-                    gid = str(g_data.get("gameID") or g_data.get("id") or "").strip()
-                    if "/" in gid:
-                        gid = gid.rstrip("/").split("/")[-1]
 
-                    away = g_data.get("away", {}) or {}
-                    home = g_data.get("home", {}) or {}
+def _dedupe_by_game_id(df, extra=()):
+    """Drop true duplicates only: same game_id (plus `extra` columns). Never
+    de-dupe on date + teams -- a doubleheader shares those and is two games."""
+    if df.empty or "game_id" not in df.columns:
+        return df
+    dup = df.duplicated(subset=["game_id", *extra], keep="last") & df["game_id"].notna()
+    return df[~dup]
 
-                    away_name = away.get("names", {}).get("short") or away.get("name") or "Away"
-                    home_name = home.get("names", {}).get("short") or home.get("name") or "Home"
 
-                    away_score = away.get("score")
-                    home_score = home.get("score")
+def _daterange(start, end):
+    d = start
+    while d <= end:
+        yield d
+        d += timedelta(days=1)
 
-                    if away_score is not None and home_score is not None:
-                        try:
-                            a_sc = int(away_score)
-                            h_sc = int(home_score)
 
-                            g_writer.writerow({
-                                "date": date_str, "game_id": gid,
-                                "away_team": away_name, "away_score": a_sc,
-                                "home_team": home_name, "home_score": h_sc,
-                                "status": g_data.get("gameState", "final")
-                            })
+def pull_season(start, end, out_dir=".", fetch_innings=True, debug=False, max_retries=2):
+    os.makedirs(out_dir, exist_ok=True)
+    games_path = os.path.join(out_dir, "games_season.csv")
+    team_path = os.path.join(out_dir, "team_games_season.csv")
+    progress_path = os.path.join(out_dir, "_completed_dates.txt")
 
-                            t_writer.writerow({
-                                "date": date_str, "game_id": gid, "team": away_name, "opponent": home_name,
-                                "role": "away", "runs_for": a_sc, "runs_against": h_sc, "win": int(a_sc > h_sc)
-                            })
-                            t_writer.writerow({
-                                "date": date_str, "game_id": gid, "team": home_name, "opponent": away_name,
-                                "role": "home", "runs_for": h_sc, "runs_against": a_sc, "win": int(h_sc > a_sc)
-                            })
-                            day_games += 1
-                        except (ValueError, TypeError):
-                            continue
+    completed = set()
+    if os.path.exists(progress_path):
+        with open(progress_path) as f:
+            completed = set(line.strip() for line in f if line.strip())
 
-                g_file.flush()
-                t_file.flush()
-                save_completed_date(date_str)
-                print(f"[{date_str}] Processed {day_games} team games.")
-            time.sleep(0.15)
-        except Exception as e:
-            print(f"Error on {date_str}: {e}")
+    all_games = (pd.read_csv(games_path, dtype={"game_id": str}).to_dict("records")
+                 if os.path.exists(games_path) else [])
+    all_team_rows = (pd.read_csv(team_path, dtype={"game_id": str}).to_dict("records")
+                     if os.path.exists(team_path) else [])
 
-        curr += delta
+    dates = list(_daterange(start, end))
+    print(f"{len(dates)} day(s) requested, {len(completed)} already done\n")
 
-    g_file.close()
-    t_file.close()
+    failed_dates = []
+    for i, d in enumerate(dates, 1):
+        date_str = d.isoformat()
+        if date_str in completed:
+            continue
+
+        day_games, attempt = None, 0
+        while attempt <= max_retries:
+            try:
+                day_games = pull_day(d.year, d.month, d.day, fetch_innings=fetch_innings, debug=debug)
+                break
+            except Exception as e:
+                attempt += 1
+                print(f"[{i}/{len(dates)}] {date_str}: error ({e}), retry {attempt}/{max_retries}")
+                time.sleep(2 * attempt)
+
+        if day_games is None:
+            print(f"[{i}/{len(dates)}] {date_str}: FAILED -- not marked complete, will retry next run")
+            failed_dates.append(date_str)
+            continue
+
+        all_games.extend(day_games)
+        all_team_rows.extend(games_to_team_rows(day_games))
+        completed.add(date_str)
+
+        _dedupe_by_game_id(pd.DataFrame(all_games)).to_csv(games_path, index=False)
+        _dedupe_by_game_id(pd.DataFrame(all_team_rows), extra=("team",)).to_csv(team_path, index=False)
+        with open(progress_path, "w") as f:
+            f.write("\n".join(sorted(completed)))
+
+        print(f"[{i}/{len(dates)}] {date_str}: {len(day_games)} games "
+              f"(running total: {len(all_games)} games, {len(all_team_rows)} team-rows)")
+
+    n_missing_inn = sum(1 for g in all_games
+                        if pd.isna(g.get("away_innings")) or pd.isna(g.get("home_innings")))
+    if n_missing_inn:
+        print(f"\nNOTE: {n_missing_inn} game(s) have missing innings (box score fetch failed); "
+              f"they are kept in the files but excluded from ratings.")
+    if failed_dates:
+        print(f"\n{len(failed_dates)} day(s) failed -- rerun to retry just those: {failed_dates}")
+    else:
+        print(f"\nDone. {len(all_games)} games, {len(all_team_rows)} team-rows written to {out_dir}/")
+
+    return pd.DataFrame(all_games), pd.DataFrame(all_team_rows)
+
 
 if __name__ == "__main__":
-    import sys
-    s_date = sys.argv[1] if len(sys.argv) > 1 else "2026-02-05"
-    e_date = sys.argv[2] if len(sys.argv) > 2 else "2026-06-05"
-    pull_season(s_date, e_date)
+    if len(sys.argv) >= 3:
+        start_date = date.fromisoformat(sys.argv[1])
+        end_date = date.fromisoformat(sys.argv[2])
+    elif len(sys.argv) == 2:
+        start_date = end_date = date.fromisoformat(sys.argv[1])
+    else:
+        start_date = end_date = date.today() - timedelta(days=1)  # daily-job default
+
+    print(f"Pulling games from {start_date.isoformat()} to {end_date.isoformat()}...")
+    pull_season(start_date, end_date, out_dir=".", fetch_innings=True, debug=True)
