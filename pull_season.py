@@ -18,7 +18,7 @@ HEADERS = {
 }
 
 GAME_COLUMNS = ["date", "game_id", "away_team", "away_score", "home_team", "home_score", "state", "status", "away_innings", "home_innings"]
-TEAM_GAME_COLUMNS = ["date", "game_id", "team", "opponent", "role", "runs_for", "runs_against", "win"]
+TEAM_GAME_COLUMNS = ["date", "game_id", "team", "opponent", "role", "runs_for", "runs_against", "win", "innings_batted", "innings_fielded"]
 
 def load_completed_dates():
     if not FORCE_RESET and os.path.exists(CHECKPOINT_FILE):
@@ -29,6 +29,26 @@ def load_completed_dates():
 def save_completed_date(date_str):
     with open(CHECKPOINT_FILE, "a", encoding="utf-8") as f:
         f.write(f"{date_str}\n")
+
+def fetch_game_boxscore(game_id):
+    url = f"https://ncaa-api.henrygd.me/game/{game_id}/boxscore"
+    try:
+        resp = requests.get(url, headers=HEADERS, timeout=4)
+        if resp.status_code == 200:
+            return resp.json()
+    except Exception:
+        pass
+    return None
+
+def extract_innings(box_data):
+    """Extracts innings played from boxscore linescore if available."""
+    if not box_data or not isinstance(box_data, dict):
+        return 7.0, 7.0
+    
+    linescore = box_data.get("linescore") or box_data.get("boxscore", {}).get("linescore")
+    if isinstance(linescore, list) and len(linescore) > 0:
+        return float(len(linescore)), float(len(linescore))
+    return 7.0, 7.0
 
 def pull_season(start_date="2026-02-05", end_date="2026-06-05"):
     completed = load_completed_dates()
@@ -89,32 +109,40 @@ def pull_season(start_date="2026-02-05", end_date="2026-06-05"):
                             a_sc = int(away_score)
                             h_sc = int(home_score)
 
+                            # Fetch boxscore for accurate innings
+                            box = fetch_game_boxscore(gid)
+                            a_inn, h_inn = extract_innings(box)
+
                             g_writer.writerow({
                                 "date": date_str, "game_id": gid,
                                 "away_team": away_name, "away_score": a_sc,
                                 "home_team": home_name, "home_score": h_sc,
                                 "state": g_data.get("gameState", "final"),
                                 "status": g_data.get("status", ""),
-                                "away_innings": 7.0, "home_innings": 7.0
+                                "away_innings": a_inn, "home_innings": h_inn
                             })
 
+                            # Away Team
                             t_writer.writerow({
                                 "date": date_str, "game_id": gid, "team": away_name, "opponent": home_name,
-                                "role": "away", "runs_for": a_sc, "runs_against": h_sc, "win": int(a_sc > h_sc)
+                                "role": "away", "runs_for": a_sc, "runs_against": h_sc, "win": int(a_sc > h_sc),
+                                "innings_batted": a_inn, "innings_fielded": h_inn
                             })
+                            # Home Team
                             t_writer.writerow({
                                 "date": date_str, "game_id": gid, "team": home_name, "opponent": away_name,
-                                "role": "home", "runs_for": h_sc, "runs_against": a_sc, "win": int(h_sc > a_sc)
+                                "role": "home", "runs_for": h_sc, "runs_against": a_sc, "win": int(h_sc > a_sc),
+                                "innings_batted": h_inn, "innings_fielded": a_inn
                             })
                             day_games += 1
+                            time.sleep(0.05)
                         except (ValueError, TypeError):
                             continue
 
                 g_file.flush()
                 t_file.flush()
                 save_completed_date(date_str)
-                print(f"[{date_str}] Processed {day_games} team games.")
-            time.sleep(0.15)
+                print(f"[{date_str}] Processed {day_games} team games with boxscores.")
         except Exception as e:
             print(f"Error on {date_str}: {e}")
 
