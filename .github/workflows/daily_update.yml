@@ -1,18 +1,41 @@
+
 name: 2026 NCAA D-I Softball RC7 Pipeline
 
 on:
   schedule:
     # Runs daily at 6:00 AM UTC (1:00 AM EST)
     - cron: '0 6 * * *'
-  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: softball-rc7-pipeline
+  cancel-in-progress: false
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+    timeout-minutes: 180
+
+    # Local NCAA API service used for boxscore requests
+    services:
+      ncaa-api:
+        image: henrygd/ncaa-api
+        ports:
+          - 3000:3000
+
+    env:
+      NCAA_BOXSCORE_BASE: http://localhost:3000
+      NCAA_SCOREBOARD_BASE: https://ncaa-api.henrygd.me
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Set up Python 3.11
         uses: actions/setup-python@v5
@@ -30,7 +53,7 @@ jobs:
 
       - name: Step 2 - Fetch Player Box Scores & XBH
         run: |
-          python pull_player_stats.py
+          python pull_player_stats.py 2026-02-05 2026-06-05
 
       - name: Step 3 - Calculate RC7 Leaderboards & RAA
         run: |
@@ -38,11 +61,32 @@ jobs:
 
       - name: Commit and Push Updated Results
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add _completed_dates.txt team_games_season.csv player_games_season.csv players.json qualified_players.json || true
-          git commit -m "Auto-update 2026 RC7 Leaderboards & Data [skip ci]" || exit 0
-          git push
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # Stage available output files and checkpoints
+          for file in \
+            _completed_dates.txt \
+            _completed_dates_players.txt \
+            _player_completed_dates.txt \
+            team_games_season.csv \
+            games_season.csv \
+            player_games_season.csv \
+            players.json \
+            qualified_players.json
+          do
+            if [ -f "$file" ]; then
+              git add "$file"
+            fi
+          done
+
+          # Only commit when something has changed
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Auto-update 2026 RC7 Leaderboards & Data [skip ci]"
+            git push
+          fi
 
       - name: Upload Data Artifacts
         if: always()
@@ -50,8 +94,11 @@ jobs:
         with:
           name: season-data-and-leaderboards
           path: |
+            games_season.csv
             team_games_season.csv
             player_games_season.csv
             players.json
             qualified_players.json
             _completed_dates.txt
+            _completed_dates_players.txt
+          if-no-files-found: warn
