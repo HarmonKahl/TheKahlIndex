@@ -43,7 +43,7 @@ jobs:
 
       - name: Step 2 - Calculate RC7 Leaderboards & RAA
         run: |
-          python calculate_rc7.py
+          python rc7.py --audit --season 2026
 
       - name: Commit and Push Updated Results
         run: |
