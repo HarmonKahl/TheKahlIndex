@@ -1,4 +1,4 @@
-name: 2026 NCAA D-I Softball RC7 Pipeline
+name: 2026 NCAA D-I Softball RC7 & Kahl Index Pipeline
 
 on:
   schedule:
@@ -31,7 +31,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas requests
+          pip install numpy pandas requests
 
       - name: Step 1 - Pull Season Games, Teams & Player Box Scores
         run: |
@@ -41,7 +41,7 @@ jobs:
             python ncaa_pull.py --season 2026
           fi
 
-      - name: Step 2 - Calculate RC7 Leaderboards & RAA
+      - name: Step 2 - Generate Kahl Index, Bracketology & RC7 Leaderboards
         run: |
           python rc7.py --audit --season 2026
 
@@ -49,8 +49,8 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add -f games_season.csv team_games_season.csv player_games_season.csv players.json qualified_players.json || true
-          git commit -m "Auto-update 2026 Season Data & RC7 Leaderboards [skip ci]" || exit 0
+          git add -f games_season.csv team_games_season.csv player_games_season.csv ratings.json bracketology.json players.json qualified_players.json _completed_dates.txt || true
+          git commit -m "Auto-update 2026 Season Data, Ratings & RC7 Leaderboards [skip ci]" || exit 0
           git push
 
       - name: Upload Data Artifacts
@@ -62,5 +62,8 @@ jobs:
             games_season.csv
             team_games_season.csv
             player_games_season.csv
+            ratings.json
+            bracketology.json
             players.json
             qualified_players.json
+            _completed_dates.txt
