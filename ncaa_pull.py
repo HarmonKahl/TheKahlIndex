@@ -17,6 +17,7 @@ Files written to --out-dir (default: current folder):
     games_season.csv         one row per game (scores, innings, fetch status)
     team_games_season.csv    two rows per game (one per team)  -> compute_ratings.py
     player_games_season.csv  one row per player per game       -> rc7.py
+    _completed_dates.txt     checkpoint of completed scoreboard dates
 
 Why this replaces pull_season.py / pull_player_stats.py -- see README.md.
 Only third-party dependency: requests
@@ -47,6 +48,7 @@ MIN_RPS = 0.7
 WORKERS = 4
 RECHECK_DAYS = 3        # always re-pull this many most-recent days (late finals / corrections)
 RETRY_RECENT_DAYS = 10  # games with no box score / linescore are retried this long
+CHECKPOINT_FILE = "_completed_dates.txt"
 
 GAME_COLS = [
     "date", "game_id", "away_team", "away_score", "home_team", "home_score",
@@ -208,6 +210,21 @@ def read_csv(path):
     with open(path, newline="", encoding="utf-8") as f:
         rd = csv.DictReader(f)
         return list(rd), rd.fieldnames or []
+
+
+def load_completed_dates(path):
+    if not os.path.exists(path):
+        return set()
+    with open(path, "r", encoding="utf-8") as f:
+        return {line.strip() for line in f if line.strip()}
+
+
+def save_completed_dates(path, dates_set):
+    tmp = path + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        for d_str in sorted(dates_set):
+            f.write(d_str + "\n")
+    os.replace(tmp, path)
 
 
 # ----------------------------------------------------------------------------
@@ -564,13 +581,16 @@ def main():
     gpath = os.path.join(args.out_dir, "games_season.csv")
     tpath = os.path.join(args.out_dir, "team_games_season.csv")
     ppath = os.path.join(args.out_dir, "player_games_season.csv")
+    cpath = os.path.join(args.out_dir, CHECKPOINT_FILE)
 
     today = today_et()
     season = args.season or today.year
 
     # ---- load saved state -------------------------------------------------
     games, players = {}, {}
+    completed_dates = set()
     if not args.full_refresh:
+        completed_dates = load_completed_dates(cpath)
         for r in read_csv(gpath)[0]:
             for k in ("away_score", "home_score"):
                 r[k] = to_int(r.get(k))
@@ -584,7 +604,7 @@ def main():
         else:
             for r in prow:
                 players.setdefault(r["game_id"], []).append(r)
-    print(f"Loaded {len(games)} saved games, {len(players)} saved box scores. Season {season}, today {today}.")
+    print(f"Loaded {len(games)} saved games, {len(players)} saved box scores, {len(completed_dates)} completed dates. Season {season}, today {today}.")
 
     if args.audit_only:
         audit(list(games.values()), season)
@@ -598,7 +618,7 @@ def main():
     while d <= end:                      # always include the recent window
         cand.add(d)
         d += timedelta(days=1)
-    have_dates = {g["date"] for g in games.values()}
+    have_dates = {g["date"] for g in games.values()} | completed_dates
     todo = set()
     for d in cand:
         if d.isoformat() not in have_dates or d >= end - timedelta(days=RECHECK_DAYS - 1):
@@ -636,6 +656,7 @@ def main():
             else:
                 del games[gid]           # was cancelled / moved
                 players.pop(gid, None)
+        completed_dates.add(d.isoformat())
         if i % 20 == 0 or i == len(todo):
             print(f"  [{i}/{len(todo)}] scoreboard through {d}  ({len(games)} games total)")
 
@@ -668,6 +689,7 @@ def main():
         for r in plist:   # always recompute from the position text
             r["pitcher_row"] = is_pitching_pos(r.get("position"))
         atomic_write_csv(ppath, PLAYER_COLS, plist)
+        save_completed_dates(cpath, completed_dates)
 
     errors, err_msgs = Counter(), Counter()
     done = 0
@@ -747,7 +769,7 @@ def main():
         print("RESULT: incomplete -- too many fetch failures; re-run to fill the gaps.")
         return 1
     if n_failed:
-        print(f"RESULT: OK. {n_failed} request(s) failed and will be retried on the next run.")
+        print(f"RESULT: completed with {n_failed} minor fetch error(s) (will retry automatically next run).")
     return 0
 
 
