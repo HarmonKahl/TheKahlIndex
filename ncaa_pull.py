@@ -9,7 +9,7 @@ update during the season.
 
     python ncaa_pull.py                       # daily update (this season)
     python ncaa_pull.py --season 2026         # a specific season
-    python ncaa_pull.py --start 2026-02-05 --end 2026-06-05
+    python ncaa_pull.py --start 2026-02-05 --end 2026-02-20
     python ncaa_pull.py --full-refresh        # throw away saved data, redo everything
     python ncaa_pull.py --audit-only          # just compare saved data to NCAA's official totals
 
@@ -738,7 +738,17 @@ def main():
             print(f"   {n}x {m}")
     if not args.no_audit and not args.start and not args.end:
         audit(gl, season)
-    return 1 if (failed_days or errors) else 0
+    # A few games failing (HTTP 502 from the API) is normal: they are retried on the next run and
+    # must not stop an automated job before it saves results. Only report failure (exit code 1)
+    # when a whole scoreboard day failed or more than 3% of the games attempted failed.
+    n_failed = sum(errors.values())
+    too_many = bool(work) and n_failed > 0.03 * len(work) * (1 if args.no_boxscores else 2)
+    if failed_days or too_many:
+        print("RESULT: incomplete -- too many fetch failures; re-run to fill the gaps.")
+        return 1
+    if n_failed:
+        print(f"RESULT: OK. {n_failed} request(s) failed and will be retried on the next run.")
+    return 0
 
 
 if __name__ == "__main__":
