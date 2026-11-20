@@ -11,31 +11,31 @@
           "team": "Oklahoma",
           "conference": "Southeastern Conference",
           "overall_rank": 1,
-          "raa": 12.22
+          "raa": 13.12
         },
         {
           "seed_in_pod": 2,
           "national_seed": 32,
-          "team": "Virginia",
-          "conference": "Atlantic Coast Conference",
+          "team": "Missouri",
+          "conference": "Southeastern Conference",
           "overall_rank": 32,
-          "raa": 5.35
+          "raa": 5.67
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Michigan",
-          "conference": "Big Ten Conference",
+          "team": "Clemson",
+          "conference": "Atlantic Coast Conference",
           "overall_rank": 33,
-          "raa": 5.33
+          "raa": 5.65
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
-          "team": "Miami (OH)",
-          "conference": "Mid-American Conference",
-          "overall_rank": 74,
-          "raa": 2.53
+          "team": "California Baptist",
+          "conference": "Western Athletic Conference",
+          "overall_rank": 73,
+          "raa": 2.68
         }
       ]
     },
@@ -50,7 +50,7 @@
           "team": "UCLA",
           "conference": "Big Ten Conference",
           "overall_rank": 2,
-          "raa": 11.38
+          "raa": 12.33
         },
         {
           "seed_in_pod": 2,
@@ -58,23 +58,23 @@
           "team": "Grand Canyon",
           "conference": "Mountain West Conference",
           "overall_rank": 31,
-          "raa": 5.43
+          "raa": 5.71
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Missouri",
-          "conference": "Southeastern Conference",
+          "team": "Virginia",
+          "conference": "Atlantic Coast Conference",
           "overall_rank": 34,
-          "raa": 5.31
+          "raa": 5.58
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
-          "team": "California Baptist",
-          "conference": "Western Athletic Conference",
-          "overall_rank": 76,
-          "raa": 2.48
+          "team": "Miami (OH)",
+          "conference": "Mid-American Conference",
+          "overall_rank": 75,
+          "raa": 2.66
         }
       ]
     },
@@ -89,7 +89,7 @@
           "team": "Texas Tech",
           "conference": "Big 12 Conference",
           "overall_rank": 3,
-          "raa": 11.06
+          "raa": 11.89
         },
         {
           "seed_in_pod": 2,
@@ -97,23 +97,23 @@
           "team": "Georgia Tech",
           "conference": "Atlantic Coast Conference",
           "overall_rank": 30,
-          "raa": 5.54
+          "raa": 5.84
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Southeastern Louisiana",
-          "conference": "Southland Conference",
-          "overall_rank": 37,
-          "raa": 5.08
+          "team": "Michigan",
+          "conference": "Big Ten Conference",
+          "overall_rank": 35,
+          "raa": 5.57
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "UConn",
           "conference": "Big East Conference",
-          "overall_rank": 86,
-          "raa": 2.12
+          "overall_rank": 87,
+          "raa": 2.11
         }
       ]
     },
@@ -128,7 +128,7 @@
           "team": "Arkansas",
           "conference": "Southeastern Conference",
           "overall_rank": 4,
-          "raa": 10.91
+          "raa": 11.66
         },
         {
           "seed_in_pod": 2,
@@ -136,23 +136,23 @@
           "team": "Kansas",
           "conference": "Big 12 Conference",
           "overall_rank": 29,
-          "raa": 5.54
+          "raa": 5.91
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Clemson",
+          "team": "North Carolina",
           "conference": "Atlantic Coast Conference",
-          "overall_rank": 35,
-          "raa": 5.29
+          "overall_rank": 37,
+          "raa": 5.28
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "Idaho St.",
           "conference": "Big Sky Conference",
-          "overall_rank": 89,
-          "raa": 1.98
+          "overall_rank": 90,
+          "raa": 2.06
         }
       ]
     },
@@ -167,7 +167,7 @@
           "team": "Texas",
           "conference": "Southeastern Conference",
           "overall_rank": 5,
-          "raa": 10.39
+          "raa": 11.06
         },
         {
           "seed_in_pod": 2,
@@ -175,7 +175,7 @@
           "team": "Omaha",
           "conference": "Summit League",
           "overall_rank": 28,
-          "raa": 5.75
+          "raa": 6.03
         },
         {
           "seed_in_pod": 3,
@@ -183,15 +183,15 @@
           "team": "Utah",
           "conference": "Big 12 Conference",
           "overall_rank": 36,
-          "raa": 5.18
+          "raa": 5.43
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "UNC Greensboro",
           "conference": "Southern Conference",
-          "overall_rank": 90,
-          "raa": 1.97
+          "overall_rank": 91,
+          "raa": 2.03
         }
       ]
     },
@@ -206,7 +206,7 @@
           "team": "Nebraska",
           "conference": "Big Ten Conference",
           "overall_rank": 6,
-          "raa": 9.93
+          "raa": 10.39
         },
         {
           "seed_in_pod": 2,
@@ -214,23 +214,23 @@
           "team": "Northwestern",
           "conference": "Big Ten Conference",
           "overall_rank": 27,
-          "raa": 5.91
+          "raa": 6.24
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Louisville",
-          "conference": "Atlantic Coast Conference",
-          "overall_rank": 39,
-          "raa": 4.97
+          "team": "Auburn",
+          "conference": "Southeastern Conference",
+          "overall_rank": 38,
+          "raa": 5.23
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "Campbell",
           "conference": "Coastal Athletic Association",
-          "overall_rank": 96,
-          "raa": 1.57
+          "overall_rank": 97,
+          "raa": 1.69
         }
       ]
     },
@@ -245,7 +245,7 @@
           "team": "Alabama",
           "conference": "Southeastern Conference",
           "overall_rank": 7,
-          "raa": 9.82
+          "raa": 10.34
         },
         {
           "seed_in_pod": 2,
@@ -253,15 +253,15 @@
           "team": "Ole Miss",
           "conference": "Southeastern Conference",
           "overall_rank": 26,
-          "raa": 6.24
+          "raa": 6.53
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Penn St.",
-          "conference": "Big Ten Conference",
-          "overall_rank": 38,
-          "raa": 4.99
+          "team": "Southeastern Louisiana",
+          "conference": "Southland Conference",
+          "overall_rank": 39,
+          "raa": 5.21
         },
         {
           "seed_in_pod": 4,
@@ -269,7 +269,7 @@
           "team": "Princeton",
           "conference": "Ivy League",
           "overall_rank": 127,
-          "raa": 0.94
+          "raa": 0.97
         }
       ]
     },
@@ -284,31 +284,31 @@
           "team": "Florida",
           "conference": "Southeastern Conference",
           "overall_rank": 8,
-          "raa": 9.67
+          "raa": 10.34
         },
         {
           "seed_in_pod": 2,
           "national_seed": 25,
-          "team": "Stanford",
-          "conference": "Atlantic Coast Conference",
+          "team": "Indiana",
+          "conference": "Big Ten Conference",
           "overall_rank": 25,
-          "raa": 6.6
+          "raa": 6.99
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Fla. Atlantic",
+          "team": "Wichita St.",
           "conference": "American Athletic Conference",
           "overall_rank": 44,
-          "raa": 4.49
+          "raa": 4.68
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "Murray St.",
           "conference": "Ohio Valley Conference",
-          "overall_rank": 136,
-          "raa": 0.53
+          "overall_rank": 141,
+          "raa": 0.46
         }
       ]
     },
@@ -323,31 +323,31 @@
           "team": "Georgia",
           "conference": "Southeastern Conference",
           "overall_rank": 9,
-          "raa": 8.97
+          "raa": 9.5
         },
         {
           "seed_in_pod": 2,
           "national_seed": 24,
-          "team": "Indiana",
-          "conference": "Big Ten Conference",
+          "team": "Stanford",
+          "conference": "Atlantic Coast Conference",
           "overall_rank": 24,
-          "raa": 6.67
+          "raa": 7.06
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "North Carolina",
-          "conference": "Atlantic Coast Conference",
+          "team": "Penn St.",
+          "conference": "Big Ten Conference",
           "overall_rank": 40,
-          "raa": 4.93
+          "raa": 5.2
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "USC Upstate",
           "conference": "Big South Conference",
-          "overall_rank": 147,
-          "raa": 0.11
+          "overall_rank": 144,
+          "raa": 0.16
         }
       ]
     },
@@ -362,31 +362,31 @@
           "team": "Texas A&M",
           "conference": "Southeastern Conference",
           "overall_rank": 10,
-          "raa": 8.74
+          "raa": 9.19
         },
         {
           "seed_in_pod": 2,
           "national_seed": 23,
-          "team": "South Carolina",
-          "conference": "Southeastern Conference",
+          "team": "Washington",
+          "conference": "Big Ten Conference",
           "overall_rank": 23,
-          "raa": 6.88
+          "raa": 7.19
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Jacksonville St.",
-          "conference": "Conference USA",
-          "overall_rank": 46,
-          "raa": 4.29
+          "team": "Texas St.",
+          "conference": "Sun Belt Conference",
+          "overall_rank": 47,
+          "raa": 4.49
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "Fordham",
           "conference": "Atlantic 10 Conference",
-          "overall_rank": 162,
-          "raa": -0.35
+          "overall_rank": 163,
+          "raa": -0.41
         }
       ]
     },
@@ -401,85 +401,85 @@
           "team": "Tennessee",
           "conference": "Southeastern Conference",
           "overall_rank": 11,
-          "raa": 8.69
+          "raa": 9.13
         },
         {
           "seed_in_pod": 2,
           "national_seed": 22,
-          "team": "UCF",
-          "conference": "Big 12 Conference",
+          "team": "South Carolina",
+          "conference": "Southeastern Conference",
           "overall_rank": 22,
-          "raa": 6.89
+          "raa": 7.24
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Texas St.",
-          "conference": "Sun Belt Conference",
-          "overall_rank": 47,
-          "raa": 4.27
+          "team": "Jacksonville St.",
+          "conference": "Conference USA",
+          "overall_rank": 48,
+          "raa": 4.45
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "Robert Morris",
           "conference": "Horizon League",
-          "overall_rank": 165,
-          "raa": -0.59
+          "overall_rank": 168,
+          "raa": -0.74
         }
       ]
     },
     {
       "regional_number": 12,
-      "host_team": "LSU",
+      "host_team": "Florida St.",
       "host_rank": 12,
       "teams": [
         {
           "seed_in_pod": 1,
           "national_seed": 12,
-          "team": "LSU",
-          "conference": "Southeastern Conference",
+          "team": "Florida St.",
+          "conference": "Atlantic Coast Conference",
           "overall_rank": 12,
-          "raa": 8.55
+          "raa": 9.01
         },
         {
           "seed_in_pod": 2,
           "national_seed": 21,
-          "team": "Washington",
-          "conference": "Big Ten Conference",
+          "team": "UCF",
+          "conference": "Big 12 Conference",
           "overall_rank": 21,
-          "raa": 6.92
+          "raa": 7.34
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
           "team": "Cal.",
           "conference": "Big West Conference",
-          "overall_rank": 51,
-          "raa": 3.98
+          "overall_rank": 50,
+          "raa": 4.24
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "Prairie View",
           "conference": "Southwestern Athletic Conference",
-          "overall_rank": 173,
-          "raa": -0.83
+          "overall_rank": 172,
+          "raa": -0.91
         }
       ]
     },
     {
       "regional_number": 13,
-      "host_team": "Florida St.",
+      "host_team": "LSU",
       "host_rank": 13,
       "teams": [
         {
           "seed_in_pod": 1,
           "national_seed": 13,
-          "team": "Florida St.",
-          "conference": "Atlantic Coast Conference",
+          "team": "LSU",
+          "conference": "Southeastern Conference",
           "overall_rank": 13,
-          "raa": 8.4
+          "raa": 8.98
         },
         {
           "seed_in_pod": 2,
@@ -487,7 +487,7 @@
           "team": "Arizona St.",
           "conference": "Big 12 Conference",
           "overall_rank": 20,
-          "raa": 7.19
+          "raa": 7.66
         },
         {
           "seed_in_pod": 3,
@@ -495,15 +495,15 @@
           "team": "Boston U.",
           "conference": "Patriot League",
           "overall_rank": 58,
-          "raa": 3.43
+          "raa": 3.61
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "Marist",
           "conference": "Metro Atlantic Athletic Conference",
-          "overall_rank": 191,
-          "raa": -1.49
+          "overall_rank": 189,
+          "raa": -1.54
         }
       ]
     },
@@ -518,46 +518,46 @@
           "team": "Virginia Tech",
           "conference": "Atlantic Coast Conference",
           "overall_rank": 14,
-          "raa": 7.87
+          "raa": 8.23
         },
         {
           "seed_in_pod": 2,
           "national_seed": 19,
-          "team": "Arizona",
-          "conference": "Big 12 Conference",
+          "team": "Duke",
+          "conference": "Atlantic Coast Conference",
           "overall_rank": 19,
-          "raa": 7.47
+          "raa": 7.68
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Belmont",
-          "conference": "Missouri Valley Conference",
+          "team": "Saint Mary's",
+          "conference": "West Coast Conference",
           "overall_rank": 61,
-          "raa": 3.2
+          "raa": 3.37
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
           "team": "Howard",
           "conference": "Mid-Eastern Athletic Conference",
-          "overall_rank": 200,
-          "raa": -1.65
+          "overall_rank": 201,
+          "raa": -1.84
         }
       ]
     },
     {
       "regional_number": 15,
-      "host_team": "Oklahoma St.",
+      "host_team": "Arizona",
       "host_rank": 15,
       "teams": [
         {
           "seed_in_pod": 1,
           "national_seed": 15,
-          "team": "Oklahoma St.",
+          "team": "Arizona",
           "conference": "Big 12 Conference",
           "overall_rank": 15,
-          "raa": 7.58
+          "raa": 8.15
         },
         {
           "seed_in_pod": 2,
@@ -565,38 +565,38 @@
           "team": "Mississippi St.",
           "conference": "Southeastern Conference",
           "overall_rank": 18,
-          "raa": 7.47
+          "raa": 7.83
         },
         {
           "seed_in_pod": 3,
           "national_seed": null,
-          "team": "Saint Mary's",
-          "conference": "West Coast Conference",
-          "overall_rank": 63,
-          "raa": 3.11
+          "team": "Belmont",
+          "conference": "Missouri Valley Conference",
+          "overall_rank": 64,
+          "raa": 3.22
         },
         {
           "seed_in_pod": 4,
           "national_seed": null,
-          "team": "Binghamton",
+          "team": "Bryant",
           "conference": "America East Conference",
-          "overall_rank": 205,
-          "raa": -1.88
+          "overall_rank": 209,
+          "raa": -2.08
         }
       ]
     },
     {
       "regional_number": 16,
-      "host_team": "Duke",
+      "host_team": "Oklahoma St.",
       "host_rank": 16,
       "teams": [
         {
           "seed_in_pod": 1,
           "national_seed": 16,
-          "team": "Duke",
-          "conference": "Atlantic Coast Conference",
+          "team": "Oklahoma St.",
+          "conference": "Big 12 Conference",
           "overall_rank": 16,
-          "raa": 7.49
+          "raa": 7.99
         },
         {
           "seed_in_pod": 2,
@@ -604,7 +604,7 @@
           "team": "Oregon",
           "conference": "Big Ten Conference",
           "overall_rank": 17,
-          "raa": 7.48
+          "raa": 7.88
         },
         {
           "seed_in_pod": 3,
@@ -612,7 +612,7 @@
           "team": "Central Ark.",
           "conference": "ASUN Conference",
           "overall_rank": 67,
-          "raa": 2.71
+          "raa": 2.88
         },
         {
           "seed_in_pod": 4,
@@ -620,7 +620,7 @@
           "team": "LIU",
           "conference": "Northeast Conference",
           "overall_rank": 258,
-          "raa": -3.53
+          "raa": -3.76
         }
       ]
     }
@@ -630,77 +630,77 @@
       "team": "Utah",
       "conference": "Big 12 Conference",
       "rank": 36,
-      "raa": 5.18
-    },
-    {
-      "team": "Penn St.",
-      "conference": "Big Ten Conference",
-      "rank": 38,
-      "raa": 4.99
-    },
-    {
-      "team": "Louisville",
-      "conference": "Atlantic Coast Conference",
-      "rank": 39,
-      "raa": 4.97
+      "raa": 5.43
     },
     {
       "team": "North Carolina",
       "conference": "Atlantic Coast Conference",
+      "rank": 37,
+      "raa": 5.28
+    },
+    {
+      "team": "Auburn",
+      "conference": "Southeastern Conference",
+      "rank": 38,
+      "raa": 5.23
+    },
+    {
+      "team": "Penn St.",
+      "conference": "Big Ten Conference",
       "rank": 40,
-      "raa": 4.93
+      "raa": 5.2
     }
   ],
   "first_four_out": [
     {
-      "team": "Auburn",
-      "conference": "Southeastern Conference",
+      "team": "Louisville",
+      "conference": "Atlantic Coast Conference",
       "rank": 41,
-      "raa": 4.89
+      "raa": 5.14
     },
     {
       "team": "Nevada",
       "conference": "Mountain West Conference",
       "rank": 42,
-      "raa": 4.82
+      "raa": 5.0
     },
     {
       "team": "Purdue",
       "conference": "Big Ten Conference",
       "rank": 43,
-      "raa": 4.61
+      "raa": 4.71
     },
     {
-      "team": "Wichita St.",
+      "team": "Fla. Atlantic",
       "conference": "American Athletic Conference",
       "rank": 45,
-      "raa": 4.36
+      "raa": 4.65
     }
   ],
   "next_four_out": [
     {
       "team": "Baylor",
       "conference": "Big 12 Conference",
-      "rank": 48,
-      "raa": 4.21
+      "rank": 46,
+      "raa": 4.54
     },
     {
       "team": "Iowa St.",
       "conference": "Big 12 Conference",
       "rank": 49,
-      "raa": 4.13
+      "raa": 4.28
     },
     {
       "team": "Ohio St.",
       "conference": "Big Ten Conference",
-      "rank": 50,
-      "raa": 4.04
+      "rank": 51,
+      "raa": 4.23
     },
     {
-      "team": "St. Thomas",
-      "conference": "Summit League",
+      "team": "Louisiana",
+      "conference": "Sun Belt Conference",
       "rank": 52,
-      "raa": 3.88
+      "raa": 4.07
     }
   ]
 }
