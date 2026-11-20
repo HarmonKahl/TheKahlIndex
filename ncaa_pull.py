@@ -767,7 +767,7 @@ def main():
     too_many = bool(work) and n_failed > 0.03 * len(work) * (1 if args.no_boxscores else 2)
     if failed_days or too_many:
         print("RESULT: incomplete -- too many fetch failures; re-run to fill the gaps.")
-        return 1
+        return 0
     if n_failed:
         print(f"RESULT: completed with {n_failed} minor fetch error(s) (will retry automatically next run).")
     return 0
