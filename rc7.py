@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-rc7.py -- Unified metrics generator for the Kahl Index & RC7 Leaderboards.
+rc7.py -- Unified metrics generator for the Kahl Index, Hitter RC7 & Pitcher ERA_adj.
 
 Reads:
     team_games_season.csv
@@ -11,6 +11,8 @@ Writes:
     bracketology.json
     players.json
     qualified_players.json
+    pitchers.json
+    qualified_pitchers.json
 
 Usage:
     python rc7.py
@@ -545,6 +547,9 @@ def alnum(s):
 # ----------------------------------------------------------------------------
 def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
     team_df = team_df[(team_df["team"] != "TBA") & (team_df["opponent"] != "TBA")].copy()
+    team_df["innings_batted"] = pd.to_numeric(team_df["innings_batted"], errors="coerce").fillna(7.0)
+    team_df["innings_fielded"] = pd.to_numeric(team_df["innings_fielded"], errors="coerce").fillna(7.0)
+
     raw_counts = team_df.groupby("team")["opponent"].count()
     valid_teams = set(raw_counts[raw_counts >= min_games].index)
 
@@ -730,7 +735,7 @@ def generate_bracketology(final_df, output_path="bracketology.json"):
 
 
 # ----------------------------------------------------------------------------
-# 3. Player Resolution & RC7 Leaderboard
+# 3. Player Resolution & RC7 / Pitching Leaderboards
 # ----------------------------------------------------------------------------
 def _surname(name):
     toks = str(name).replace(",", " ").split()
@@ -800,12 +805,15 @@ def resolve_players(df):
 
 
 def team_context(t):
-    """Games played and runs-allowed-per-7 for every team, from real innings."""
+    """Games played, runs-scored-per-7, and runs-allowed-per-7 for every team, from real innings."""
     agg = t.groupby("team").agg(
         games=("game_id", "nunique"),
+        runs_for=("runs_for", "sum"),
+        innings_batted=("innings_batted", "sum"),
         runs_against=("runs_against", "sum"),
         innings_fielded=("innings_fielded", "sum"),
     )
+    agg["r7"] = agg["runs_for"] / agg["innings_batted"] * 7
     agg["ra7"] = agg["runs_against"] / agg["innings_fielded"] * 7
     return agg
 
@@ -907,6 +915,115 @@ def calculate_rc7(p, t, out_all="players.json", out_qualified="qualified_players
     return out
 
 
+def calculate_pitchers(p, t, out_all="pitchers.json", out_qualified="qualified_pitchers.json",
+                       min_qualified_ip=35.0, ip_per_team_game=1.0, quiet=False):
+    if "ip" not in p.columns:
+        if not quiet:
+            print("No pitching 'ip' column found in player_games_season.csv yet -- skipping pitchers.")
+        return []
+
+    p = resolve_players(p)
+    pcols = ["ip", "pitching_runs", "earned_runs", "hits_allowed", "walks_allowed", "strikeouts_pitched"]
+    for c in pcols:
+        if c in p.columns:
+            p[c] = pd.to_numeric(p[c], errors="coerce").fillna(0.0)
+        else:
+            p[c] = 0.0
+
+    # Keep only rows where the player actually pitched
+    pitch_df = p[p["ip"] > 0].copy()
+    if pitch_df.empty:
+        with open(out_all, "w", encoding="utf-8") as f:
+            json.dump([], f)
+        with open(out_qualified, "w", encoding="utf-8") as f:
+            json.dump([], f)
+        if not quiet:
+            print("0 pitchers with IP > 0 found -- wrote empty pitching JSONs.")
+        return []
+
+    ctx = team_context(t)
+    d1_r7 = (ctx["runs_for"].sum() / ctx["innings_batted"].sum() * 7) if len(ctx) else 4.5
+
+    # Opponent Offensive Adjustment Factor (OOAF), weighted by innings pitched
+    pitch_df["opp_r7"] = pitch_df["opponent"].map(ctx["r7"]).fillna(d1_r7)
+    pitch_df["weighted_opp_r7"] = pitch_df["opp_r7"] * pitch_df["ip"]
+
+    g = pitch_df.groupby("player_id")
+    season = pd.DataFrame({
+        "player_name": g["player_name"].first(),
+        "team": g["team"].first(),
+        "appearances": g.size(),
+        "ip": g["ip"].sum(),
+        "runs_allowed": g["pitching_runs"].sum(),
+        "earned_runs": g["earned_runs"].sum(),
+        "hits_allowed": g["hits_allowed"].sum(),
+        "walks_allowed": g["walks_allowed"].sum(),
+        "strikeouts": g["strikeouts_pitched"].sum(),
+        "weighted_opp_r7": g["weighted_opp_r7"].sum(),
+    }).reset_index()
+
+    out = []
+    for r in season.itertuples():
+        ip = float(r.ip)
+        if ip <= 0:
+            continue
+        er = float(r.earned_runs)
+        ra = float(r.runs_allowed)
+        ha = float(r.hits_allowed)
+        bb = float(r.walks_allowed)
+        so = float(r.strikeouts)
+
+        era_raw = (er / ip) * 7.0
+        ra7_raw = (ra / ip) * 7.0
+        whip = (bb + ha) / ip
+        k7 = (so / ip) * 7.0
+
+        avg_opp_r7 = r.weighted_opp_r7 / ip
+        ooaf = (d1_r7 / avg_opp_r7) if avg_opp_r7 > 0 else 1.0
+        era_adj = era_raw * ooaf
+
+        team_games = int(ctx["games"].get(r.team, r.appearances))
+        qualified = bool(ip >= team_games * ip_per_team_game and ip >= min_qualified_ip)
+
+        out.append({
+            "player_name": r.player_name,
+            "name": r.player_name,
+            "team": r.team,
+            "appearances": int(r.appearances),
+            "IP": round(ip, 1),
+            "ER": int(er),
+            "R": int(ra),
+            "H": int(ha),
+            "BB": int(bb),
+            "SO": int(so),
+            "WHIP": round(whip, 2),
+            "K7": round(k7, 2),
+            "ERA_raw": round(era_raw, 2),
+            "OOAF": round(ooaf, 2),
+            "ERA_adj": round(era_adj, 2),
+            "RA7_adj": round(ra7_raw * ooaf, 2),
+            "qualified": qualified,
+        })
+
+    # Lower ERA_adj is better
+    out.sort(key=lambda x: (x["ERA_adj"], -x["IP"]))
+    for i, row in enumerate(out, 1):
+        row["rank"] = i
+
+    qual = [dict(x) for x in out if x["qualified"]]
+    for i, row in enumerate(qual, 1):
+        row["rank"] = i
+
+    with open(out_all, "w", encoding="utf-8") as f:
+        json.dump(out, f, indent=2)
+    with open(out_qualified, "w", encoding="utf-8") as f:
+        json.dump(qual, f, indent=2)
+
+    if not quiet:
+        print(f"{len(out)} pitchers -> {out_all};  {len(qual)} qualified -> {out_qualified}")
+    return out
+
+
 # ----------------------------------------------------------------------------
 # 4. NCAA Official Leaderboard Audit
 # ----------------------------------------------------------------------------
@@ -960,7 +1077,7 @@ def audit(players, api="https://ncaa-api.henrygd.me", season=None):
 # 5. Main Entrypoint
 # ----------------------------------------------------------------------------
 def main():
-    ap = argparse.ArgumentParser(description="Generate Kahl Index ratings, bracketology, and RC7 leaderboards.")
+    ap = argparse.ArgumentParser(description="Generate Kahl Index ratings, bracketology, and RC7/ERA leaderboards.")
     ap.add_argument("--data-dir", default=".")
     ap.add_argument("--out-dir", default=None)
     ap.add_argument("--audit", action="store_true")
@@ -989,11 +1106,18 @@ def main():
     save_ratings_json(final_ratings, os.path.join(out_dir, "ratings.json"))
     generate_bracketology(final_ratings, os.path.join(out_dir, "bracketology.json"))
 
-    # 2. Generate RC7 Leaderboards
+    # 2. Generate Hitter RC7 Leaderboards
     players = calculate_rc7(
         p_df, t_df,
         out_all=os.path.join(out_dir, "players.json"),
         out_qualified=os.path.join(out_dir, "qualified_players.json"),
+    )
+
+    # 3. Generate Pitcher Opponent-Adjusted ERA Leaderboards
+    calculate_pitchers(
+        p_df, t_df,
+        out_all=os.path.join(out_dir, "pitchers.json"),
+        out_qualified=os.path.join(out_dir, "qualified_pitchers.json"),
     )
 
     if a.audit:
