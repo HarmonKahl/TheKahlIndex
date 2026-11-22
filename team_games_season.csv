@@ -13411,8 +13411,8 @@ date,game_id,team,opponent,role,runs_for,runs_against,win,innings_batted,innings
 2026-04-20,6545349,New Haven,Mercyhurst,home,8,2,1,7.0,7.0
 2026-04-20,6546577,Western Ill.,Tennessee St.,away,9,20,0,5.0,5.0
 2026-04-20,6546577,Tennessee St.,Western Ill.,home,20,9,1,5.0,5.0
-2026-04-20,6551053,Kansas City,North Dakota St.,away,3,5,0,7.0,7.0
-2026-04-20,6551053,North Dakota St.,Kansas City,home,5,3,1,7.0,7.0
+2026-04-20,6551053,Kansas City,North Dakota St.,away,3,5,0,7.0,6.0
+2026-04-20,6551053,North Dakota St.,Kansas City,home,5,3,1,6.0,7.0
 2026-04-20,6552502,St. Thomas (MN),Green Bay,away,10,4,1,7.0,7.0
 2026-04-20,6552502,Green Bay,St. Thomas (MN),home,4,10,0,7.0,7.0
 2026-04-20,6552505,St. Thomas (MN),Green Bay,away,10,7,1,7.0,7.0

@@ -6750,7 +6750,7 @@ date,game_id,away_team,away_score,home_team,home_score,state,status,away_innings
 2026-04-19,6588360,Manhattan,19,Merrimack,6,final,,6.0,6.0,linescore,ok,ok,
 2026-04-20,6545349,Mercyhurst,2,New Haven,8,final,,7.0,7.0,linescore,ok,ok,
 2026-04-20,6546577,Western Ill.,9,Tennessee St.,20,final,,5.0,5.0,linescore,ok,ok,
-2026-04-20,6551053,Kansas City,3,North Dakota St.,5,final,,7.0,7.0,linescore,ok,ok,
+2026-04-20,6551053,Kansas City,3,North Dakota St.,5,final,,7,6,boxscore,ok,ok,
 2026-04-20,6552502,St. Thomas (MN),10,Green Bay,4,final,,7.0,7.0,linescore,ok,ok,
 2026-04-20,6552505,St. Thomas (MN),10,Green Bay,7,final,,7.0,7.0,linescore,ok,ok,
 2026-04-20,6552640,Nevada,6,Northern Colo.,1,final,,7.0,7.0,linescore,ok,ok,
@@ -6816,7 +6816,7 @@ date,game_id,away_team,away_score,home_team,home_score,state,status,away_innings
 2026-04-21,6554513,Charlotte,0,Duke,8,final,,5.0,5.0,linescore,ok,ok,
 2026-04-21,6554632,Georgia St.,4,Kennesaw St.,0,final,,7.0,7.0,linescore,ok,ok,
 2026-04-21,6554858,Fairfield,9,Manhattan,1,final,,6.0,6.0,linescore,ok,ok,
-2026-04-21,6554859,Fairfield,6,Manhattan,2,final,,7.0,7.0,linescore,ok,ok,
+2026-04-21,6554859,Fairfield,6,Manhattan,2,final,,7.0,7.0,linescore,error,,
 2026-04-21,6554906,Samford,14,West Ga.,6,final,,7.0,7.0,linescore,ok,ok,
 2026-04-21,6555084,Evansville,8,Northern Ky.,3,final,,7.0,7.0,linescore,ok,ok,
 2026-04-21,6555214,Troy,9,Florida A&M,0,final,,5.0,5.0,linescore,ok,ok,
@@ -8172,7 +8172,7 @@ date,game_id,away_team,away_score,home_team,home_score,state,status,away_innings
 2026-05-17,6599892,Texas,7,Baylor,0,final,,7.0,7.0,linescore,ok,ok,
 2026-05-17,6603137,Duke,8,Arizona,6,final,,7.0,7.0,,,,6599822
 2026-05-17,6603165,Arizona,4,Duke,9,final,,6.0,7.0,,,,6599823
-2026-05-21,6599912,Georgia,1,Tennessee,3,final,,7.0,6.0,linescore,ok,ok,
+2026-05-21,6599912,Georgia,1,Tennessee,3,final,,7.0,6.0,linescore,error,,
 2026-05-21,6603486,Oklahoma St.,1,Nebraska,8,final,,7.0,7.0,linescore,ok,ok,
 2026-05-22,6599894,LSU,0,Alabama,7,final,,7.0,6.0,linescore,ok,ok,
 2026-05-22,6599897,UCF,1,UCLA,9,final,,5.0,5.0,linescore,ok,ok,

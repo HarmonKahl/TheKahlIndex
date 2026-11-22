@@ -27,7 +27,7 @@
           "team": "Clemson",
           "conference": "Atlantic Coast Conference",
           "overall_rank": 33,
-          "raa": 5.65
+          "raa": 5.64
         },
         {
           "seed_in_pod": 4,
@@ -66,7 +66,7 @@
           "team": "Virginia",
           "conference": "Atlantic Coast Conference",
           "overall_rank": 34,
-          "raa": 5.58
+          "raa": 5.57
         },
         {
           "seed_in_pod": 4,
@@ -128,7 +128,7 @@
           "team": "Arkansas",
           "conference": "Southeastern Conference",
           "overall_rank": 4,
-          "raa": 11.66
+          "raa": 11.55
         },
         {
           "seed_in_pod": 2,
@@ -167,7 +167,7 @@
           "team": "Texas",
           "conference": "Southeastern Conference",
           "overall_rank": 5,
-          "raa": 11.06
+          "raa": 11.05
         },
         {
           "seed_in_pod": 2,
@@ -175,7 +175,7 @@
           "team": "Omaha",
           "conference": "Summit League",
           "overall_rank": 28,
-          "raa": 6.03
+          "raa": 6.02
         },
         {
           "seed_in_pod": 3,
@@ -214,7 +214,7 @@
           "team": "Northwestern",
           "conference": "Big Ten Conference",
           "overall_rank": 27,
-          "raa": 6.24
+          "raa": 6.23
         },
         {
           "seed_in_pod": 3,
@@ -222,7 +222,7 @@
           "team": "Auburn",
           "conference": "Southeastern Conference",
           "overall_rank": 38,
-          "raa": 5.23
+          "raa": 5.22
         },
         {
           "seed_in_pod": 4,
@@ -245,7 +245,7 @@
           "team": "Alabama",
           "conference": "Southeastern Conference",
           "overall_rank": 7,
-          "raa": 10.34
+          "raa": 10.33
         },
         {
           "seed_in_pod": 2,
@@ -269,7 +269,7 @@
           "team": "Princeton",
           "conference": "Ivy League",
           "overall_rank": 127,
-          "raa": 0.97
+          "raa": 0.98
         }
       ]
     },
@@ -284,7 +284,7 @@
           "team": "Florida",
           "conference": "Southeastern Conference",
           "overall_rank": 8,
-          "raa": 10.34
+          "raa": 10.33
         },
         {
           "seed_in_pod": 2,
@@ -323,7 +323,7 @@
           "team": "Georgia",
           "conference": "Southeastern Conference",
           "overall_rank": 9,
-          "raa": 9.5
+          "raa": 9.49
         },
         {
           "seed_in_pod": 2,
@@ -370,7 +370,7 @@
           "team": "Washington",
           "conference": "Big Ten Conference",
           "overall_rank": 23,
-          "raa": 7.19
+          "raa": 7.18
         },
         {
           "seed_in_pod": 3,
@@ -378,7 +378,7 @@
           "team": "Texas St.",
           "conference": "Sun Belt Conference",
           "overall_rank": 47,
-          "raa": 4.49
+          "raa": 4.48
         },
         {
           "seed_in_pod": 4,
@@ -386,7 +386,7 @@
           "team": "Fordham",
           "conference": "Atlantic 10 Conference",
           "overall_rank": 163,
-          "raa": -0.41
+          "raa": -0.42
         }
       ]
     },
@@ -401,7 +401,7 @@
           "team": "Tennessee",
           "conference": "Southeastern Conference",
           "overall_rank": 11,
-          "raa": 9.13
+          "raa": 9.12
         },
         {
           "seed_in_pod": 2,
@@ -526,7 +526,7 @@
           "team": "Duke",
           "conference": "Atlantic Coast Conference",
           "overall_rank": 19,
-          "raa": 7.68
+          "raa": 7.67
         },
         {
           "seed_in_pod": 3,
@@ -542,7 +542,7 @@
           "team": "Howard",
           "conference": "Mid-Eastern Athletic Conference",
           "overall_rank": 201,
-          "raa": -1.84
+          "raa": -1.83
         }
       ]
     },
@@ -604,7 +604,7 @@
           "team": "Oregon",
           "conference": "Big Ten Conference",
           "overall_rank": 17,
-          "raa": 7.88
+          "raa": 7.87
         },
         {
           "seed_in_pod": 3,
@@ -642,7 +642,7 @@
       "team": "Auburn",
       "conference": "Southeastern Conference",
       "rank": 38,
-      "raa": 5.23
+      "raa": 5.22
     },
     {
       "team": "Penn St.",
@@ -668,7 +668,7 @@
       "team": "Purdue",
       "conference": "Big Ten Conference",
       "rank": 43,
-      "raa": 4.71
+      "raa": 4.72
     },
     {
       "team": "Fla. Atlantic",
@@ -682,7 +682,7 @@
       "team": "Baylor",
       "conference": "Big 12 Conference",
       "rank": 46,
-      "raa": 4.54
+      "raa": 4.53
     },
     {
       "team": "Iowa St.",
