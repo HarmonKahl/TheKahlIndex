@@ -528,28 +528,6 @@
     "rank": 24
   },
   {
-    "player_name": "Sarah Gordon",
-    "name": "Sarah Gordon",
-    "team": "Georgia",
-    "PA": 192,
-    "HR": 13,
-    "pitching_games": 0,
-    "RC7_raw": 13.94,
-    "OPAF": 1.32,
-    "RC7_adj": 18.44,
-    "ab": 170,
-    "hits": 71,
-    "doubles": 18,
-    "triples": 1,
-    "tb": 130,
-    "walks": 22,
-    "qualified": true,
-    "rc": 65.74,
-    "rc7": 13.94,
-    "rc7_adj": 18.44,
-    "rank": 25
-  },
-  {
     "player_name": "Rylee Slimp",
     "name": "Rylee Slimp",
     "team": "UCLA",
@@ -569,6 +547,28 @@
     "rc": 86.47,
     "rc7": 16.07,
     "rc7_adj": 18.33,
+    "rank": 25
+  },
+  {
+    "player_name": "Sarah Gordon",
+    "name": "Sarah Gordon",
+    "team": "Georgia",
+    "PA": 195,
+    "HR": 13,
+    "pitching_games": 0,
+    "RC7_raw": 13.7,
+    "OPAF": 1.33,
+    "RC7_adj": 18.27,
+    "ab": 173,
+    "hits": 72,
+    "doubles": 18,
+    "triples": 1,
+    "tb": 131,
+    "walks": 22,
+    "qualified": true,
+    "rc": 65.91,
+    "rc7": 13.7,
+    "rc7_adj": 18.27,
     "rank": 26
   },
   {
@@ -1430,28 +1430,6 @@
     "rank": 65
   },
   {
-    "player_name": "Jaydyn Goodwin",
-    "name": "Jaydyn Goodwin",
-    "team": "Georgia",
-    "PA": 202,
-    "HR": 12,
-    "pitching_games": 0,
-    "RC7_raw": 11.39,
-    "OPAF": 1.3,
-    "RC7_adj": 14.81,
-    "ab": 190,
-    "hits": 77,
-    "doubles": 17,
-    "triples": 3,
-    "tb": 136,
-    "walks": 12,
-    "qualified": true,
-    "rc": 61.3,
-    "rc7": 11.39,
-    "rc7_adj": 14.81,
-    "rank": 66
-  },
-  {
     "player_name": "Jordy Frahm",
     "name": "Jordy Frahm",
     "team": "Nebraska",
@@ -1471,7 +1449,7 @@
     "rc": 70.12,
     "rc7": 12.92,
     "rc7_adj": 14.79,
-    "rank": 67
+    "rank": 66
   },
   {
     "player_name": "Lafulafu Malepeai",
@@ -1493,7 +1471,7 @@
     "rc": 64.1,
     "rc7": 14.96,
     "rc7_adj": 14.73,
-    "rank": 68
+    "rank": 67
   },
   {
     "player_name": "Addie Osborne",
@@ -1515,7 +1493,7 @@
     "rc": 54.54,
     "rc7": 13.64,
     "rc7_adj": 14.71,
-    "rank": 69
+    "rank": 68
   },
   {
     "player_name": "Jaeya Butler",
@@ -1537,6 +1515,28 @@
     "rc": 70.28,
     "rc7": 13.67,
     "rc7_adj": 14.57,
+    "rank": 69
+  },
+  {
+    "player_name": "Jaydyn Goodwin",
+    "name": "Jaydyn Goodwin",
+    "team": "Georgia",
+    "PA": 206,
+    "HR": 12,
+    "pitching_games": 0,
+    "RC7_raw": 11.08,
+    "OPAF": 1.31,
+    "RC7_adj": 14.56,
+    "ab": 194,
+    "hits": 78,
+    "doubles": 17,
+    "triples": 3,
+    "tb": 137,
+    "walks": 12,
+    "qualified": true,
+    "rc": 61.22,
+    "rc7": 11.08,
+    "rc7_adj": 14.56,
     "rank": 70
   },
   {
@@ -1650,28 +1650,6 @@
     "rank": 75
   },
   {
-    "player_name": "Tyler Ellison",
-    "name": "Tyler Ellison",
-    "team": "Georgia",
-    "PA": 195,
-    "HR": 9,
-    "pitching_games": 0,
-    "RC7_raw": 11.03,
-    "OPAF": 1.3,
-    "RC7_adj": 14.33,
-    "ab": 158,
-    "hits": 59,
-    "doubles": 8,
-    "triples": 1,
-    "tb": 96,
-    "walks": 37,
-    "qualified": true,
-    "rc": 52.0,
-    "rc7": 11.03,
-    "rc7_adj": 14.33,
-    "rank": 76
-  },
-  {
     "player_name": "Brinli Bain",
     "name": "Brinli Bain",
     "team": "Arkansas",
@@ -1691,7 +1669,7 @@
     "rc": 49.8,
     "rc7": 11.01,
     "rc7_adj": 14.32,
-    "rank": 77
+    "rank": 76
   },
   {
     "player_name": "Georgia Hood",
@@ -1713,7 +1691,7 @@
     "rc": 62.2,
     "rc7": 12.44,
     "rc7_adj": 14.29,
-    "rank": 78
+    "rank": 77
   },
   {
     "player_name": "Reagan Bartholomew",
@@ -1735,7 +1713,7 @@
     "rc": 62.93,
     "rc7": 14.21,
     "rc7_adj": 14.21,
-    "rank": 79
+    "rank": 78
   },
   {
     "player_name": "Aly VanBrandt",
@@ -1757,7 +1735,7 @@
     "rc": 77.38,
     "rc7": 14.25,
     "rc7_adj": 14.19,
-    "rank": 80
+    "rank": 79
   },
   {
     "player_name": "Anna Moore",
@@ -1779,7 +1757,7 @@
     "rc": 58.94,
     "rc7": 13.91,
     "rc7_adj": 14.14,
-    "rank": 81
+    "rank": 80
   },
   {
     "player_name": "Avery Parker",
@@ -1801,7 +1779,7 @@
     "rc": 65.5,
     "rc7": 14.04,
     "rc7_adj": 14.08,
-    "rank": 82
+    "rank": 81
   },
   {
     "player_name": "Madison Conley",
@@ -1823,7 +1801,7 @@
     "rc": 62.7,
     "rc7": 14.47,
     "rc7_adj": 14.06,
-    "rank": 83
+    "rank": 82
   },
   {
     "player_name": "Cameron Dunn",
@@ -1845,7 +1823,7 @@
     "rc": 59.77,
     "rc7": 14.77,
     "rc7_adj": 14.05,
-    "rank": 84
+    "rank": 83
   },
   {
     "player_name": "Tianna Bell",
@@ -1867,7 +1845,7 @@
     "rc": 57.65,
     "rc7": 10.81,
     "rc7_adj": 14.02,
-    "rank": 85
+    "rank": 84
   },
   {
     "player_name": "Kyra Chan",
@@ -1889,7 +1867,7 @@
     "rc": 57.59,
     "rc7": 13.0,
     "rc7_adj": 13.98,
-    "rank": 86
+    "rank": 85
   },
   {
     "player_name": "Marlie Giles",
@@ -1911,7 +1889,7 @@
     "rc": 43.9,
     "rc7": 10.6,
     "rc7_adj": 13.95,
-    "rank": 87
+    "rank": 86
   },
   {
     "player_name": "Karlie Davison",
@@ -1933,7 +1911,7 @@
     "rc": 43.13,
     "rc7": 10.66,
     "rc7_adj": 13.89,
-    "rank": 88
+    "rank": 87
   },
   {
     "player_name": "Sofia Zielinski",
@@ -1955,7 +1933,7 @@
     "rc": 52.31,
     "rc7": 15.92,
     "rc7_adj": 13.86,
-    "rank": 89
+    "rank": 88
   },
   {
     "player_name": "Emma Raye",
@@ -1977,6 +1955,28 @@
     "rc": 54.66,
     "rc7": 12.75,
     "rc7_adj": 13.77,
+    "rank": 89
+  },
+  {
+    "player_name": "Emily Digby",
+    "name": "Emily Digby",
+    "team": "Georgia",
+    "PA": 150,
+    "HR": 12,
+    "pitching_games": 0,
+    "RC7_raw": 10.51,
+    "OPAF": 1.31,
+    "RC7_adj": 13.76,
+    "ab": 136,
+    "hits": 49,
+    "doubles": 9,
+    "triples": 3,
+    "tb": 100,
+    "walks": 14,
+    "qualified": true,
+    "rc": 43.53,
+    "rc7": 10.51,
+    "rc7_adj": 13.76,
     "rank": 90
   },
   {
@@ -2002,6 +2002,28 @@
     "rank": 91
   },
   {
+    "player_name": "Tyler Ellison",
+    "name": "Tyler Ellison",
+    "team": "Georgia",
+    "PA": 199,
+    "HR": 9,
+    "pitching_games": 0,
+    "RC7_raw": 10.39,
+    "OPAF": 1.31,
+    "RC7_adj": 13.65,
+    "ab": 162,
+    "hits": 59,
+    "doubles": 8,
+    "triples": 1,
+    "tb": 96,
+    "walks": 37,
+    "qualified": true,
+    "rc": 50.95,
+    "rc7": 10.39,
+    "rc7_adj": 13.65,
+    "rank": 92
+  },
+  {
     "player_name": "Maddie Hartley",
     "name": "Maddie Hartley",
     "team": "Houston",
@@ -2021,7 +2043,7 @@
     "rc": 59.45,
     "rc7": 13.14,
     "rc7_adj": 13.65,
-    "rank": 92
+    "rank": 93
   },
   {
     "player_name": "Kinzey Woody",
@@ -2043,7 +2065,7 @@
     "rc": 55.77,
     "rc7": 12.87,
     "rc7_adj": 13.59,
-    "rank": 93
+    "rank": 94
   },
   {
     "player_name": "Cat Petteys",
@@ -2065,7 +2087,7 @@
     "rc": 74.52,
     "rc7": 13.61,
     "rc7_adj": 13.56,
-    "rank": 94
+    "rank": 95
   },
   {
     "player_name": "Allison Oneacre",
@@ -2087,7 +2109,7 @@
     "rc": 66.24,
     "rc7": 14.34,
     "rc7_adj": 13.55,
-    "rank": 95
+    "rank": 96
   },
   {
     "player_name": "D'Auna Jennings",
@@ -2109,7 +2131,7 @@
     "rc": 64.41,
     "rc7": 11.97,
     "rc7_adj": 13.48,
-    "rank": 96
+    "rank": 97
   },
   {
     "player_name": "Kiarra Sells",
@@ -2131,7 +2153,7 @@
     "rc": 52.33,
     "rc7": 10.37,
     "rc7_adj": 13.43,
-    "rank": 97
+    "rank": 98
   },
   {
     "player_name": "Belle Hummel",
@@ -2153,7 +2175,7 @@
     "rc": 71.01,
     "rc7": 14.48,
     "rc7_adj": 13.4,
-    "rank": 98
+    "rank": 99
   },
   {
     "player_name": "Maryn JORDAN",
@@ -2175,7 +2197,7 @@
     "rc": 46.06,
     "rc7": 14.88,
     "rc7_adj": 13.36,
-    "rank": 99
+    "rank": 100
   },
   {
     "player_name": "Ella Boyer",
@@ -2197,7 +2219,7 @@
     "rc": 62.42,
     "rc7": 13.11,
     "rc7_adj": 13.27,
-    "rank": 100
+    "rank": 101
   },
   {
     "player_name": "Mihyia Davis",
@@ -2219,7 +2241,7 @@
     "rc": 80.51,
     "rc7": 13.01,
     "rc7_adj": 13.27,
-    "rank": 101
+    "rank": 102
   },
   {
     "player_name": "Kaitlyn Terry",
@@ -2241,7 +2263,7 @@
     "rc": 67.44,
     "rc7": 12.87,
     "rc7_adj": 13.12,
-    "rank": 102
+    "rank": 103
   },
   {
     "player_name": "Lindsay Henson",
@@ -2263,7 +2285,7 @@
     "rc": 54.93,
     "rc7": 13.11,
     "rc7_adj": 13.1,
-    "rank": 103
+    "rank": 104
   },
   {
     "player_name": "Jena Young",
@@ -2285,7 +2307,7 @@
     "rc": 45.75,
     "rc7": 10.44,
     "rc7_adj": 13.07,
-    "rank": 104
+    "rank": 105
   },
   {
     "player_name": "Amailee Morales",
@@ -2307,28 +2329,6 @@
     "rc": 53.13,
     "rc7": 12.97,
     "rc7_adj": 13.07,
-    "rank": 105
-  },
-  {
-    "player_name": "Emily Digby",
-    "name": "Emily Digby",
-    "team": "Georgia",
-    "PA": 147,
-    "HR": 11,
-    "pitching_games": 0,
-    "RC7_raw": 10.07,
-    "OPAF": 1.3,
-    "RC7_adj": 13.04,
-    "ab": 134,
-    "hits": 48,
-    "doubles": 9,
-    "triples": 3,
-    "tb": 96,
-    "walks": 13,
-    "qualified": true,
-    "rc": 41.24,
-    "rc7": 10.07,
-    "rc7_adj": 13.04,
     "rank": 106
   },
   {
@@ -2772,6 +2772,28 @@
     "rank": 126
   },
   {
+    "player_name": "Keirstin Roose",
+    "name": "Keirstin Roose",
+    "team": "Georgia",
+    "PA": 199,
+    "HR": 16,
+    "pitching_games": 0,
+    "RC7_raw": 9.54,
+    "OPAF": 1.32,
+    "RC7_adj": 12.61,
+    "ab": 181,
+    "hits": 63,
+    "doubles": 14,
+    "triples": 1,
+    "tb": 127,
+    "walks": 18,
+    "qualified": true,
+    "rc": 53.6,
+    "rc7": 9.54,
+    "rc7_adj": 12.61,
+    "rank": 127
+  },
+  {
     "player_name": "Sam Rohwer",
     "name": "Sam Rohwer",
     "team": "Rutgers",
@@ -2791,7 +2813,7 @@
     "rc": 58.75,
     "rc7": 11.75,
     "rc7_adj": 12.59,
-    "rank": 127
+    "rank": 128
   },
   {
     "player_name": "Brianna Stanley",
@@ -2813,7 +2835,7 @@
     "rc": 60.35,
     "rc7": 13.78,
     "rc7_adj": 12.58,
-    "rank": 128
+    "rank": 129
   },
   {
     "player_name": "Shelby Barbee",
@@ -2835,7 +2857,7 @@
     "rc": 48.32,
     "rc7": 11.94,
     "rc7_adj": 12.57,
-    "rank": 129
+    "rank": 130
   },
   {
     "player_name": "Micaela Wark",
@@ -2857,7 +2879,7 @@
     "rc": 52.79,
     "rc7": 10.66,
     "rc7_adj": 12.57,
-    "rank": 130
+    "rank": 131
   },
   {
     "player_name": "Montgomery J",
@@ -2879,7 +2901,7 @@
     "rc": 44.52,
     "rc7": 13.95,
     "rc7_adj": 12.56,
-    "rank": 131
+    "rank": 132
   },
   {
     "player_name": "Jadyn Glab",
@@ -2901,7 +2923,7 @@
     "rc": 51.46,
     "rc7": 11.14,
     "rc7_adj": 12.53,
-    "rank": 132
+    "rank": 133
   },
   {
     "player_name": "Rylee Spindler",
@@ -2923,7 +2945,7 @@
     "rc": 53.18,
     "rc7": 12.14,
     "rc7_adj": 12.47,
-    "rank": 133
+    "rank": 134
   },
   {
     "player_name": "Reina Zermeno",
@@ -2945,7 +2967,7 @@
     "rc": 47.47,
     "rc7": 11.33,
     "rc7_adj": 12.41,
-    "rank": 134
+    "rank": 135
   },
   {
     "player_name": "Giselle Alvarez",
@@ -2967,7 +2989,7 @@
     "rc": 59.44,
     "rc7": 11.05,
     "rc7_adj": 12.37,
-    "rank": 135
+    "rank": 136
   },
   {
     "player_name": "Jasmyn Burns",
@@ -2989,7 +3011,7 @@
     "rc": 55.05,
     "rc7": 11.33,
     "rc7_adj": 12.36,
-    "rank": 136
+    "rank": 137
   },
   {
     "player_name": "Ariel Kowalewski",
@@ -3011,7 +3033,7 @@
     "rc": 49.48,
     "rc7": 10.29,
     "rc7_adj": 12.35,
-    "rank": 137
+    "rank": 138
   },
   {
     "player_name": "Jenissa Conway",
@@ -3033,7 +3055,7 @@
     "rc": 68.45,
     "rc7": 11.78,
     "rc7_adj": 12.29,
-    "rank": 138
+    "rank": 139
   },
   {
     "player_name": "Ella McDowell",
@@ -3055,7 +3077,7 @@
     "rc": 49.77,
     "rc7": 9.5,
     "rc7_adj": 12.27,
-    "rank": 139
+    "rank": 140
   },
   {
     "player_name": "Kylie Aldridge",
@@ -3077,7 +3099,7 @@
     "rc": 58.33,
     "rc7": 12.13,
     "rc7_adj": 12.26,
-    "rank": 140
+    "rank": 141
   },
   {
     "player_name": "Addison Foster",
@@ -3099,7 +3121,7 @@
     "rc": 60.59,
     "rc7": 12.12,
     "rc7_adj": 12.26,
-    "rank": 141
+    "rank": 142
   },
   {
     "player_name": "Addison Lucier",
@@ -3121,7 +3143,7 @@
     "rc": 38.83,
     "rc7": 12.94,
     "rc7_adj": 12.17,
-    "rank": 142
+    "rank": 143
   },
   {
     "player_name": "Atalyia Rijo",
@@ -3143,7 +3165,7 @@
     "rc": 40.13,
     "rc7": 9.36,
     "rc7_adj": 12.15,
-    "rank": 143
+    "rank": 144
   },
   {
     "player_name": "Colby McClinton",
@@ -3165,7 +3187,7 @@
     "rc": 53.75,
     "rc7": 11.88,
     "rc7_adj": 12.14,
-    "rank": 144
+    "rank": 145
   },
   {
     "player_name": "Alyssa Hastings",
@@ -3187,7 +3209,7 @@
     "rc": 41.31,
     "rc7": 9.64,
     "rc7_adj": 12.12,
-    "rank": 145
+    "rank": 146
   },
   {
     "player_name": "Taylor Cruse",
@@ -3209,28 +3231,6 @@
     "rc": 53.7,
     "rc7": 11.16,
     "rc7_adj": 12.09,
-    "rank": 146
-  },
-  {
-    "player_name": "Keirstin Roose",
-    "name": "Keirstin Roose",
-    "team": "Georgia",
-    "PA": 195,
-    "HR": 16,
-    "pitching_games": 0,
-    "RC7_raw": 9.22,
-    "OPAF": 1.31,
-    "RC7_adj": 12.06,
-    "ab": 178,
-    "hits": 61,
-    "doubles": 13,
-    "triples": 1,
-    "tb": 124,
-    "walks": 17,
-    "qualified": true,
-    "rc": 51.37,
-    "rc7": 9.22,
-    "rc7_adj": 12.06,
     "rank": 147
   },
   {
@@ -5082,6 +5082,28 @@
     "rank": 231
   },
   {
+    "player_name": "Sophia Knight",
+    "name": "Sophia Knight",
+    "team": "Tennessee",
+    "PA": 186,
+    "HR": 3,
+    "pitching_games": 0,
+    "RC7_raw": 8.25,
+    "OPAF": 1.29,
+    "RC7_adj": 10.63,
+    "ab": 172,
+    "hits": 68,
+    "doubles": 10,
+    "triples": 1,
+    "tb": 89,
+    "walks": 14,
+    "qualified": true,
+    "rc": 40.84,
+    "rc7": 8.25,
+    "rc7_adj": 10.63,
+    "rank": 232
+  },
+  {
     "player_name": "Julia Renny",
     "name": "Julia Renny",
     "team": "Providence",
@@ -5101,7 +5123,7 @@
     "rc": 42.44,
     "rc7": 11.28,
     "rc7_adj": 10.62,
-    "rank": 232
+    "rank": 233
   },
   {
     "player_name": "Katie Campbell",
@@ -5123,7 +5145,7 @@
     "rc": 51.99,
     "rc7": 10.2,
     "rc7_adj": 10.6,
-    "rank": 233
+    "rank": 234
   },
   {
     "player_name": "Emma Davis",
@@ -5145,7 +5167,7 @@
     "rc": 42.32,
     "rc7": 9.45,
     "rc7_adj": 10.59,
-    "rank": 234
+    "rank": 235
   },
   {
     "player_name": "Katie RAPER",
@@ -5167,7 +5189,7 @@
     "rc": 45.2,
     "rc7": 10.67,
     "rc7_adj": 10.56,
-    "rank": 235
+    "rank": 236
   },
   {
     "player_name": "Ava Zachary",
@@ -5189,7 +5211,7 @@
     "rc": 41.22,
     "rc7": 10.56,
     "rc7_adj": 10.56,
-    "rank": 236
+    "rank": 237
   },
   {
     "player_name": "Payton Brown",
@@ -5211,7 +5233,7 @@
     "rc": 47.88,
     "rc7": 12.41,
     "rc7_adj": 10.55,
-    "rank": 237
+    "rank": 238
   },
   {
     "player_name": "Reagan Terwilliger",
@@ -5233,7 +5255,7 @@
     "rc": 48.92,
     "rc7": 11.17,
     "rc7_adj": 10.53,
-    "rank": 238
+    "rank": 239
   },
   {
     "player_name": "Dallas Hill",
@@ -5255,7 +5277,7 @@
     "rc": 48.65,
     "rc7": 15.02,
     "rc7_adj": 10.53,
-    "rank": 239
+    "rank": 240
   },
   {
     "player_name": "Bella Dean",
@@ -5277,7 +5299,7 @@
     "rc": 47.6,
     "rc7": 10.3,
     "rc7_adj": 10.49,
-    "rank": 240
+    "rank": 241
   },
   {
     "player_name": "Kennedy Powell",
@@ -5299,7 +5321,7 @@
     "rc": 47.01,
     "rc7": 8.74,
     "rc7_adj": 10.49,
-    "rank": 241
+    "rank": 242
   },
   {
     "player_name": "Ailana Agbayani",
@@ -5321,7 +5343,7 @@
     "rc": 39.72,
     "rc7": 9.59,
     "rc7_adj": 10.48,
-    "rank": 242
+    "rank": 243
   },
   {
     "player_name": "Katie Chester",
@@ -5343,7 +5365,7 @@
     "rc": 52.84,
     "rc7": 10.0,
     "rc7_adj": 10.45,
-    "rank": 243
+    "rank": 244
   },
   {
     "player_name": "McKaela Walker",
@@ -5365,7 +5387,7 @@
     "rc": 38.74,
     "rc7": 8.56,
     "rc7_adj": 10.44,
-    "rank": 244
+    "rank": 245
   },
   {
     "player_name": "Sammie Shelander",
@@ -5387,7 +5409,7 @@
     "rc": 51.95,
     "rc7": 10.59,
     "rc7_adj": 10.44,
-    "rank": 245
+    "rank": 246
   },
   {
     "player_name": "Haley Painter",
@@ -5409,7 +5431,7 @@
     "rc": 47.07,
     "rc7": 10.41,
     "rc7_adj": 10.44,
-    "rank": 246
+    "rank": 247
   },
   {
     "player_name": "Kennedy Proctor",
@@ -5431,28 +5453,6 @@
     "rc": 55.27,
     "rc7": 10.95,
     "rc7_adj": 10.44,
-    "rank": 247
-  },
-  {
-    "player_name": "Sophia Knight",
-    "name": "Sophia Knight",
-    "team": "Tennessee",
-    "PA": 182,
-    "HR": 3,
-    "pitching_games": 0,
-    "RC7_raw": 8.11,
-    "OPAF": 1.28,
-    "RC7_adj": 10.42,
-    "ab": 168,
-    "hits": 66,
-    "doubles": 9,
-    "triples": 1,
-    "tb": 86,
-    "walks": 14,
-    "qualified": true,
-    "rc": 39.4,
-    "rc7": 8.11,
-    "rc7_adj": 10.42,
     "rank": 248
   },
   {
@@ -5852,6 +5852,28 @@
     "rank": 266
   },
   {
+    "player_name": "Alannah Leach",
+    "name": "Alannah Leach",
+    "team": "Tennessee",
+    "PA": 137,
+    "HR": 14,
+    "pitching_games": 0,
+    "RC7_raw": 7.85,
+    "OPAF": 1.29,
+    "RC7_adj": 10.09,
+    "ab": 125,
+    "hits": 38,
+    "doubles": 6,
+    "triples": 0,
+    "tb": 86,
+    "walks": 12,
+    "qualified": true,
+    "rc": 32.53,
+    "rc7": 7.85,
+    "rc7_adj": 10.09,
+    "rank": 267
+  },
+  {
     "player_name": "Townsen Thomas",
     "name": "Townsen Thomas",
     "team": "Florida",
@@ -5871,7 +5893,7 @@
     "rc": 46.26,
     "rc7": 8.03,
     "rc7_adj": 10.07,
-    "rank": 267
+    "rank": 268
   },
   {
     "player_name": "Chelsea Mack",
@@ -5893,7 +5915,7 @@
     "rc": 52.04,
     "rc7": 10.21,
     "rc7_adj": 10.07,
-    "rank": 268
+    "rank": 269
   },
   {
     "player_name": "Grace Barrett",
@@ -5915,7 +5937,7 @@
     "rc": 43.31,
     "rc7": 9.47,
     "rc7_adj": 10.05,
-    "rank": 269
+    "rank": 270
   },
   {
     "player_name": "Taylor Fitch",
@@ -5937,7 +5959,7 @@
     "rc": 49.19,
     "rc7": 9.75,
     "rc7_adj": 10.0,
-    "rank": 270
+    "rank": 271
   },
   {
     "player_name": "Nadia Barbary",
@@ -5959,7 +5981,7 @@
     "rc": 47.88,
     "rc7": 7.68,
     "rc7_adj": 9.99,
-    "rank": 271
+    "rank": 272
   },
   {
     "player_name": "Jenna Samuel",
@@ -5981,7 +6003,7 @@
     "rc": 39.84,
     "rc7": 9.84,
     "rc7_adj": 9.99,
-    "rank": 272
+    "rank": 273
   },
   {
     "player_name": "Bailey Sample",
@@ -6003,7 +6025,7 @@
     "rc": 41.4,
     "rc7": 10.73,
     "rc7_adj": 9.97,
-    "rank": 273
+    "rank": 274
   },
   {
     "player_name": "Jace Jackson",
@@ -6025,7 +6047,7 @@
     "rc": 35.17,
     "rc7": 10.26,
     "rc7_adj": 9.97,
-    "rank": 274
+    "rank": 275
   },
   {
     "player_name": "Ella Whitney",
@@ -6047,7 +6069,7 @@
     "rc": 52.13,
     "rc7": 11.06,
     "rc7_adj": 9.95,
-    "rank": 275
+    "rank": 276
   },
   {
     "player_name": "Tara Vandewater",
@@ -6069,7 +6091,7 @@
     "rc": 48.7,
     "rc7": 10.23,
     "rc7_adj": 9.92,
-    "rank": 276
+    "rank": 277
   },
   {
     "player_name": "Carly Raven",
@@ -6091,7 +6113,7 @@
     "rc": 37.45,
     "rc7": 9.48,
     "rc7_adj": 9.91,
-    "rank": 277
+    "rank": 278
   },
   {
     "player_name": "Olivia Thornton",
@@ -6113,7 +6135,7 @@
     "rc": 42.09,
     "rc7": 9.71,
     "rc7_adj": 9.91,
-    "rank": 278
+    "rank": 279
   },
   {
     "player_name": "Regan Shockey",
@@ -6135,7 +6157,7 @@
     "rc": 43.06,
     "rc7": 9.04,
     "rc7_adj": 9.89,
-    "rank": 279
+    "rank": 280
   },
   {
     "player_name": "Cassie Reasner",
@@ -6157,7 +6179,7 @@
     "rc": 44.39,
     "rc7": 7.7,
     "rc7_adj": 9.89,
-    "rank": 280
+    "rank": 281
   },
   {
     "player_name": "Shelby Morris",
@@ -6179,28 +6201,6 @@
     "rc": 56.64,
     "rc7": 9.91,
     "rc7_adj": 9.89,
-    "rank": 281
-  },
-  {
-    "player_name": "Alannah Leach",
-    "name": "Alannah Leach",
-    "team": "Tennessee",
-    "PA": 134,
-    "HR": 13,
-    "pitching_games": 0,
-    "RC7_raw": 7.69,
-    "OPAF": 1.28,
-    "RC7_adj": 9.85,
-    "ab": 122,
-    "hits": 37,
-    "doubles": 6,
-    "triples": 0,
-    "tb": 82,
-    "walks": 12,
-    "qualified": true,
-    "rc": 31.13,
-    "rc7": 7.69,
-    "rc7_adj": 9.85,
     "rank": 282
   },
   {
@@ -8778,28 +8778,6 @@
     "rank": 399
   },
   {
-    "player_name": "Ella Dodge",
-    "name": "Ella Dodge",
-    "team": "Tennessee",
-    "PA": 195,
-    "HR": 11,
-    "pitching_games": 0,
-    "RC7_raw": 7.1,
-    "OPAF": 1.24,
-    "RC7_adj": 8.78,
-    "ab": 167,
-    "hits": 48,
-    "doubles": 13,
-    "triples": 1,
-    "tb": 96,
-    "walks": 28,
-    "qualified": true,
-    "rc": 40.25,
-    "rc7": 7.1,
-    "rc7_adj": 8.78,
-    "rank": 400
-  },
-  {
     "player_name": "Maggie Hiatt",
     "name": "Maggie Hiatt",
     "team": "Longwood",
@@ -8819,7 +8797,7 @@
     "rc": 36.61,
     "rc7": 9.49,
     "rc7_adj": 8.77,
-    "rank": 401
+    "rank": 400
   },
   {
     "player_name": "Camryn MCDONALD",
@@ -8841,7 +8819,7 @@
     "rc": 35.41,
     "rc7": 9.53,
     "rc7_adj": 8.76,
-    "rank": 402
+    "rank": 401
   },
   {
     "player_name": "Ally Hetzel",
@@ -8863,7 +8841,7 @@
     "rc": 30.42,
     "rc7": 7.99,
     "rc7_adj": 8.75,
-    "rank": 403
+    "rank": 402
   },
   {
     "player_name": "Kendall Grover",
@@ -8885,7 +8863,7 @@
     "rc": 43.89,
     "rc7": 7.09,
     "rc7_adj": 8.74,
-    "rank": 404
+    "rank": 403
   },
   {
     "player_name": "Presley Rader",
@@ -8907,7 +8885,7 @@
     "rc": 33.16,
     "rc7": 8.7,
     "rc7_adj": 8.74,
-    "rank": 405
+    "rank": 404
   },
   {
     "player_name": "Kennedy Dean",
@@ -8929,7 +8907,7 @@
     "rc": 51.5,
     "rc7": 11.51,
     "rc7_adj": 8.73,
-    "rank": 406
+    "rank": 405
   },
   {
     "player_name": "Kaelan Schultz",
@@ -8951,7 +8929,7 @@
     "rc": 46.41,
     "rc7": 9.02,
     "rc7_adj": 8.72,
-    "rank": 407
+    "rank": 406
   },
   {
     "player_name": "Bayleigh Rouse",
@@ -8973,7 +8951,7 @@
     "rc": 36.98,
     "rc7": 8.26,
     "rc7_adj": 8.71,
-    "rank": 408
+    "rank": 407
   },
   {
     "player_name": "Amanda Hasler",
@@ -8995,7 +8973,7 @@
     "rc": 40.82,
     "rc7": 7.65,
     "rc7_adj": 8.71,
-    "rank": 409
+    "rank": 408
   },
   {
     "player_name": "Ella Gonzales",
@@ -9017,7 +8995,7 @@
     "rc": 39.66,
     "rc7": 8.59,
     "rc7_adj": 8.67,
-    "rank": 410
+    "rank": 409
   },
   {
     "player_name": "Sykora Smith",
@@ -9039,7 +9017,7 @@
     "rc": 43.53,
     "rc7": 9.05,
     "rc7_adj": 8.67,
-    "rank": 411
+    "rank": 410
   },
   {
     "player_name": "Mack Gallagher",
@@ -9061,7 +9039,7 @@
     "rc": 41.13,
     "rc7": 9.29,
     "rc7_adj": 8.67,
-    "rank": 412
+    "rank": 411
   },
   {
     "player_name": "Marina Taveras",
@@ -9083,7 +9061,7 @@
     "rc": 50.02,
     "rc7": 9.55,
     "rc7_adj": 8.66,
-    "rank": 413
+    "rank": 412
   },
   {
     "player_name": "Sydney Potter",
@@ -9105,29 +9083,7 @@
     "rc": 44.13,
     "rc7": 9.09,
     "rc7_adj": 8.65,
-    "rank": 414
-  },
-  {
-    "player_name": "Gabby Leach",
-    "name": "Gabby Leach",
-    "team": "Tennessee",
-    "PA": 191,
-    "HR": 10,
-    "pitching_games": 0,
-    "RC7_raw": 6.99,
-    "OPAF": 1.24,
-    "RC7_adj": 8.65,
-    "ab": 169,
-    "hits": 51,
-    "doubles": 12,
-    "triples": 2,
-    "tb": 97,
-    "walks": 22,
-    "qualified": true,
-    "rc": 39.26,
-    "rc7": 6.99,
-    "rc7_adj": 8.65,
-    "rank": 415
+    "rank": 413
   },
   {
     "player_name": "Lily Livingston",
@@ -9149,7 +9105,7 @@
     "rc": 42.65,
     "rc7": 8.53,
     "rc7_adj": 8.63,
-    "rank": 416
+    "rank": 414
   },
   {
     "player_name": "Jordan Smith",
@@ -9171,7 +9127,7 @@
     "rc": 34.34,
     "rc7": 8.8,
     "rc7_adj": 8.63,
-    "rank": 417
+    "rank": 415
   },
   {
     "player_name": "Delanie Thames",
@@ -9193,7 +9149,7 @@
     "rc": 37.93,
     "rc7": 7.73,
     "rc7_adj": 8.62,
-    "rank": 418
+    "rank": 416
   },
   {
     "player_name": "Claire Timm",
@@ -9215,7 +9171,7 @@
     "rc": 38.8,
     "rc7": 7.61,
     "rc7_adj": 8.62,
-    "rank": 419
+    "rank": 417
   },
   {
     "player_name": "Karley Shelton",
@@ -9237,7 +9193,7 @@
     "rc": 43.42,
     "rc7": 7.07,
     "rc7_adj": 8.62,
-    "rank": 420
+    "rank": 418
   },
   {
     "player_name": "Lily Haluska",
@@ -9259,7 +9215,7 @@
     "rc": 46.49,
     "rc7": 9.39,
     "rc7_adj": 8.59,
-    "rank": 421
+    "rank": 419
   },
   {
     "player_name": "Sydney Malott",
@@ -9281,7 +9237,7 @@
     "rc": 41.37,
     "rc7": 8.69,
     "rc7_adj": 8.59,
-    "rank": 422
+    "rank": 420
   },
   {
     "player_name": "Autumn Liebhauser",
@@ -9303,7 +9259,7 @@
     "rc": 37.76,
     "rc7": 10.3,
     "rc7_adj": 8.59,
-    "rank": 423
+    "rank": 421
   },
   {
     "player_name": "Ella Cook",
@@ -9325,7 +9281,7 @@
     "rc": 42.23,
     "rc7": 8.87,
     "rc7_adj": 8.59,
-    "rank": 424
+    "rank": 422
   },
   {
     "player_name": "Stefini Ma'Ake",
@@ -9347,7 +9303,7 @@
     "rc": 30.73,
     "rc7": 7.59,
     "rc7_adj": 8.58,
-    "rank": 425
+    "rank": 423
   },
   {
     "player_name": "Ava BROWN",
@@ -9369,7 +9325,7 @@
     "rc": 47.92,
     "rc7": 9.23,
     "rc7_adj": 8.57,
-    "rank": 426
+    "rank": 424
   },
   {
     "player_name": "Ava Kuszak",
@@ -9391,7 +9347,7 @@
     "rc": 46.54,
     "rc7": 7.46,
     "rc7_adj": 8.57,
-    "rank": 427
+    "rank": 425
   },
   {
     "player_name": "Anna Hinde",
@@ -9413,7 +9369,7 @@
     "rc": 36.97,
     "rc7": 8.0,
     "rc7_adj": 8.56,
-    "rank": 428
+    "rank": 426
   },
   {
     "player_name": "Mia Liscano",
@@ -9435,7 +9391,7 @@
     "rc": 30.72,
     "rc7": 7.68,
     "rc7_adj": 8.56,
-    "rank": 429
+    "rank": 427
   },
   {
     "player_name": "Jada Munoz",
@@ -9457,7 +9413,7 @@
     "rc": 41.02,
     "rc7": 8.53,
     "rc7_adj": 8.54,
-    "rank": 430
+    "rank": 428
   },
   {
     "player_name": "Katey Brennan",
@@ -9479,7 +9435,7 @@
     "rc": 36.9,
     "rc7": 8.71,
     "rc7_adj": 8.53,
-    "rank": 431
+    "rank": 429
   },
   {
     "player_name": "Jessie Baughan",
@@ -9501,7 +9457,7 @@
     "rc": 30.96,
     "rc7": 9.42,
     "rc7_adj": 8.52,
-    "rank": 432
+    "rank": 430
   },
   {
     "player_name": "Emily Jonte",
@@ -9523,7 +9479,7 @@
     "rc": 33.85,
     "rc7": 9.11,
     "rc7_adj": 8.51,
-    "rank": 433
+    "rank": 431
   },
   {
     "player_name": "Kennedy Demott",
@@ -9545,7 +9501,7 @@
     "rc": 33.0,
     "rc7": 8.88,
     "rc7_adj": 8.51,
-    "rank": 434
+    "rank": 432
   },
   {
     "player_name": "Bryce CLENDENIN",
@@ -9567,7 +9523,7 @@
     "rc": 28.77,
     "rc7": 9.74,
     "rc7_adj": 8.5,
-    "rank": 435
+    "rank": 433
   },
   {
     "player_name": "Mary Brant",
@@ -9589,7 +9545,7 @@
     "rc": 51.91,
     "rc7": 12.25,
     "rc7_adj": 8.5,
-    "rank": 436
+    "rank": 434
   },
   {
     "player_name": "Cece Smith",
@@ -9611,7 +9567,7 @@
     "rc": 24.5,
     "rc7": 8.04,
     "rc7_adj": 8.49,
-    "rank": 437
+    "rank": 435
   },
   {
     "player_name": "Maddy Morris",
@@ -9633,7 +9589,7 @@
     "rc": 38.05,
     "rc7": 10.65,
     "rc7_adj": 8.49,
-    "rank": 438
+    "rank": 436
   },
   {
     "player_name": "Madi Mendoza",
@@ -9655,7 +9611,7 @@
     "rc": 38.08,
     "rc7": 8.6,
     "rc7_adj": 8.48,
-    "rank": 439
+    "rank": 437
   },
   {
     "player_name": "Emma Gilkerson",
@@ -9677,7 +9633,7 @@
     "rc": 49.53,
     "rc7": 11.19,
     "rc7_adj": 8.47,
-    "rank": 440
+    "rank": 438
   },
   {
     "player_name": "Ava CINO",
@@ -9699,7 +9655,7 @@
     "rc": 38.23,
     "rc7": 9.91,
     "rc7_adj": 8.46,
-    "rank": 441
+    "rank": 439
   },
   {
     "player_name": "Bradi Gallaway",
@@ -9721,7 +9677,7 @@
     "rc": 39.37,
     "rc7": 7.8,
     "rc7_adj": 8.46,
-    "rank": 442
+    "rank": 440
   },
   {
     "player_name": "Hannah Coor",
@@ -9743,7 +9699,7 @@
     "rc": 41.4,
     "rc7": 7.43,
     "rc7_adj": 8.46,
-    "rank": 443
+    "rank": 441
   },
   {
     "player_name": "Baileigh Burtis",
@@ -9765,7 +9721,29 @@
     "rc": 37.38,
     "rc7": 7.77,
     "rc7_adj": 8.45,
-    "rank": 444
+    "rank": 442
+  },
+  {
+    "player_name": "Ella Dodge",
+    "name": "Ella Dodge",
+    "team": "Tennessee",
+    "PA": 198,
+    "HR": 11,
+    "pitching_games": 0,
+    "RC7_raw": 6.82,
+    "OPAF": 1.24,
+    "RC7_adj": 8.45,
+    "ab": 170,
+    "hits": 48,
+    "doubles": 13,
+    "triples": 1,
+    "tb": 96,
+    "walks": 28,
+    "qualified": true,
+    "rc": 39.64,
+    "rc7": 6.82,
+    "rc7_adj": 8.45,
+    "rank": 443
   },
   {
     "player_name": "Gisselle Mejia",
@@ -9787,7 +9765,7 @@
     "rc": 33.43,
     "rc7": 8.56,
     "rc7_adj": 8.45,
-    "rank": 445
+    "rank": 444
   },
   {
     "player_name": "Lily Hinkle",
@@ -9809,7 +9787,7 @@
     "rc": 49.11,
     "rc7": 10.01,
     "rc7_adj": 8.43,
-    "rank": 446
+    "rank": 445
   },
   {
     "player_name": "Avery Bouquin",
@@ -9831,7 +9809,7 @@
     "rc": 42.35,
     "rc7": 8.72,
     "rc7_adj": 8.42,
-    "rank": 447
+    "rank": 446
   },
   {
     "player_name": "Sophia Wygast",
@@ -9853,7 +9831,7 @@
     "rc": 47.52,
     "rc7": 8.75,
     "rc7_adj": 8.41,
-    "rank": 448
+    "rank": 447
   },
   {
     "player_name": "Karlee Ford",
@@ -9875,7 +9853,7 @@
     "rc": 45.5,
     "rc7": 8.53,
     "rc7_adj": 8.41,
-    "rank": 449
+    "rank": 448
   },
   {
     "player_name": "Taylor Pannell",
@@ -9897,7 +9875,7 @@
     "rc": 53.7,
     "rc7": 8.11,
     "rc7_adj": 8.4,
-    "rank": 450
+    "rank": 449
   },
   {
     "player_name": "Emily Carr",
@@ -9919,7 +9897,7 @@
     "rc": 37.58,
     "rc7": 8.58,
     "rc7_adj": 8.39,
-    "rank": 451
+    "rank": 450
   },
   {
     "player_name": "Alanna Morse",
@@ -9941,7 +9919,7 @@
     "rc": 45.45,
     "rc7": 8.6,
     "rc7_adj": 8.38,
-    "rank": 452
+    "rank": 451
   },
   {
     "player_name": "Julia Dumais",
@@ -9963,7 +9941,7 @@
     "rc": 38.65,
     "rc7": 9.02,
     "rc7_adj": 8.38,
-    "rank": 453
+    "rank": 452
   },
   {
     "player_name": "Melody Acevedo",
@@ -9985,7 +9963,7 @@
     "rc": 28.94,
     "rc7": 7.69,
     "rc7_adj": 8.38,
-    "rank": 454
+    "rank": 453
   },
   {
     "player_name": "Marian Collins",
@@ -10007,7 +9985,7 @@
     "rc": 39.66,
     "rc7": 7.37,
     "rc7_adj": 8.37,
-    "rank": 455
+    "rank": 454
   },
   {
     "player_name": "Devin Elam",
@@ -10029,7 +10007,7 @@
     "rc": 36.98,
     "rc7": 7.92,
     "rc7_adj": 8.37,
-    "rank": 456
+    "rank": 455
   },
   {
     "player_name": "LauraLeigh Wheeler",
@@ -10051,7 +10029,7 @@
     "rc": 36.55,
     "rc7": 8.08,
     "rc7_adj": 8.36,
-    "rank": 457
+    "rank": 456
   },
   {
     "player_name": "Addie Graham",
@@ -10073,7 +10051,7 @@
     "rc": 38.15,
     "rc7": 7.85,
     "rc7_adj": 8.35,
-    "rank": 458
+    "rank": 457
   },
   {
     "player_name": "Giselle Ulloa",
@@ -10095,7 +10073,7 @@
     "rc": 24.17,
     "rc7": 9.06,
     "rc7_adj": 8.35,
-    "rank": 459
+    "rank": 458
   },
   {
     "player_name": "Shelby Westler",
@@ -10117,7 +10095,7 @@
     "rc": 36.25,
     "rc7": 8.75,
     "rc7_adj": 8.35,
-    "rank": 460
+    "rank": 459
   },
   {
     "player_name": "Emily Schepp",
@@ -10139,7 +10117,7 @@
     "rc": 48.06,
     "rc7": 8.14,
     "rc7_adj": 8.34,
-    "rank": 461
+    "rank": 460
   },
   {
     "player_name": "Maggie Knight",
@@ -10161,7 +10139,7 @@
     "rc": 39.19,
     "rc7": 9.14,
     "rc7_adj": 8.34,
-    "rank": 462
+    "rank": 461
   },
   {
     "player_name": "Emma Elrod",
@@ -10183,7 +10161,7 @@
     "rc": 49.15,
     "rc7": 8.06,
     "rc7_adj": 8.34,
-    "rank": 463
+    "rank": 462
   },
   {
     "player_name": "Ashton White",
@@ -10204,6 +10182,28 @@
     "qualified": true,
     "rc": 48.28,
     "rc7": 8.74,
+    "rc7_adj": 8.33,
+    "rank": 463
+  },
+  {
+    "player_name": "Gabby Leach",
+    "name": "Gabby Leach",
+    "team": "Tennessee",
+    "PA": 194,
+    "HR": 10,
+    "pitching_games": 0,
+    "RC7_raw": 6.71,
+    "OPAF": 1.24,
+    "RC7_adj": 8.33,
+    "ab": 172,
+    "hits": 51,
+    "doubles": 12,
+    "triples": 2,
+    "tb": 97,
+    "walks": 22,
+    "qualified": true,
+    "rc": 38.65,
+    "rc7": 6.71,
     "rc7_adj": 8.33,
     "rank": 464
   },
@@ -10296,28 +10296,6 @@
     "rank": 468
   },
   {
-    "player_name": "Emma Clarke",
-    "name": "Emma Clarke",
-    "team": "Tennessee",
-    "PA": 183,
-    "HR": 14,
-    "pitching_games": 0,
-    "RC7_raw": 6.63,
-    "OPAF": 1.25,
-    "RC7_adj": 8.29,
-    "ab": 162,
-    "hits": 45,
-    "doubles": 10,
-    "triples": 0,
-    "tb": 97,
-    "walks": 21,
-    "qualified": true,
-    "rc": 36.95,
-    "rc7": 6.63,
-    "rc7_adj": 8.29,
-    "rank": 469
-  },
-  {
     "player_name": "Desirae Devine",
     "name": "Desirae Devine",
     "team": "Wofford",
@@ -10337,7 +10315,7 @@
     "rc": 33.16,
     "rc7": 9.28,
     "rc7_adj": 8.29,
-    "rank": 470
+    "rank": 469
   },
   {
     "player_name": "Peyton Holland",
@@ -10359,7 +10337,7 @@
     "rc": 36.83,
     "rc7": 9.32,
     "rc7_adj": 8.28,
-    "rank": 471
+    "rank": 470
   },
   {
     "player_name": "Sylvia Burroughs",
@@ -10381,7 +10359,7 @@
     "rc": 39.0,
     "rc7": 8.62,
     "rc7_adj": 8.27,
-    "rank": 472
+    "rank": 471
   },
   {
     "player_name": "Deirdre FLAHERTY",
@@ -10403,7 +10381,7 @@
     "rc": 34.26,
     "rc7": 8.27,
     "rc7_adj": 8.26,
-    "rank": 473
+    "rank": 472
   },
   {
     "player_name": "Brilee Ford",
@@ -10425,7 +10403,7 @@
     "rc": 31.89,
     "rc7": 8.27,
     "rc7_adj": 8.26,
-    "rank": 474
+    "rank": 473
   },
   {
     "player_name": "Bella Duncan",
@@ -10447,7 +10425,7 @@
     "rc": 44.15,
     "rc7": 8.35,
     "rc7_adj": 8.26,
-    "rank": 475
+    "rank": 474
   },
   {
     "player_name": "Anna Sanders",
@@ -10469,7 +10447,7 @@
     "rc": 41.07,
     "rc7": 8.63,
     "rc7_adj": 8.24,
-    "rank": 476
+    "rank": 475
   },
   {
     "player_name": "Hali Duke",
@@ -10490,6 +10468,28 @@
     "qualified": true,
     "rc": 40.48,
     "rc7": 9.04,
+    "rc7_adj": 8.24,
+    "rank": 476
+  },
+  {
+    "player_name": "Emma Clarke",
+    "name": "Emma Clarke",
+    "team": "Tennessee",
+    "PA": 186,
+    "HR": 14,
+    "pitching_games": 0,
+    "RC7_raw": 6.58,
+    "OPAF": 1.25,
+    "RC7_adj": 8.24,
+    "ab": 165,
+    "hits": 46,
+    "doubles": 10,
+    "triples": 0,
+    "tb": 98,
+    "walks": 21,
+    "qualified": true,
+    "rc": 37.27,
+    "rc7": 6.58,
     "rc7_adj": 8.24,
     "rank": 477
   },
@@ -11396,6 +11396,28 @@
     "rank": 518
   },
   {
+    "player_name": "Samantha Kelly",
+    "name": "Samantha Kelly",
+    "team": "Manhattan",
+    "PA": 146,
+    "HR": 3,
+    "pitching_games": 0,
+    "RC7_raw": 8.34,
+    "OPAF": 0.95,
+    "RC7_adj": 7.93,
+    "ab": 117,
+    "hits": 39,
+    "doubles": 9,
+    "triples": 1,
+    "tb": 59,
+    "walks": 29,
+    "qualified": true,
+    "rc": 30.99,
+    "rc7": 8.34,
+    "rc7_adj": 7.93,
+    "rank": 519
+  },
+  {
     "player_name": "Mia McNulty",
     "name": "Mia McNulty",
     "team": "UT Arlington",
@@ -11415,7 +11437,7 @@
     "rc": 39.6,
     "rc7": 9.04,
     "rc7_adj": 7.93,
-    "rank": 519
+    "rank": 520
   },
   {
     "player_name": "Madalyn Strader",
@@ -11437,7 +11459,7 @@
     "rc": 37.33,
     "rc7": 8.0,
     "rc7_adj": 7.91,
-    "rank": 520
+    "rank": 521
   },
   {
     "player_name": "Brooke Bennett",
@@ -11459,7 +11481,7 @@
     "rc": 40.47,
     "rc7": 8.41,
     "rc7_adj": 7.9,
-    "rank": 521
+    "rank": 522
   },
   {
     "player_name": "Michela Barbanente",
@@ -11481,7 +11503,7 @@
     "rc": 40.16,
     "rc7": 8.43,
     "rc7_adj": 7.9,
-    "rank": 522
+    "rank": 523
   },
   {
     "player_name": "Annabella McClerren",
@@ -11503,7 +11525,7 @@
     "rc": 41.07,
     "rc7": 7.63,
     "rc7_adj": 7.9,
-    "rank": 523
+    "rank": 524
   },
   {
     "player_name": "Renee Christian",
@@ -11525,7 +11547,7 @@
     "rc": 30.15,
     "rc7": 7.28,
     "rc7_adj": 7.89,
-    "rank": 524
+    "rank": 525
   },
   {
     "player_name": "Leela Langston",
@@ -11547,7 +11569,7 @@
     "rc": 37.57,
     "rc7": 7.44,
     "rc7_adj": 7.89,
-    "rank": 525
+    "rank": 526
   },
   {
     "player_name": "Breanna Lutz",
@@ -11569,7 +11591,7 @@
     "rc": 26.75,
     "rc7": 7.8,
     "rc7_adj": 7.89,
-    "rank": 526
+    "rank": 527
   },
   {
     "player_name": "Ellie Vance",
@@ -11591,7 +11613,7 @@
     "rc": 42.22,
     "rc7": 8.29,
     "rc7_adj": 7.89,
-    "rank": 527
+    "rank": 528
   },
   {
     "player_name": "Reese Collier",
@@ -11613,7 +11635,7 @@
     "rc": 49.66,
     "rc7": 8.69,
     "rc7_adj": 7.88,
-    "rank": 528
+    "rank": 529
   },
   {
     "player_name": "Devin Simon",
@@ -11635,7 +11657,7 @@
     "rc": 37.74,
     "rc7": 6.95,
     "rc7_adj": 7.88,
-    "rank": 529
+    "rank": 530
   },
   {
     "player_name": "Isabella Manory",
@@ -11657,7 +11679,7 @@
     "rc": 36.02,
     "rc7": 7.8,
     "rc7_adj": 7.88,
-    "rank": 530
+    "rank": 531
   },
   {
     "player_name": "Faith Aragon",
@@ -11679,7 +11701,7 @@
     "rc": 32.98,
     "rc7": 7.53,
     "rc7_adj": 7.87,
-    "rank": 531
+    "rank": 532
   },
   {
     "player_name": "TORYN FULTON",
@@ -11701,7 +11723,7 @@
     "rc": 32.98,
     "rc7": 7.37,
     "rc7_adj": 7.87,
-    "rank": 532
+    "rank": 533
   },
   {
     "player_name": "Apollonia Maldonado",
@@ -11723,7 +11745,7 @@
     "rc": 33.26,
     "rc7": 8.12,
     "rc7_adj": 7.87,
-    "rank": 533
+    "rank": 534
   },
   {
     "player_name": "Allison Waldron",
@@ -11745,7 +11767,7 @@
     "rc": 32.89,
     "rc7": 8.22,
     "rc7_adj": 7.86,
-    "rank": 534
+    "rank": 535
   },
   {
     "player_name": "Kennedy Bunker",
@@ -11767,7 +11789,7 @@
     "rc": 31.77,
     "rc7": 5.85,
     "rc7_adj": 7.86,
-    "rank": 535
+    "rank": 536
   },
   {
     "player_name": "Lexie Roberts",
@@ -11789,7 +11811,7 @@
     "rc": 31.73,
     "rc7": 7.57,
     "rc7_adj": 7.85,
-    "rank": 536
+    "rank": 537
   },
   {
     "player_name": "Maranda Runco",
@@ -11811,7 +11833,7 @@
     "rc": 27.5,
     "rc7": 7.5,
     "rc7_adj": 7.85,
-    "rank": 537
+    "rank": 538
   },
   {
     "player_name": "Brie Normandin",
@@ -11833,7 +11855,7 @@
     "rc": 33.12,
     "rc7": 6.75,
     "rc7_adj": 7.84,
-    "rank": 538
+    "rank": 539
   },
   {
     "player_name": "KK Dement",
@@ -11855,7 +11877,7 @@
     "rc": 37.25,
     "rc7": 6.57,
     "rc7_adj": 7.84,
-    "rank": 539
+    "rank": 540
   },
   {
     "player_name": "Alix Franklin",
@@ -11877,7 +11899,7 @@
     "rc": 35.65,
     "rc7": 6.4,
     "rc7_adj": 7.83,
-    "rank": 540
+    "rank": 541
   },
   {
     "player_name": "Abby Mallo",
@@ -11899,7 +11921,7 @@
     "rc": 31.85,
     "rc7": 7.27,
     "rc7_adj": 7.83,
-    "rank": 541
+    "rank": 542
   },
   {
     "player_name": "Ashleigh Mejia",
@@ -11921,7 +11943,7 @@
     "rc": 40.54,
     "rc7": 7.28,
     "rc7_adj": 7.82,
-    "rank": 542
+    "rank": 543
   },
   {
     "player_name": "Amber Reed",
@@ -11943,7 +11965,7 @@
     "rc": 31.18,
     "rc7": 7.53,
     "rc7_adj": 7.82,
-    "rank": 543
+    "rank": 544
   },
   {
     "player_name": "Neleh Nogay",
@@ -11965,7 +11987,7 @@
     "rc": 35.53,
     "rc7": 6.91,
     "rc7_adj": 7.81,
-    "rank": 544
+    "rank": 545
   },
   {
     "player_name": "Sienna Kunze",
@@ -11987,7 +12009,7 @@
     "rc": 40.38,
     "rc7": 8.0,
     "rc7_adj": 7.81,
-    "rank": 545
+    "rank": 546
   },
   {
     "player_name": "Emma Petersen",
@@ -12009,7 +12031,7 @@
     "rc": 39.43,
     "rc7": 7.96,
     "rc7_adj": 7.81,
-    "rank": 546
+    "rank": 547
   },
   {
     "player_name": "Mya Flindt",
@@ -12031,7 +12053,7 @@
     "rc": 32.6,
     "rc7": 7.36,
     "rc7_adj": 7.8,
-    "rank": 547
+    "rank": 548
   },
   {
     "player_name": "KK Esparza",
@@ -12053,7 +12075,7 @@
     "rc": 31.47,
     "rc7": 8.16,
     "rc7_adj": 7.79,
-    "rank": 548
+    "rank": 549
   },
   {
     "player_name": "Nicole Mergen",
@@ -12075,7 +12097,7 @@
     "rc": 39.62,
     "rc7": 9.14,
     "rc7_adj": 7.79,
-    "rank": 549
+    "rank": 550
   },
   {
     "player_name": "Ellie Goins",
@@ -12097,7 +12119,7 @@
     "rc": 39.45,
     "rc7": 7.82,
     "rc7_adj": 7.78,
-    "rank": 550
+    "rank": 551
   },
   {
     "player_name": "Sydnie Trujillo",
@@ -12119,7 +12141,7 @@
     "rc": 33.74,
     "rc7": 9.58,
     "rc7_adj": 7.78,
-    "rank": 551
+    "rank": 552
   },
   {
     "player_name": "Kya PRATT",
@@ -12141,7 +12163,7 @@
     "rc": 40.91,
     "rc7": 7.74,
     "rc7_adj": 7.77,
-    "rank": 552
+    "rank": 553
   },
   {
     "player_name": "Jessie Clemons",
@@ -12163,7 +12185,7 @@
     "rc": 45.96,
     "rc7": 7.78,
     "rc7_adj": 7.75,
-    "rank": 553
+    "rank": 554
   },
   {
     "player_name": "Emily Gorman",
@@ -12185,7 +12207,7 @@
     "rc": 43.48,
     "rc7": 8.08,
     "rc7_adj": 7.74,
-    "rank": 554
+    "rank": 555
   },
   {
     "player_name": "Mackenzie Pickens",
@@ -12207,7 +12229,7 @@
     "rc": 35.11,
     "rc7": 5.95,
     "rc7_adj": 7.74,
-    "rank": 555
+    "rank": 556
   },
   {
     "player_name": "Priscilla Iniguez",
@@ -12229,7 +12251,7 @@
     "rc": 34.72,
     "rc7": 7.84,
     "rc7_adj": 7.73,
-    "rank": 556
+    "rank": 557
   },
   {
     "player_name": "Danika Wilson",
@@ -12251,7 +12273,7 @@
     "rc": 37.97,
     "rc7": 8.05,
     "rc7_adj": 7.72,
-    "rank": 557
+    "rank": 558
   },
   {
     "player_name": "Bronwyn Conroy",
@@ -12273,7 +12295,7 @@
     "rc": 41.44,
     "rc7": 7.37,
     "rc7_adj": 7.71,
-    "rank": 558
+    "rank": 559
   },
   {
     "player_name": "Chloe Hatcher",
@@ -12295,7 +12317,7 @@
     "rc": 36.93,
     "rc7": 7.53,
     "rc7_adj": 7.71,
-    "rank": 559
+    "rank": 560
   },
   {
     "player_name": "Khloe Banks",
@@ -12317,7 +12339,7 @@
     "rc": 38.48,
     "rc7": 7.7,
     "rc7_adj": 7.71,
-    "rank": 560
+    "rank": 561
   },
   {
     "player_name": "Grace Lopez",
@@ -12339,7 +12361,7 @@
     "rc": 36.4,
     "rc7": 7.96,
     "rc7_adj": 7.7,
-    "rank": 561
+    "rank": 562
   },
   {
     "player_name": "Arianna Rodi",
@@ -12361,7 +12383,7 @@
     "rc": 35.66,
     "rc7": 6.29,
     "rc7_adj": 7.68,
-    "rank": 562
+    "rank": 563
   },
   {
     "player_name": "Anaya Togia",
@@ -12383,28 +12405,6 @@
     "rc": 26.3,
     "rc7": 7.27,
     "rc7_adj": 7.66,
-    "rank": 563
-  },
-  {
-    "player_name": "Lainey Brown",
-    "name": "Lainey Brown",
-    "team": "Manhattan",
-    "PA": 163,
-    "HR": 9,
-    "pitching_games": 0,
-    "RC7_raw": 7.79,
-    "OPAF": 0.98,
-    "RC7_adj": 7.65,
-    "ab": 147,
-    "hits": 49,
-    "doubles": 9,
-    "triples": 1,
-    "tb": 87,
-    "walks": 16,
-    "qualified": true,
-    "rc": 36.35,
-    "rc7": 7.79,
-    "rc7_adj": 7.65,
     "rank": 564
   },
   {
@@ -12694,6 +12694,28 @@
     "rank": 577
   },
   {
+    "player_name": "Lainey Brown",
+    "name": "Lainey Brown",
+    "team": "Manhattan",
+    "PA": 166,
+    "HR": 9,
+    "pitching_games": 0,
+    "RC7_raw": 7.69,
+    "OPAF": 0.99,
+    "RC7_adj": 7.59,
+    "ab": 150,
+    "hits": 50,
+    "doubles": 9,
+    "triples": 1,
+    "tb": 88,
+    "walks": 16,
+    "qualified": true,
+    "rc": 36.64,
+    "rc7": 7.69,
+    "rc7_adj": 7.59,
+    "rank": 578
+  },
+  {
     "player_name": "Erika Perez",
     "name": "Erika Perez",
     "team": "Creighton",
@@ -12713,7 +12735,7 @@
     "rc": 40.62,
     "rc7": 7.9,
     "rc7_adj": 7.58,
-    "rank": 578
+    "rank": 579
   },
   {
     "player_name": "Hallie Langford",
@@ -12735,7 +12757,7 @@
     "rc": 42.0,
     "rc7": 7.35,
     "rc7_adj": 7.58,
-    "rank": 579
+    "rank": 580
   },
   {
     "player_name": "Tayler Biehl",
@@ -12757,7 +12779,7 @@
     "rc": 35.59,
     "rc7": 6.99,
     "rc7_adj": 7.57,
-    "rank": 580
+    "rank": 581
   },
   {
     "player_name": "Kyomi Apalit",
@@ -12779,7 +12801,7 @@
     "rc": 40.91,
     "rc7": 7.81,
     "rc7_adj": 7.57,
-    "rank": 581
+    "rank": 582
   },
   {
     "player_name": "Tatum Wolford",
@@ -12801,28 +12823,6 @@
     "rc": 33.5,
     "rc7": 7.82,
     "rc7_adj": 7.57,
-    "rank": 582
-  },
-  {
-    "player_name": "Samantha Kelly",
-    "name": "Samantha Kelly",
-    "team": "Manhattan",
-    "PA": 142,
-    "HR": 3,
-    "pitching_games": 0,
-    "RC7_raw": 8.02,
-    "OPAF": 0.94,
-    "RC7_adj": 7.56,
-    "ab": 114,
-    "hits": 37,
-    "doubles": 9,
-    "triples": 1,
-    "tb": 57,
-    "walks": 28,
-    "qualified": true,
-    "rc": 29.42,
-    "rc7": 8.02,
-    "rc7_adj": 7.56,
     "rank": 583
   },
   {
@@ -13112,28 +13112,6 @@
     "rank": 596
   },
   {
-    "player_name": "Natalye Debus",
-    "name": "Natalye Debus",
-    "team": "Manhattan",
-    "PA": 147,
-    "HR": 10,
-    "pitching_games": 21,
-    "RC7_raw": 7.61,
-    "OPAF": 0.98,
-    "RC7_adj": 7.48,
-    "ab": 139,
-    "hits": 47,
-    "doubles": 10,
-    "triples": 0,
-    "tb": 87,
-    "walks": 8,
-    "qualified": true,
-    "rc": 33.33,
-    "rc7": 7.61,
-    "rc7_adj": 7.48,
-    "rank": 597
-  },
-  {
     "player_name": "Presley Limbaugh",
     "name": "Presley Limbaugh",
     "team": "Kansas",
@@ -13153,7 +13131,7 @@
     "rc": 38.22,
     "rc7": 7.36,
     "rc7_adj": 7.47,
-    "rank": 598
+    "rank": 597
   },
   {
     "player_name": "Halle Cannon",
@@ -13175,7 +13153,7 @@
     "rc": 31.96,
     "rc7": 7.07,
     "rc7_adj": 7.46,
-    "rank": 599
+    "rank": 598
   },
   {
     "player_name": "Haley Ahr",
@@ -13197,7 +13175,7 @@
     "rc": 41.58,
     "rc7": 7.46,
     "rc7_adj": 7.45,
-    "rank": 600
+    "rank": 599
   },
   {
     "player_name": "Ayanna Shaw",
@@ -13219,7 +13197,7 @@
     "rc": 32.88,
     "rc7": 6.45,
     "rc7_adj": 7.45,
-    "rank": 601
+    "rank": 600
   },
   {
     "player_name": "Arianna Ramirez",
@@ -13241,7 +13219,7 @@
     "rc": 36.8,
     "rc7": 7.89,
     "rc7_adj": 7.45,
-    "rank": 602
+    "rank": 601
   },
   {
     "player_name": "Maddie Diamond",
@@ -13263,7 +13241,7 @@
     "rc": 38.56,
     "rc7": 7.5,
     "rc7_adj": 7.44,
-    "rank": 603
+    "rank": 602
   },
   {
     "player_name": "Delaina Maae",
@@ -13285,7 +13263,7 @@
     "rc": 25.77,
     "rc7": 7.31,
     "rc7_adj": 7.44,
-    "rank": 604
+    "rank": 603
   },
   {
     "player_name": "Reagan Marchant",
@@ -13307,7 +13285,7 @@
     "rc": 36.8,
     "rc7": 6.78,
     "rc7_adj": 7.43,
-    "rank": 605
+    "rank": 604
   },
   {
     "player_name": "Elizabeth Schaefer",
@@ -13329,7 +13307,7 @@
     "rc": 29.91,
     "rc7": 7.85,
     "rc7_adj": 7.42,
-    "rank": 606
+    "rank": 605
   },
   {
     "player_name": "Lily Yepez",
@@ -13350,6 +13328,28 @@
     "qualified": true,
     "rc": 25.19,
     "rc7": 7.78,
+    "rc7_adj": 7.42,
+    "rank": 606
+  },
+  {
+    "player_name": "Natalye Debus",
+    "name": "Natalye Debus",
+    "team": "Manhattan",
+    "PA": 150,
+    "HR": 10,
+    "pitching_games": 22,
+    "RC7_raw": 7.51,
+    "OPAF": 0.99,
+    "RC7_adj": 7.42,
+    "ab": 142,
+    "hits": 48,
+    "doubles": 10,
+    "triples": 0,
+    "tb": 88,
+    "walks": 8,
+    "qualified": true,
+    "rc": 33.63,
+    "rc7": 7.51,
     "rc7_adj": 7.42,
     "rank": 607
   },
@@ -13970,6 +13970,28 @@
     "rank": 635
   },
   {
+    "player_name": "Bailey Lindemuth",
+    "name": "Bailey Lindemuth",
+    "team": "Georgia",
+    "PA": 160,
+    "HR": 3,
+    "pitching_games": 0,
+    "RC7_raw": 5.59,
+    "OPAF": 1.3,
+    "RC7_adj": 7.26,
+    "ab": 149,
+    "hits": 48,
+    "doubles": 9,
+    "triples": 2,
+    "tb": 70,
+    "walks": 11,
+    "qualified": true,
+    "rc": 26.87,
+    "rc7": 5.59,
+    "rc7_adj": 7.26,
+    "rank": 636
+  },
+  {
     "player_name": "Kara Wine",
     "name": "Kara Wine",
     "team": "South Alabama",
@@ -13989,7 +14011,7 @@
     "rc": 25.65,
     "rc7": 5.99,
     "rc7_adj": 7.26,
-    "rank": 636
+    "rank": 637
   },
   {
     "player_name": "Mackenzie Bloss",
@@ -14011,7 +14033,7 @@
     "rc": 25.09,
     "rc7": 7.42,
     "rc7_adj": 7.25,
-    "rank": 637
+    "rank": 638
   },
   {
     "player_name": "Kacie Hoffmann",
@@ -14033,7 +14055,7 @@
     "rc": 32.66,
     "rc7": 6.47,
     "rc7_adj": 7.25,
-    "rank": 638
+    "rank": 639
   },
   {
     "player_name": "Caitlin Tighe",
@@ -14055,28 +14077,6 @@
     "rc": 38.01,
     "rc7": 7.26,
     "rc7_adj": 7.25,
-    "rank": 639
-  },
-  {
-    "player_name": "Bailey Lindemuth",
-    "name": "Bailey Lindemuth",
-    "team": "Georgia",
-    "PA": 157,
-    "HR": 3,
-    "pitching_games": 0,
-    "RC7_raw": 5.63,
-    "OPAF": 1.29,
-    "RC7_adj": 7.24,
-    "ab": 146,
-    "hits": 47,
-    "doubles": 9,
-    "triples": 2,
-    "tb": 69,
-    "walks": 11,
-    "qualified": true,
-    "rc": 26.55,
-    "rc7": 5.63,
-    "rc7_adj": 7.24,
     "rank": 640
   },
   {
@@ -14498,6 +14498,28 @@
     "rank": 659
   },
   {
+    "player_name": "Ava Armuth",
+    "name": "Ava Armuth",
+    "team": "Fairfield",
+    "PA": 165,
+    "HR": 3,
+    "pitching_games": 0,
+    "RC7_raw": 7.45,
+    "OPAF": 0.96,
+    "RC7_adj": 7.15,
+    "ab": 135,
+    "hits": 43,
+    "doubles": 10,
+    "triples": 2,
+    "tb": 66,
+    "walks": 30,
+    "qualified": true,
+    "rc": 32.65,
+    "rc7": 7.45,
+    "rc7_adj": 7.15,
+    "rank": 660
+  },
+  {
     "player_name": "K. St. Cyr",
     "name": "K. St. Cyr",
     "team": "Rider",
@@ -14517,7 +14539,7 @@
     "rc": 26.13,
     "rc7": 7.22,
     "rc7_adj": 7.15,
-    "rank": 660
+    "rank": 661
   },
   {
     "player_name": "Jess Bianco",
@@ -14539,7 +14561,7 @@
     "rc": 38.88,
     "rc7": 6.92,
     "rc7_adj": 7.14,
-    "rank": 661
+    "rank": 662
   },
   {
     "player_name": "Jade Berry",
@@ -14561,7 +14583,7 @@
     "rc": 35.93,
     "rc7": 6.62,
     "rc7_adj": 7.14,
-    "rank": 662
+    "rank": 663
   },
   {
     "player_name": "Hannah Meeks",
@@ -14583,7 +14605,7 @@
     "rc": 29.07,
     "rc7": 7.54,
     "rc7_adj": 7.13,
-    "rank": 663
+    "rank": 664
   },
   {
     "player_name": "Zara Wasserman",
@@ -14605,7 +14627,7 @@
     "rc": 33.26,
     "rc7": 7.28,
     "rc7_adj": 7.13,
-    "rank": 664
+    "rank": 665
   },
   {
     "player_name": "KARHYS PIERCE",
@@ -14627,7 +14649,7 @@
     "rc": 31.51,
     "rc7": 6.68,
     "rc7_adj": 7.11,
-    "rank": 665
+    "rank": 666
   },
   {
     "player_name": "Alana Scott",
@@ -14649,7 +14671,7 @@
     "rc": 39.5,
     "rc7": 8.55,
     "rc7_adj": 7.1,
-    "rank": 666
+    "rank": 667
   },
   {
     "player_name": "Presley Ivey",
@@ -14671,7 +14693,7 @@
     "rc": 26.67,
     "rc7": 6.92,
     "rc7_adj": 7.1,
-    "rank": 667
+    "rank": 668
   },
   {
     "player_name": "Reese Knox",
@@ -14693,7 +14715,7 @@
     "rc": 27.39,
     "rc7": 7.28,
     "rc7_adj": 7.09,
-    "rank": 668
+    "rank": 669
   },
   {
     "player_name": "Julia Girk",
@@ -14715,7 +14737,7 @@
     "rc": 27.39,
     "rc7": 6.69,
     "rc7_adj": 7.08,
-    "rank": 669
+    "rank": 670
   },
   {
     "player_name": "Jenna KEARNS",
@@ -14737,7 +14759,7 @@
     "rc": 36.3,
     "rc7": 7.7,
     "rc7_adj": 7.08,
-    "rank": 670
+    "rank": 671
   },
   {
     "player_name": "Amber DeSena",
@@ -14759,7 +14781,7 @@
     "rc": 38.53,
     "rc7": 7.36,
     "rc7_adj": 7.06,
-    "rank": 671
+    "rank": 672
   },
   {
     "player_name": "Gator Robinson",
@@ -14781,7 +14803,7 @@
     "rc": 31.55,
     "rc7": 6.76,
     "rc7_adj": 7.05,
-    "rank": 672
+    "rank": 673
   },
   {
     "player_name": "Char Lorenz",
@@ -14803,7 +14825,7 @@
     "rc": 28.19,
     "rc7": 5.69,
     "rc7_adj": 7.04,
-    "rank": 673
+    "rank": 674
   },
   {
     "player_name": "Savannah Ring",
@@ -14825,7 +14847,7 @@
     "rc": 43.39,
     "rc7": 7.06,
     "rc7_adj": 7.04,
-    "rank": 674
+    "rank": 675
   },
   {
     "player_name": "Michelle Diaz",
@@ -14847,7 +14869,7 @@
     "rc": 25.89,
     "rc7": 9.54,
     "rc7_adj": 7.03,
-    "rank": 675
+    "rank": 676
   },
   {
     "player_name": "Mary Kate murray",
@@ -14869,7 +14891,7 @@
     "rc": 28.04,
     "rc7": 7.27,
     "rc7_adj": 7.02,
-    "rank": 676
+    "rank": 677
   },
   {
     "player_name": "Brynn Acton",
@@ -14891,7 +14913,7 @@
     "rc": 41.71,
     "rc7": 7.3,
     "rc7_adj": 7.02,
-    "rank": 677
+    "rank": 678
   },
   {
     "player_name": "Haley Glass",
@@ -14913,7 +14935,7 @@
     "rc": 30.7,
     "rc7": 7.33,
     "rc7_adj": 7.01,
-    "rank": 678
+    "rank": 679
   },
   {
     "player_name": "Donnalea Barnett",
@@ -14935,7 +14957,7 @@
     "rc": 26.23,
     "rc7": 7.76,
     "rc7_adj": 7.01,
-    "rank": 679
+    "rank": 680
   },
   {
     "player_name": "MC Eaton",
@@ -14957,7 +14979,7 @@
     "rc": 28.48,
     "rc7": 6.8,
     "rc7_adj": 7.01,
-    "rank": 680
+    "rank": 681
   },
   {
     "player_name": "Raegan Duncan",
@@ -14979,7 +15001,7 @@
     "rc": 30.18,
     "rc7": 7.2,
     "rc7_adj": 7.01,
-    "rank": 681
+    "rank": 682
   },
   {
     "player_name": "Aaralyn Nogay",
@@ -15001,7 +15023,7 @@
     "rc": 31.89,
     "rc7": 7.28,
     "rc7_adj": 7.0,
-    "rank": 682
+    "rank": 683
   },
   {
     "player_name": "River Mahler",
@@ -15023,7 +15045,7 @@
     "rc": 33.18,
     "rc7": 6.51,
     "rc7_adj": 7.0,
-    "rank": 683
+    "rank": 684
   },
   {
     "player_name": "Rachael Morales",
@@ -15045,7 +15067,7 @@
     "rc": 35.47,
     "rc7": 7.09,
     "rc7_adj": 6.99,
-    "rank": 684
+    "rank": 685
   },
   {
     "player_name": "Laney Deane",
@@ -15067,28 +15089,6 @@
     "rc": 41.64,
     "rc7": 7.05,
     "rc7_adj": 6.99,
-    "rank": 685
-  },
-  {
-    "player_name": "Ava Armuth",
-    "name": "Ava Armuth",
-    "team": "Fairfield",
-    "PA": 161,
-    "HR": 3,
-    "pitching_games": 0,
-    "RC7_raw": 7.25,
-    "OPAF": 0.96,
-    "RC7_adj": 6.98,
-    "ab": 133,
-    "hits": 42,
-    "doubles": 10,
-    "triples": 2,
-    "tb": 65,
-    "walks": 28,
-    "qualified": true,
-    "rc": 31.43,
-    "rc7": 7.25,
-    "rc7_adj": 6.98,
     "rank": 686
   },
   {
@@ -17754,6 +17754,28 @@
     "rank": 807
   },
   {
+    "player_name": "Sarah Bielski",
+    "name": "Sarah Bielski",
+    "team": "Fairfield",
+    "PA": 142,
+    "HR": 1,
+    "pitching_games": 0,
+    "RC7_raw": 6.76,
+    "OPAF": 0.95,
+    "RC7_adj": 6.42,
+    "ab": 123,
+    "hits": 43,
+    "doubles": 6,
+    "triples": 1,
+    "tb": 54,
+    "walks": 19,
+    "qualified": true,
+    "rc": 25.73,
+    "rc7": 6.76,
+    "rc7_adj": 6.42,
+    "rank": 808
+  },
+  {
     "player_name": "Michele Tarpey",
     "name": "Michele Tarpey",
     "team": "North Carolina",
@@ -17773,7 +17795,7 @@
     "rc": 27.24,
     "rc7": 6.22,
     "rc7_adj": 6.42,
-    "rank": 808
+    "rank": 809
   },
   {
     "player_name": "Sydney Orndorff",
@@ -17795,7 +17817,7 @@
     "rc": 20.16,
     "rc7": 6.13,
     "rc7_adj": 6.41,
-    "rank": 809
+    "rank": 810
   },
   {
     "player_name": "Addie Keef",
@@ -17817,7 +17839,7 @@
     "rc": 31.41,
     "rc7": 6.28,
     "rc7_adj": 6.4,
-    "rank": 810
+    "rank": 811
   },
   {
     "player_name": "Brianna De La Fuente",
@@ -17839,7 +17861,7 @@
     "rc": 23.07,
     "rc7": 6.82,
     "rc7_adj": 6.4,
-    "rank": 811
+    "rank": 812
   },
   {
     "player_name": "Kelsey Hackett",
@@ -17861,7 +17883,7 @@
     "rc": 27.95,
     "rc7": 6.45,
     "rc7_adj": 6.4,
-    "rank": 812
+    "rank": 813
   },
   {
     "player_name": "Ava Arce",
@@ -17883,7 +17905,7 @@
     "rc": 30.01,
     "rc7": 6.12,
     "rc7_adj": 6.39,
-    "rank": 813
+    "rank": 814
   },
   {
     "player_name": "Easton Lotus",
@@ -17905,7 +17927,7 @@
     "rc": 39.72,
     "rc7": 6.47,
     "rc7_adj": 6.39,
-    "rank": 814
+    "rank": 815
   },
   {
     "player_name": "Ella Stevinson",
@@ -17927,7 +17949,7 @@
     "rc": 22.35,
     "rc7": 6.52,
     "rc7_adj": 6.39,
-    "rank": 815
+    "rank": 816
   },
   {
     "player_name": "Audrey Miller",
@@ -17949,7 +17971,7 @@
     "rc": 33.28,
     "rc7": 6.3,
     "rc7_adj": 6.39,
-    "rank": 816
+    "rank": 817
   },
   {
     "player_name": "Bella Foran",
@@ -17971,7 +17993,7 @@
     "rc": 21.39,
     "rc7": 6.24,
     "rc7_adj": 6.38,
-    "rank": 817
+    "rank": 818
   },
   {
     "player_name": "Camryn Lasota",
@@ -17993,7 +18015,7 @@
     "rc": 33.51,
     "rc7": 7.33,
     "rc7_adj": 6.38,
-    "rank": 818
+    "rank": 819
   },
   {
     "player_name": "Aynslee Linduff",
@@ -18015,7 +18037,7 @@
     "rc": 31.43,
     "rc7": 6.35,
     "rc7_adj": 6.37,
-    "rank": 819
+    "rank": 820
   },
   {
     "player_name": "Allie Furr",
@@ -18037,28 +18059,6 @@
     "rc": 30.38,
     "rc7": 5.91,
     "rc7_adj": 6.36,
-    "rank": 820
-  },
-  {
-    "player_name": "Sarah Bielski",
-    "name": "Sarah Bielski",
-    "team": "Fairfield",
-    "PA": 137,
-    "HR": 1,
-    "pitching_games": 0,
-    "RC7_raw": 6.66,
-    "OPAF": 0.95,
-    "RC7_adj": 6.35,
-    "ab": 120,
-    "hits": 42,
-    "doubles": 6,
-    "triples": 1,
-    "tb": 53,
-    "walks": 17,
-    "qualified": true,
-    "rc": 24.73,
-    "rc7": 6.66,
-    "rc7_adj": 6.35,
     "rank": 821
   },
   {
@@ -19184,28 +19184,6 @@
     "rank": 872
   },
   {
-    "player_name": "Elsa Morrison",
-    "name": "Elsa Morrison",
-    "team": "Tennessee",
-    "PA": 180,
-    "HR": 7,
-    "pitching_games": 0,
-    "RC7_raw": 4.79,
-    "OPAF": 1.29,
-    "RC7_adj": 6.16,
-    "ab": 164,
-    "hits": 43,
-    "doubles": 14,
-    "triples": 1,
-    "tb": 80,
-    "walks": 16,
-    "qualified": true,
-    "rc": 27.59,
-    "rc7": 4.79,
-    "rc7_adj": 6.16,
-    "rank": 873
-  },
-  {
     "player_name": "Hailey Shuler",
     "name": "Hailey Shuler",
     "team": "BYU",
@@ -19225,7 +19203,7 @@
     "rc": 26.98,
     "rc7": 5.78,
     "rc7_adj": 6.15,
-    "rank": 874
+    "rank": 873
   },
   {
     "player_name": "Madison Edwards",
@@ -19247,7 +19225,7 @@
     "rc": 28.21,
     "rc7": 5.49,
     "rc7_adj": 6.15,
-    "rank": 875
+    "rank": 874
   },
   {
     "player_name": "Caroline Hall",
@@ -19269,7 +19247,7 @@
     "rc": 35.8,
     "rc7": 6.37,
     "rc7_adj": 6.15,
-    "rank": 876
+    "rank": 875
   },
   {
     "player_name": "Grace Johnson",
@@ -19291,7 +19269,7 @@
     "rc": 24.54,
     "rc7": 5.92,
     "rc7_adj": 6.15,
-    "rank": 877
+    "rank": 876
   },
   {
     "player_name": "Abby Hornberger",
@@ -19313,7 +19291,7 @@
     "rc": 23.73,
     "rc7": 6.73,
     "rc7_adj": 6.15,
-    "rank": 878
+    "rank": 877
   },
   {
     "player_name": "Lily Bell",
@@ -19335,7 +19313,7 @@
     "rc": 38.98,
     "rc7": 6.66,
     "rc7_adj": 6.15,
-    "rank": 879
+    "rank": 878
   },
   {
     "player_name": "Alana Powell",
@@ -19357,7 +19335,7 @@
     "rc": 24.2,
     "rc7": 6.96,
     "rc7_adj": 6.14,
-    "rank": 880
+    "rank": 879
   },
   {
     "player_name": "Madison Poulson",
@@ -19379,7 +19357,7 @@
     "rc": 24.31,
     "rc7": 6.81,
     "rc7_adj": 6.13,
-    "rank": 881
+    "rank": 880
   },
   {
     "player_name": "Jaylah Jarrell",
@@ -19401,7 +19379,7 @@
     "rc": 20.49,
     "rc7": 5.38,
     "rc7_adj": 6.12,
-    "rank": 882
+    "rank": 881
   },
   {
     "player_name": "Hayden Kyne",
@@ -19423,7 +19401,7 @@
     "rc": 22.58,
     "rc7": 6.41,
     "rc7_adj": 6.12,
-    "rank": 883
+    "rank": 882
   },
   {
     "player_name": "Gia Felice",
@@ -19445,7 +19423,7 @@
     "rc": 31.03,
     "rc7": 6.33,
     "rc7_adj": 6.12,
-    "rank": 884
+    "rank": 883
   },
   {
     "player_name": "Kadence Shepherd",
@@ -19467,7 +19445,7 @@
     "rc": 35.74,
     "rc7": 6.1,
     "rc7_adj": 6.11,
-    "rank": 885
+    "rank": 884
   },
   {
     "player_name": "Leah McAnally",
@@ -19489,7 +19467,7 @@
     "rc": 27.17,
     "rc7": 5.38,
     "rc7_adj": 6.11,
-    "rank": 886
+    "rank": 885
   },
   {
     "player_name": "Jaedyn Valdez",
@@ -19511,7 +19489,7 @@
     "rc": 26.37,
     "rc7": 6.92,
     "rc7_adj": 6.11,
-    "rank": 887
+    "rank": 886
   },
   {
     "player_name": "Ella Oswalt",
@@ -19533,7 +19511,7 @@
     "rc": 22.94,
     "rc7": 5.87,
     "rc7_adj": 6.11,
-    "rank": 888
+    "rank": 887
   },
   {
     "player_name": "Johnna Schroeder",
@@ -19555,7 +19533,7 @@
     "rc": 29.75,
     "rc7": 5.73,
     "rc7_adj": 6.11,
-    "rank": 889
+    "rank": 888
   },
   {
     "player_name": "Gracie Parker",
@@ -19577,7 +19555,7 @@
     "rc": 29.0,
     "rc7": 6.62,
     "rc7_adj": 6.11,
-    "rank": 890
+    "rank": 889
   },
   {
     "player_name": "Hannah Haberstroh",
@@ -19598,6 +19576,28 @@
     "qualified": true,
     "rc": 26.16,
     "rc7": 6.1,
+    "rc7_adj": 6.1,
+    "rank": 890
+  },
+  {
+    "player_name": "Elsa Morrison",
+    "name": "Elsa Morrison",
+    "team": "Tennessee",
+    "PA": 183,
+    "HR": 7,
+    "pitching_games": 0,
+    "RC7_raw": 4.73,
+    "OPAF": 1.29,
+    "RC7_adj": 6.1,
+    "ab": 166,
+    "hits": 43,
+    "doubles": 14,
+    "triples": 1,
+    "tb": 80,
+    "walks": 17,
+    "qualified": true,
+    "rc": 27.68,
+    "rc7": 4.73,
     "rc7_adj": 6.1,
     "rank": 891
   },
@@ -26752,6 +26752,28 @@
     "rank": 1216
   },
   {
+    "player_name": "Brianna Estevez",
+    "name": "Brianna Estevez",
+    "team": "Manhattan",
+    "PA": 177,
+    "HR": 3,
+    "pitching_games": 0,
+    "RC7_raw": 5.05,
+    "OPAF": 0.99,
+    "RC7_adj": 4.98,
+    "ab": 164,
+    "hits": 52,
+    "doubles": 7,
+    "triples": 1,
+    "tb": 70,
+    "walks": 13,
+    "qualified": true,
+    "rc": 26.95,
+    "rc7": 5.05,
+    "rc7_adj": 4.98,
+    "rank": 1217
+  },
+  {
     "player_name": "Lauren Payne",
     "name": "Lauren Payne",
     "team": "Binghamton",
@@ -26771,7 +26793,7 @@
     "rc": 21.3,
     "rc7": 5.26,
     "rc7_adj": 4.97,
-    "rank": 1217
+    "rank": 1218
   },
   {
     "player_name": "Gabby Park",
@@ -26793,7 +26815,7 @@
     "rc": 20.84,
     "rc7": 5.15,
     "rc7_adj": 4.97,
-    "rank": 1218
+    "rank": 1219
   },
   {
     "player_name": "Riley Potter",
@@ -26815,7 +26837,7 @@
     "rc": 20.26,
     "rc7": 5.19,
     "rc7_adj": 4.97,
-    "rank": 1219
+    "rank": 1220
   },
   {
     "player_name": "Aspen Wheeler",
@@ -26837,7 +26859,7 @@
     "rc": 25.26,
     "rc7": 4.82,
     "rc7_adj": 4.97,
-    "rank": 1220
+    "rank": 1221
   },
   {
     "player_name": "Tristian Thompson",
@@ -26859,7 +26881,7 @@
     "rc": 28.49,
     "rc7": 4.64,
     "rc7_adj": 4.96,
-    "rank": 1221
+    "rank": 1222
   },
   {
     "player_name": "Shae Anderson",
@@ -26881,7 +26903,7 @@
     "rc": 18.53,
     "rc7": 4.1,
     "rc7_adj": 4.96,
-    "rank": 1222
+    "rank": 1223
   },
   {
     "player_name": "Abby Grundy",
@@ -26903,7 +26925,7 @@
     "rc": 22.6,
     "rc7": 5.05,
     "rc7_adj": 4.96,
-    "rank": 1223
+    "rank": 1224
   },
   {
     "player_name": "Taylor Waitley",
@@ -26925,7 +26947,7 @@
     "rc": 29.3,
     "rc7": 5.3,
     "rc7_adj": 4.96,
-    "rank": 1224
+    "rank": 1225
   },
   {
     "player_name": "Kierston McCoy",
@@ -26947,7 +26969,7 @@
     "rc": 30.64,
     "rc7": 4.99,
     "rc7_adj": 4.95,
-    "rank": 1225
+    "rank": 1226
   },
   {
     "player_name": "Kayla Whaley",
@@ -26969,7 +26991,7 @@
     "rc": 18.47,
     "rc7": 5.17,
     "rc7_adj": 4.94,
-    "rank": 1226
+    "rank": 1227
   },
   {
     "player_name": "Gracie Dees",
@@ -26991,7 +27013,7 @@
     "rc": 24.5,
     "rc7": 3.96,
     "rc7_adj": 4.94,
-    "rank": 1227
+    "rank": 1228
   },
   {
     "player_name": "Larissa Ortiz",
@@ -27013,7 +27035,7 @@
     "rc": 18.3,
     "rc7": 4.99,
     "rc7_adj": 4.94,
-    "rank": 1228
+    "rank": 1229
   },
   {
     "player_name": "K. Cosek",
@@ -27035,7 +27057,7 @@
     "rc": 19.93,
     "rc7": 4.81,
     "rc7_adj": 4.93,
-    "rank": 1229
+    "rank": 1230
   },
   {
     "player_name": "Liz Sedakis",
@@ -27057,7 +27079,7 @@
     "rc": 23.52,
     "rc7": 4.49,
     "rc7_adj": 4.93,
-    "rank": 1230
+    "rank": 1231
   },
   {
     "player_name": "Bella Fuentes",
@@ -27079,7 +27101,7 @@
     "rc": 26.62,
     "rc7": 5.04,
     "rc7_adj": 4.93,
-    "rank": 1231
+    "rank": 1232
   },
   {
     "player_name": "Cameron Zytkewicz ra",
@@ -27101,7 +27123,7 @@
     "rc": 19.47,
     "rc7": 5.05,
     "rc7_adj": 4.92,
-    "rank": 1232
+    "rank": 1233
   },
   {
     "player_name": "Karmyn Bass",
@@ -27123,7 +27145,7 @@
     "rc": 27.4,
     "rc7": 4.43,
     "rc7_adj": 4.92,
-    "rank": 1233
+    "rank": 1234
   },
   {
     "player_name": "Marley Neises",
@@ -27145,7 +27167,7 @@
     "rc": 25.13,
     "rc7": 5.61,
     "rc7_adj": 4.92,
-    "rank": 1234
+    "rank": 1235
   },
   {
     "player_name": "Deana Cunningham",
@@ -27167,7 +27189,7 @@
     "rc": 21.82,
     "rc7": 4.68,
     "rc7_adj": 4.9,
-    "rank": 1235
+    "rank": 1236
   },
   {
     "player_name": "Laniya LEWIS",
@@ -27189,7 +27211,7 @@
     "rc": 15.75,
     "rc7": 5.7,
     "rc7_adj": 4.89,
-    "rank": 1236
+    "rank": 1237
   },
   {
     "player_name": "Trinity Fessler",
@@ -27211,7 +27233,7 @@
     "rc": 21.72,
     "rc7": 5.92,
     "rc7_adj": 4.89,
-    "rank": 1237
+    "rank": 1238
   },
   {
     "player_name": "Taylor Howe",
@@ -27233,7 +27255,7 @@
     "rc": 25.48,
     "rc7": 5.19,
     "rc7_adj": 4.89,
-    "rank": 1238
+    "rank": 1239
   },
   {
     "player_name": "Madisen Noll",
@@ -27255,7 +27277,7 @@
     "rc": 29.63,
     "rc7": 5.23,
     "rc7_adj": 4.89,
-    "rank": 1239
+    "rank": 1240
   },
   {
     "player_name": "Britain Beshears",
@@ -27277,7 +27299,7 @@
     "rc": 22.08,
     "rc7": 4.83,
     "rc7_adj": 4.89,
-    "rank": 1240
+    "rank": 1241
   },
   {
     "player_name": "Ella Stephenson",
@@ -27299,7 +27321,7 @@
     "rc": 27.43,
     "rc7": 4.72,
     "rc7_adj": 4.89,
-    "rank": 1241
+    "rank": 1242
   },
   {
     "player_name": "Caylee De Meo",
@@ -27321,7 +27343,7 @@
     "rc": 23.81,
     "rc7": 4.9,
     "rc7_adj": 4.89,
-    "rank": 1242
+    "rank": 1243
   },
   {
     "player_name": "Ava Cowart",
@@ -27343,7 +27365,7 @@
     "rc": 26.33,
     "rc7": 5.27,
     "rc7_adj": 4.88,
-    "rank": 1243
+    "rank": 1244
   },
   {
     "player_name": "Logan-Ray Gaspar",
@@ -27365,7 +27387,7 @@
     "rc": 20.11,
     "rc7": 6.21,
     "rc7_adj": 4.88,
-    "rank": 1244
+    "rank": 1245
   },
   {
     "player_name": "Sydney Farmer",
@@ -27387,7 +27409,7 @@
     "rc": 20.26,
     "rc7": 5.19,
     "rc7_adj": 4.88,
-    "rank": 1245
+    "rank": 1246
   },
   {
     "player_name": "Calle Henne",
@@ -27409,7 +27431,7 @@
     "rc": 25.79,
     "rc7": 5.16,
     "rc7_adj": 4.88,
-    "rank": 1246
+    "rank": 1247
   },
   {
     "player_name": "Kendall Gaunt",
@@ -27431,7 +27453,7 @@
     "rc": 16.1,
     "rc7": 4.97,
     "rc7_adj": 4.88,
-    "rank": 1247
+    "rank": 1248
   },
   {
     "player_name": "Abby Edwards",
@@ -27453,7 +27475,7 @@
     "rc": 17.28,
     "rc7": 4.71,
     "rc7_adj": 4.87,
-    "rank": 1248
+    "rank": 1249
   },
   {
     "player_name": "Lydia Ettema",
@@ -27475,7 +27497,7 @@
     "rc": 22.21,
     "rc7": 5.07,
     "rc7_adj": 4.87,
-    "rank": 1249
+    "rank": 1250
   },
   {
     "player_name": "Brooke Musch",
@@ -27497,7 +27519,7 @@
     "rc": 24.78,
     "rc7": 5.05,
     "rc7_adj": 4.87,
-    "rank": 1250
+    "rank": 1251
   },
   {
     "player_name": "Arvai Madeline",
@@ -27519,7 +27541,7 @@
     "rc": 18.3,
     "rc7": 5.12,
     "rc7_adj": 4.87,
-    "rank": 1251
+    "rank": 1252
   },
   {
     "player_name": "Geanice Morales",
@@ -27541,7 +27563,7 @@
     "rc": 20.78,
     "rc7": 5.9,
     "rc7_adj": 4.87,
-    "rank": 1252
+    "rank": 1253
   },
   {
     "player_name": "Jess Willsey",
@@ -27563,7 +27585,7 @@
     "rc": 24.7,
     "rc7": 5.14,
     "rc7_adj": 4.86,
-    "rank": 1253
+    "rank": 1254
   },
   {
     "player_name": "Hannah Ziecik",
@@ -27584,28 +27606,6 @@
     "qualified": true,
     "rc": 20.33,
     "rc7": 5.14,
-    "rc7_adj": 4.86,
-    "rank": 1254
-  },
-  {
-    "player_name": "Brianna Estevez",
-    "name": "Brianna Estevez",
-    "team": "Manhattan",
-    "PA": 173,
-    "HR": 3,
-    "pitching_games": 0,
-    "RC7_raw": 4.96,
-    "OPAF": 0.98,
-    "RC7_adj": 4.86,
-    "ab": 160,
-    "hits": 50,
-    "doubles": 7,
-    "triples": 1,
-    "tb": 68,
-    "walks": 13,
-    "qualified": true,
-    "rc": 25.99,
-    "rc7": 4.96,
     "rc7_adj": 4.86,
     "rank": 1255
   },
@@ -28512,28 +28512,6 @@
     "rank": 1296
   },
   {
-    "player_name": "Samantha Dougherty",
-    "name": "Samantha Dougherty",
-    "team": "Fairfield",
-    "PA": 128,
-    "HR": 1,
-    "pitching_games": 0,
-    "RC7_raw": 4.84,
-    "OPAF": 0.98,
-    "RC7_adj": 4.74,
-    "ab": 117,
-    "hits": 36,
-    "doubles": 7,
-    "triples": 1,
-    "tb": 48,
-    "walks": 11,
-    "qualified": true,
-    "rc": 18.68,
-    "rc7": 4.84,
-    "rc7_adj": 4.74,
-    "rank": 1297
-  },
-  {
     "player_name": "Maycen Gibbs",
     "name": "Maycen Gibbs",
     "team": "Hawaii",
@@ -28553,7 +28531,7 @@
     "rc": 24.62,
     "rc7": 4.92,
     "rc7_adj": 4.74,
-    "rank": 1298
+    "rank": 1297
   },
   {
     "player_name": "Janelle Ilacqua",
@@ -28575,7 +28553,7 @@
     "rc": 17.99,
     "rc7": 4.5,
     "rc7_adj": 4.74,
-    "rank": 1299
+    "rank": 1298
   },
   {
     "player_name": "Alyssa Dethlefson",
@@ -28597,7 +28575,7 @@
     "rc": 22.16,
     "rc7": 4.56,
     "rc7_adj": 4.74,
-    "rank": 1300
+    "rank": 1299
   },
   {
     "player_name": "Prisais Quintero",
@@ -28619,7 +28597,7 @@
     "rc": 23.88,
     "rc7": 5.12,
     "rc7_adj": 4.74,
-    "rank": 1301
+    "rank": 1300
   },
   {
     "player_name": "Allison Corbin",
@@ -28641,7 +28619,7 @@
     "rc": 20.02,
     "rc7": 4.89,
     "rc7_adj": 4.74,
-    "rank": 1302
+    "rank": 1301
   },
   {
     "player_name": "Blakley Kingsmore",
@@ -28663,7 +28641,7 @@
     "rc": 22.36,
     "rc7": 4.7,
     "rc7_adj": 4.73,
-    "rank": 1303
+    "rank": 1302
   },
   {
     "player_name": "Skylinn Pogue",
@@ -28685,7 +28663,7 @@
     "rc": 26.8,
     "rc7": 5.26,
     "rc7_adj": 4.72,
-    "rank": 1304
+    "rank": 1303
   },
   {
     "player_name": "Megan Claerhout",
@@ -28707,7 +28685,7 @@
     "rc": 23.42,
     "rc7": 4.92,
     "rc7_adj": 4.72,
-    "rank": 1305
+    "rank": 1304
   },
   {
     "player_name": "Bailey Murphy",
@@ -28729,7 +28707,7 @@
     "rc": 15.37,
     "rc7": 4.42,
     "rc7_adj": 4.71,
-    "rank": 1306
+    "rank": 1305
   },
   {
     "player_name": "Taylinn Warren",
@@ -28751,7 +28729,7 @@
     "rc": 18.55,
     "rc7": 4.58,
     "rc7_adj": 4.71,
-    "rank": 1307
+    "rank": 1306
   },
   {
     "player_name": "Michelle Delgado",
@@ -28773,7 +28751,7 @@
     "rc": 21.85,
     "rc7": 4.29,
     "rc7_adj": 4.71,
-    "rank": 1308
+    "rank": 1307
   },
   {
     "player_name": "Payton Janicki",
@@ -28795,7 +28773,7 @@
     "rc": 22.05,
     "rc7": 5.79,
     "rc7_adj": 4.71,
-    "rank": 1309
+    "rank": 1308
   },
   {
     "player_name": "AB Cipalla",
@@ -28817,7 +28795,7 @@
     "rc": 22.1,
     "rc7": 4.94,
     "rc7_adj": 4.7,
-    "rank": 1310
+    "rank": 1309
   },
   {
     "player_name": "Katie Harrington",
@@ -28839,7 +28817,7 @@
     "rc": 24.88,
     "rc7": 4.84,
     "rc7_adj": 4.7,
-    "rank": 1311
+    "rank": 1310
   },
   {
     "player_name": "London Slade",
@@ -28861,7 +28839,7 @@
     "rc": 27.0,
     "rc7": 4.61,
     "rc7_adj": 4.7,
-    "rank": 1312
+    "rank": 1311
   },
   {
     "player_name": "Talia Maldonado",
@@ -28883,7 +28861,7 @@
     "rc": 21.08,
     "rc7": 5.33,
     "rc7_adj": 4.7,
-    "rank": 1313
+    "rank": 1312
   },
   {
     "player_name": "Jackie Masone",
@@ -28905,7 +28883,7 @@
     "rc": 16.27,
     "rc7": 4.5,
     "rc7_adj": 4.69,
-    "rank": 1314
+    "rank": 1313
   },
   {
     "player_name": "Chloe Yeatts",
@@ -28927,7 +28905,7 @@
     "rc": 19.63,
     "rc7": 4.58,
     "rc7_adj": 4.69,
-    "rank": 1315
+    "rank": 1314
   },
   {
     "player_name": "Brynn Libler",
@@ -28949,7 +28927,7 @@
     "rc": 23.42,
     "rc7": 4.87,
     "rc7_adj": 4.69,
-    "rank": 1316
+    "rank": 1315
   },
   {
     "player_name": "Andrea Perez",
@@ -28971,7 +28949,7 @@
     "rc": 21.26,
     "rc7": 4.7,
     "rc7_adj": 4.68,
-    "rank": 1317
+    "rank": 1316
   },
   {
     "player_name": "Lilly Bean",
@@ -28993,7 +28971,7 @@
     "rc": 23.48,
     "rc7": 4.93,
     "rc7_adj": 4.68,
-    "rank": 1318
+    "rank": 1317
   },
   {
     "player_name": "Frankie Rita",
@@ -29015,7 +28993,7 @@
     "rc": 25.82,
     "rc7": 4.88,
     "rc7_adj": 4.67,
-    "rank": 1319
+    "rank": 1318
   },
   {
     "player_name": "Reagan Heflin",
@@ -29037,7 +29015,7 @@
     "rc": 25.82,
     "rc7": 4.93,
     "rc7_adj": 4.67,
-    "rank": 1320
+    "rank": 1319
   },
   {
     "player_name": "Jamie Varga",
@@ -29059,7 +29037,7 @@
     "rc": 27.83,
     "rc7": 4.79,
     "rc7_adj": 4.67,
-    "rank": 1321
+    "rank": 1320
   },
   {
     "player_name": "Rachel Hawkins",
@@ -29081,7 +29059,7 @@
     "rc": 22.38,
     "rc7": 4.84,
     "rc7_adj": 4.66,
-    "rank": 1322
+    "rank": 1321
   },
   {
     "player_name": "Meg Fountain",
@@ -29103,7 +29081,7 @@
     "rc": 27.16,
     "rc7": 6.0,
     "rc7_adj": 4.66,
-    "rank": 1323
+    "rank": 1322
   },
   {
     "player_name": "Riley Croley",
@@ -29125,7 +29103,7 @@
     "rc": 22.85,
     "rc7": 5.27,
     "rc7_adj": 4.65,
-    "rank": 1324
+    "rank": 1323
   },
   {
     "player_name": "Teagan Baulsir",
@@ -29147,7 +29125,7 @@
     "rc": 21.34,
     "rc7": 4.53,
     "rc7_adj": 4.65,
-    "rank": 1325
+    "rank": 1324
   },
   {
     "player_name": "McKenna Andrews",
@@ -29169,7 +29147,7 @@
     "rc": 21.14,
     "rc7": 4.72,
     "rc7_adj": 4.65,
-    "rank": 1326
+    "rank": 1325
   },
   {
     "player_name": "Aniya Merritt",
@@ -29191,7 +29169,7 @@
     "rc": 19.05,
     "rc7": 5.56,
     "rc7_adj": 4.65,
-    "rank": 1327
+    "rank": 1326
   },
   {
     "player_name": "Naya Martinez",
@@ -29213,7 +29191,7 @@
     "rc": 18.78,
     "rc7": 4.69,
     "rc7_adj": 4.65,
-    "rank": 1328
+    "rank": 1327
   },
   {
     "player_name": "Maddie Burrows",
@@ -29235,7 +29213,7 @@
     "rc": 16.36,
     "rc7": 4.58,
     "rc7_adj": 4.65,
-    "rank": 1329
+    "rank": 1328
   },
   {
     "player_name": "Jayla Stafford",
@@ -29257,7 +29235,7 @@
     "rc": 20.05,
     "rc7": 4.3,
     "rc7_adj": 4.64,
-    "rank": 1330
+    "rank": 1329
   },
   {
     "player_name": "Emma McDonald",
@@ -29279,7 +29257,7 @@
     "rc": 19.53,
     "rc7": 4.94,
     "rc7_adj": 4.64,
-    "rank": 1331
+    "rank": 1330
   },
   {
     "player_name": "Taylor Francis",
@@ -29301,7 +29279,7 @@
     "rc": 14.05,
     "rc7": 4.68,
     "rc7_adj": 4.64,
-    "rank": 1332
+    "rank": 1331
   },
   {
     "player_name": "Skye Johnson",
@@ -29323,7 +29301,7 @@
     "rc": 19.29,
     "rc7": 4.36,
     "rc7_adj": 4.64,
-    "rank": 1333
+    "rank": 1332
   },
   {
     "player_name": "Kelsey Creech",
@@ -29345,7 +29323,7 @@
     "rc": 24.29,
     "rc7": 5.2,
     "rc7_adj": 4.64,
-    "rank": 1334
+    "rank": 1333
   },
   {
     "player_name": "Kairi Rodriguez",
@@ -29367,7 +29345,7 @@
     "rc": 18.45,
     "rc7": 3.99,
     "rc7_adj": 4.63,
-    "rank": 1335
+    "rank": 1334
   },
   {
     "player_name": "Sydney Parlett",
@@ -29389,7 +29367,7 @@
     "rc": 25.85,
     "rc7": 5.17,
     "rc7_adj": 4.61,
-    "rank": 1336
+    "rank": 1335
   },
   {
     "player_name": "Hannah Hawley",
@@ -29411,7 +29389,7 @@
     "rc": 22.79,
     "rc7": 4.47,
     "rc7_adj": 4.6,
-    "rank": 1337
+    "rank": 1336
   },
   {
     "player_name": "Ariah Mitchell",
@@ -29433,7 +29411,7 @@
     "rc": 26.7,
     "rc7": 4.75,
     "rc7_adj": 4.6,
-    "rank": 1338
+    "rank": 1337
   },
   {
     "player_name": "Abby Carsley",
@@ -29455,7 +29433,7 @@
     "rc": 18.54,
     "rc7": 4.53,
     "rc7_adj": 4.6,
-    "rank": 1339
+    "rank": 1338
   },
   {
     "player_name": "Zoe Wright",
@@ -29477,7 +29455,7 @@
     "rc": 19.34,
     "rc7": 5.01,
     "rc7_adj": 4.59,
-    "rank": 1340
+    "rank": 1339
   },
   {
     "player_name": "Camrynn LINNEMAN",
@@ -29499,7 +29477,7 @@
     "rc": 18.94,
     "rc7": 4.52,
     "rc7_adj": 4.59,
-    "rank": 1341
+    "rank": 1340
   },
   {
     "player_name": "Nevaeh Terrell",
@@ -29521,7 +29499,7 @@
     "rc": 17.14,
     "rc7": 6.1,
     "rc7_adj": 4.59,
-    "rank": 1342
+    "rank": 1341
   },
   {
     "player_name": "Nicole Cancel",
@@ -29543,7 +29521,7 @@
     "rc": 20.27,
     "rc7": 4.68,
     "rc7_adj": 4.59,
-    "rank": 1343
+    "rank": 1342
   },
   {
     "player_name": "Sharon Manni",
@@ -29565,7 +29543,7 @@
     "rc": 17.05,
     "rc7": 4.53,
     "rc7_adj": 4.59,
-    "rank": 1344
+    "rank": 1343
   },
   {
     "player_name": "Josefina Lacalle",
@@ -29587,7 +29565,7 @@
     "rc": 23.12,
     "rc7": 7.14,
     "rc7_adj": 4.58,
-    "rank": 1345
+    "rank": 1344
   },
   {
     "player_name": "Sophie Smith",
@@ -29609,7 +29587,7 @@
     "rc": 19.75,
     "rc7": 3.95,
     "rc7_adj": 4.58,
-    "rank": 1346
+    "rank": 1345
   },
   {
     "player_name": "Diamond Leslie",
@@ -29631,7 +29609,7 @@
     "rc": 24.74,
     "rc7": 4.0,
     "rc7_adj": 4.57,
-    "rank": 1347
+    "rank": 1346
   },
   {
     "player_name": "Mady Pint",
@@ -29653,7 +29631,7 @@
     "rc": 20.78,
     "rc7": 4.55,
     "rc7_adj": 4.57,
-    "rank": 1348
+    "rank": 1347
   },
   {
     "player_name": "Taikibrea Campbell",
@@ -29675,7 +29653,7 @@
     "rc": 15.53,
     "rc7": 4.8,
     "rc7_adj": 4.57,
-    "rank": 1349
+    "rank": 1348
   },
   {
     "player_name": "Ayla Ray",
@@ -29697,7 +29675,7 @@
     "rc": 25.21,
     "rc7": 6.02,
     "rc7_adj": 4.57,
-    "rank": 1350
+    "rank": 1349
   },
   {
     "player_name": "Kiersten Buchanan",
@@ -29719,7 +29697,7 @@
     "rc": 19.26,
     "rc7": 4.49,
     "rc7_adj": 4.56,
-    "rank": 1351
+    "rank": 1350
   },
   {
     "player_name": "Mackenzy Glenn",
@@ -29741,7 +29719,7 @@
     "rc": 22.48,
     "rc7": 4.29,
     "rc7_adj": 4.56,
-    "rank": 1352
+    "rank": 1351
   },
   {
     "player_name": "Andrea Day",
@@ -29763,7 +29741,7 @@
     "rc": 21.22,
     "rc7": 4.59,
     "rc7_adj": 4.55,
-    "rank": 1353
+    "rank": 1352
   },
   {
     "player_name": "Kamryn Broussard",
@@ -29785,7 +29763,7 @@
     "rc": 19.87,
     "rc7": 5.35,
     "rc7_adj": 4.55,
-    "rank": 1354
+    "rank": 1353
   },
   {
     "player_name": "Emma Bradley-Tse",
@@ -29807,7 +29785,7 @@
     "rc": 21.62,
     "rc7": 5.97,
     "rc7_adj": 4.54,
-    "rank": 1355
+    "rank": 1354
   },
   {
     "player_name": "Hailey Pirkey",
@@ -29829,7 +29807,7 @@
     "rc": 16.24,
     "rc7": 5.33,
     "rc7_adj": 4.54,
-    "rank": 1356
+    "rank": 1355
   },
   {
     "player_name": "Mikayla Wilson",
@@ -29851,7 +29829,7 @@
     "rc": 27.58,
     "rc7": 5.08,
     "rc7_adj": 4.54,
-    "rank": 1357
+    "rank": 1356
   },
   {
     "player_name": "Sydney Poole",
@@ -29873,7 +29851,7 @@
     "rc": 25.19,
     "rc7": 4.85,
     "rc7_adj": 4.53,
-    "rank": 1358
+    "rank": 1357
   },
   {
     "player_name": "Kyla Jobe",
@@ -29895,7 +29873,7 @@
     "rc": 16.72,
     "rc7": 4.33,
     "rc7_adj": 4.53,
-    "rank": 1359
+    "rank": 1358
   },
   {
     "player_name": "Kylie Wilson",
@@ -29917,7 +29895,7 @@
     "rc": 19.03,
     "rc7": 5.63,
     "rc7_adj": 4.53,
-    "rank": 1360
+    "rank": 1359
   },
   {
     "player_name": "Hannah Dorsett",
@@ -29939,7 +29917,7 @@
     "rc": 23.87,
     "rc7": 4.11,
     "rc7_adj": 4.53,
-    "rank": 1361
+    "rank": 1360
   },
   {
     "player_name": "Faith KROENING",
@@ -29961,7 +29939,7 @@
     "rc": 25.5,
     "rc7": 4.43,
     "rc7_adj": 4.53,
-    "rank": 1362
+    "rank": 1361
   },
   {
     "player_name": "Kate Verhoef",
@@ -29983,7 +29961,7 @@
     "rc": 19.87,
     "rc7": 4.39,
     "rc7_adj": 4.52,
-    "rank": 1363
+    "rank": 1362
   },
   {
     "player_name": "Cheyenne CASTILLE",
@@ -30005,7 +29983,7 @@
     "rc": 18.61,
     "rc7": 4.95,
     "rc7_adj": 4.52,
-    "rank": 1364
+    "rank": 1363
   },
   {
     "player_name": "Gabby Quinn",
@@ -30027,7 +30005,7 @@
     "rc": 20.55,
     "rc7": 4.69,
     "rc7_adj": 4.52,
-    "rank": 1365
+    "rank": 1364
   },
   {
     "player_name": "Sister Arnold",
@@ -30049,7 +30027,7 @@
     "rc": 19.38,
     "rc7": 4.68,
     "rc7_adj": 4.52,
-    "rank": 1366
+    "rank": 1365
   },
   {
     "player_name": "Morgan Holliday",
@@ -30071,7 +30049,7 @@
     "rc": 19.93,
     "rc7": 4.5,
     "rc7_adj": 4.52,
-    "rank": 1367
+    "rank": 1366
   },
   {
     "player_name": "Macie Vickers",
@@ -30093,7 +30071,7 @@
     "rc": 25.75,
     "rc7": 5.15,
     "rc7_adj": 4.52,
-    "rank": 1368
+    "rank": 1367
   },
   {
     "player_name": "Julia Knowler",
@@ -30115,7 +30093,7 @@
     "rc": 16.75,
     "rc7": 4.0,
     "rc7_adj": 4.51,
-    "rank": 1369
+    "rank": 1368
   },
   {
     "player_name": "Cameron KAUFMAN",
@@ -30137,7 +30115,7 @@
     "rc": 22.54,
     "rc7": 5.2,
     "rc7_adj": 4.5,
-    "rank": 1370
+    "rank": 1369
   },
   {
     "player_name": "Sophia Burdick",
@@ -30159,7 +30137,7 @@
     "rc": 16.26,
     "rc7": 4.32,
     "rc7_adj": 4.5,
-    "rank": 1371
+    "rank": 1370
   },
   {
     "player_name": "Carys Platt",
@@ -30181,7 +30159,7 @@
     "rc": 19.7,
     "rc7": 3.9,
     "rc7_adj": 4.5,
-    "rank": 1372
+    "rank": 1371
   },
   {
     "player_name": "Makayla Mathis",
@@ -30203,7 +30181,7 @@
     "rc": 19.22,
     "rc7": 4.69,
     "rc7_adj": 4.49,
-    "rank": 1373
+    "rank": 1372
   },
   {
     "player_name": "Maya Johnson",
@@ -30225,7 +30203,7 @@
     "rc": 21.01,
     "rc7": 5.66,
     "rc7_adj": 4.49,
-    "rank": 1374
+    "rank": 1373
   },
   {
     "player_name": "Mikayla Conklin",
@@ -30247,7 +30225,7 @@
     "rc": 21.95,
     "rc7": 5.24,
     "rc7_adj": 4.48,
-    "rank": 1375
+    "rank": 1374
   },
   {
     "player_name": "Mallory Ogle",
@@ -30269,7 +30247,7 @@
     "rc": 16.62,
     "rc7": 4.53,
     "rc7_adj": 4.48,
-    "rank": 1376
+    "rank": 1375
   },
   {
     "player_name": "Alexis Woods",
@@ -30291,7 +30269,7 @@
     "rc": 16.25,
     "rc7": 4.55,
     "rc7_adj": 4.48,
-    "rank": 1377
+    "rank": 1376
   },
   {
     "player_name": "Alli Pawlowicz",
@@ -30313,7 +30291,7 @@
     "rc": 20.0,
     "rc7": 4.04,
     "rc7_adj": 4.47,
-    "rank": 1378
+    "rank": 1377
   },
   {
     "player_name": "Shenita Tucker",
@@ -30335,7 +30313,7 @@
     "rc": 21.17,
     "rc7": 4.45,
     "rc7_adj": 4.47,
-    "rank": 1379
+    "rank": 1378
   },
   {
     "player_name": "Maliyah Wilkins",
@@ -30357,6 +30335,28 @@
     "rc": 21.69,
     "rc7": 4.79,
     "rc7_adj": 4.46,
+    "rank": 1379
+  },
+  {
+    "player_name": "Samantha Dougherty",
+    "name": "Samantha Dougherty",
+    "team": "Fairfield",
+    "PA": 131,
+    "HR": 1,
+    "pitching_games": 0,
+    "RC7_raw": 4.56,
+    "OPAF": 0.98,
+    "RC7_adj": 4.45,
+    "ab": 120,
+    "hits": 36,
+    "doubles": 7,
+    "triples": 1,
+    "tb": 48,
+    "walks": 11,
+    "qualified": true,
+    "rc": 18.25,
+    "rc7": 4.56,
+    "rc7_adj": 4.45,
     "rank": 1380
   },
   {
@@ -32318,6 +32318,28 @@
     "rank": 1469
   },
   {
+    "player_name": "Anna Paravati",
+    "name": "Anna Paravati",
+    "team": "Fairfield",
+    "PA": 158,
+    "HR": 0,
+    "pitching_games": 0,
+    "RC7_raw": 4.42,
+    "OPAF": 0.95,
+    "RC7_adj": 4.19,
+    "ab": 133,
+    "hits": 37,
+    "doubles": 6,
+    "triples": 1,
+    "tb": 45,
+    "walks": 25,
+    "qualified": true,
+    "rc": 20.21,
+    "rc7": 4.42,
+    "rc7_adj": 4.19,
+    "rank": 1470
+  },
+  {
     "player_name": "Bri Pellicone",
     "name": "Bri Pellicone",
     "team": "New Haven",
@@ -32337,7 +32359,7 @@
     "rc": 16.17,
     "rc7": 4.72,
     "rc7_adj": 4.19,
-    "rank": 1470
+    "rank": 1471
   },
   {
     "player_name": "Marybeth Dyson",
@@ -32359,7 +32381,7 @@
     "rc": 20.22,
     "rc7": 4.12,
     "rc7_adj": 4.18,
-    "rank": 1471
+    "rank": 1472
   },
   {
     "player_name": "Allie WILLIAMS",
@@ -32381,7 +32403,7 @@
     "rc": 22.48,
     "rc7": 4.29,
     "rc7_adj": 4.18,
-    "rank": 1472
+    "rank": 1473
   },
   {
     "player_name": "Anna Mauck",
@@ -32403,7 +32425,7 @@
     "rc": 17.91,
     "rc7": 4.76,
     "rc7_adj": 4.18,
-    "rank": 1473
+    "rank": 1474
   },
   {
     "player_name": "Shay McDowell",
@@ -32425,7 +32447,7 @@
     "rc": 18.2,
     "rc7": 3.86,
     "rc7_adj": 4.17,
-    "rank": 1474
+    "rank": 1475
   },
   {
     "player_name": "Jenna Higgins",
@@ -32447,7 +32469,7 @@
     "rc": 18.11,
     "rc7": 5.14,
     "rc7_adj": 4.16,
-    "rank": 1475
+    "rank": 1476
   },
   {
     "player_name": "Paige Miller",
@@ -32469,7 +32491,7 @@
     "rc": 19.1,
     "rc7": 4.01,
     "rc7_adj": 4.15,
-    "rank": 1476
+    "rank": 1477
   },
   {
     "player_name": "Ariel Flores",
@@ -32491,7 +32513,7 @@
     "rc": 17.48,
     "rc7": 4.22,
     "rc7_adj": 4.15,
-    "rank": 1477
+    "rank": 1478
   },
   {
     "player_name": "Mary Fogg",
@@ -32513,7 +32535,7 @@
     "rc": 19.91,
     "rc7": 4.31,
     "rc7_adj": 4.15,
-    "rank": 1478
+    "rank": 1479
   },
   {
     "player_name": "Averie Daughtry",
@@ -32535,7 +32557,7 @@
     "rc": 17.1,
     "rc7": 4.08,
     "rc7_adj": 4.15,
-    "rank": 1479
+    "rank": 1480
   },
   {
     "player_name": "Maria Luna",
@@ -32557,7 +32579,7 @@
     "rc": 21.81,
     "rc7": 4.82,
     "rc7_adj": 4.15,
-    "rank": 1480
+    "rank": 1481
   },
   {
     "player_name": "Haley Speicher",
@@ -32579,7 +32601,7 @@
     "rc": 13.81,
     "rc7": 4.68,
     "rc7_adj": 4.14,
-    "rank": 1481
+    "rank": 1482
   },
   {
     "player_name": "Austy Miller",
@@ -32601,7 +32623,7 @@
     "rc": 24.45,
     "rc7": 3.95,
     "rc7_adj": 4.14,
-    "rank": 1482
+    "rank": 1483
   },
   {
     "player_name": "Gabby Fowler",
@@ -32623,7 +32645,7 @@
     "rc": 21.97,
     "rc7": 4.05,
     "rc7_adj": 4.14,
-    "rank": 1483
+    "rank": 1484
   },
   {
     "player_name": "Zoey Defoor",
@@ -32645,7 +32667,7 @@
     "rc": 18.88,
     "rc7": 4.01,
     "rc7_adj": 4.14,
-    "rank": 1484
+    "rank": 1485
   },
   {
     "player_name": "Adeline Blackwell",
@@ -32667,7 +32689,7 @@
     "rc": 21.64,
     "rc7": 4.41,
     "rc7_adj": 4.14,
-    "rank": 1485
+    "rank": 1486
   },
   {
     "player_name": "Jenna Turner",
@@ -32689,7 +32711,7 @@
     "rc": 20.69,
     "rc7": 4.62,
     "rc7_adj": 4.14,
-    "rank": 1486
+    "rank": 1487
   },
   {
     "player_name": "Keirys Click",
@@ -32711,7 +32733,7 @@
     "rc": 20.22,
     "rc7": 4.04,
     "rc7_adj": 4.13,
-    "rank": 1487
+    "rank": 1488
   },
   {
     "player_name": "Aaliyah Wilcox",
@@ -32733,7 +32755,7 @@
     "rc": 16.65,
     "rc7": 4.21,
     "rc7_adj": 4.12,
-    "rank": 1488
+    "rank": 1489
   },
   {
     "player_name": "Kaycee Slovak",
@@ -32755,7 +32777,7 @@
     "rc": 16.9,
     "rc7": 4.03,
     "rc7_adj": 4.12,
-    "rank": 1489
+    "rank": 1490
   },
   {
     "player_name": "Bella Douglas",
@@ -32777,7 +32799,7 @@
     "rc": 20.32,
     "rc7": 4.18,
     "rc7_adj": 4.12,
-    "rank": 1490
+    "rank": 1491
   },
   {
     "player_name": "Leilani Juan",
@@ -32799,7 +32821,7 @@
     "rc": 14.79,
     "rc7": 4.03,
     "rc7_adj": 4.12,
-    "rank": 1491
+    "rank": 1492
   },
   {
     "player_name": "Gabi Giroux",
@@ -32821,7 +32843,7 @@
     "rc": 16.64,
     "rc7": 4.48,
     "rc7_adj": 4.12,
-    "rank": 1492
+    "rank": 1493
   },
   {
     "player_name": "Erin Pinter",
@@ -32843,7 +32865,7 @@
     "rc": 19.64,
     "rc7": 4.39,
     "rc7_adj": 4.11,
-    "rank": 1493
+    "rank": 1494
   },
   {
     "player_name": "Dominuque Lopez",
@@ -32865,7 +32887,7 @@
     "rc": 16.25,
     "rc7": 4.21,
     "rc7_adj": 4.11,
-    "rank": 1494
+    "rank": 1495
   },
   {
     "player_name": "Madison Konopka",
@@ -32887,7 +32909,7 @@
     "rc": 16.52,
     "rc7": 4.03,
     "rc7_adj": 4.11,
-    "rank": 1495
+    "rank": 1496
   },
   {
     "player_name": "Jaibriel Terrell",
@@ -32909,7 +32931,7 @@
     "rc": 22.58,
     "rc7": 5.1,
     "rc7_adj": 4.1,
-    "rank": 1496
+    "rank": 1497
   },
   {
     "player_name": "Jasmine Hsiao",
@@ -32931,7 +32953,7 @@
     "rc": 16.13,
     "rc7": 4.23,
     "rc7_adj": 4.1,
-    "rank": 1497
+    "rank": 1498
   },
   {
     "player_name": "Avery Jackson",
@@ -32953,7 +32975,7 @@
     "rc": 14.06,
     "rc7": 3.64,
     "rc7_adj": 4.1,
-    "rank": 1498
+    "rank": 1499
   },
   {
     "player_name": "Ella Fox",
@@ -32975,7 +32997,7 @@
     "rc": 22.7,
     "rc7": 3.78,
     "rc7_adj": 4.1,
-    "rank": 1499
+    "rank": 1500
   },
   {
     "player_name": "Kenley Minor",
@@ -32997,7 +33019,7 @@
     "rc": 23.97,
     "rc7": 4.27,
     "rc7_adj": 4.1,
-    "rank": 1500
+    "rank": 1501
   },
   {
     "player_name": "Katia Reyes",
@@ -33019,7 +33041,7 @@
     "rc": 17.75,
     "rc7": 4.1,
     "rc7_adj": 4.1,
-    "rank": 1501
+    "rank": 1502
   },
   {
     "player_name": "Juliana GONZALEZ",
@@ -33041,7 +33063,7 @@
     "rc": 14.04,
     "rc7": 4.1,
     "rc7_adj": 4.09,
-    "rank": 1502
+    "rank": 1503
   },
   {
     "player_name": "Karen Spadafora",
@@ -33063,7 +33085,7 @@
     "rc": 21.27,
     "rc7": 3.95,
     "rc7_adj": 4.09,
-    "rank": 1503
+    "rank": 1504
   },
   {
     "player_name": "Delaney Reefe",
@@ -33085,7 +33107,7 @@
     "rc": 16.85,
     "rc7": 4.02,
     "rc7_adj": 4.08,
-    "rank": 1504
+    "rank": 1505
   },
   {
     "player_name": "Ava Brookshire",
@@ -33107,7 +33129,7 @@
     "rc": 19.51,
     "rc7": 4.1,
     "rc7_adj": 4.08,
-    "rank": 1505
+    "rank": 1506
   },
   {
     "player_name": "Jacklyn20 Zuege",
@@ -33129,7 +33151,7 @@
     "rc": 20.97,
     "rc7": 4.19,
     "rc7_adj": 4.07,
-    "rank": 1506
+    "rank": 1507
   },
   {
     "player_name": "Riley York",
@@ -33151,7 +33173,7 @@
     "rc": 18.47,
     "rc7": 3.96,
     "rc7_adj": 4.07,
-    "rank": 1507
+    "rank": 1508
   },
   {
     "player_name": "KateLynn Cooper",
@@ -33173,7 +33195,7 @@
     "rc": 16.19,
     "rc7": 5.15,
     "rc7_adj": 4.07,
-    "rank": 1508
+    "rank": 1509
   },
   {
     "player_name": "Alex Call",
@@ -33195,7 +33217,7 @@
     "rc": 21.05,
     "rc7": 3.95,
     "rc7_adj": 4.07,
-    "rank": 1509
+    "rank": 1510
   },
   {
     "player_name": "Alicia Marzouca",
@@ -33217,7 +33239,7 @@
     "rc": 17.5,
     "rc7": 4.54,
     "rc7_adj": 4.06,
-    "rank": 1510
+    "rank": 1511
   },
   {
     "player_name": "Kate Stoltzfus",
@@ -33239,7 +33261,7 @@
     "rc": 24.93,
     "rc7": 4.26,
     "rc7_adj": 4.06,
-    "rank": 1511
+    "rank": 1512
   },
   {
     "player_name": "Hannah Burnett",
@@ -33261,7 +33283,7 @@
     "rc": 18.11,
     "rc7": 4.64,
     "rc7_adj": 4.06,
-    "rank": 1512
+    "rank": 1513
   },
   {
     "player_name": "Savannah Lira",
@@ -33283,7 +33305,7 @@
     "rc": 18.81,
     "rc7": 4.54,
     "rc7_adj": 4.06,
-    "rank": 1513
+    "rank": 1514
   },
   {
     "player_name": "Olivia Evans",
@@ -33305,7 +33327,7 @@
     "rc": 19.71,
     "rc7": 4.18,
     "rc7_adj": 4.06,
-    "rank": 1514
+    "rank": 1515
   },
   {
     "player_name": "Matti Severns",
@@ -33327,7 +33349,7 @@
     "rc": 22.97,
     "rc7": 4.64,
     "rc7_adj": 4.05,
-    "rank": 1515
+    "rank": 1516
   },
   {
     "player_name": "Chloe Hatzopoulos",
@@ -33349,7 +33371,7 @@
     "rc": 19.63,
     "rc7": 3.89,
     "rc7_adj": 4.05,
-    "rank": 1516
+    "rank": 1517
   },
   {
     "player_name": "Ayanna Mears",
@@ -33371,7 +33393,7 @@
     "rc": 21.58,
     "rc7": 4.82,
     "rc7_adj": 4.05,
-    "rank": 1517
+    "rank": 1518
   },
   {
     "player_name": "Katy Huels",
@@ -33393,28 +33415,6 @@
     "rc": 19.75,
     "rc7": 4.11,
     "rc7_adj": 4.03,
-    "rank": 1518
-  },
-  {
-    "player_name": "Anna Paravati",
-    "name": "Anna Paravati",
-    "team": "Fairfield",
-    "PA": 155,
-    "HR": 0,
-    "pitching_games": 0,
-    "RC7_raw": 4.24,
-    "OPAF": 0.95,
-    "RC7_adj": 4.02,
-    "ab": 130,
-    "hits": 35,
-    "doubles": 6,
-    "triples": 1,
-    "tb": 43,
-    "walks": 25,
-    "qualified": true,
-    "rc": 19.16,
-    "rc7": 4.24,
-    "rc7_adj": 4.02,
     "rank": 1519
   },
   {
@@ -33858,6 +33858,28 @@
     "rank": 1539
   },
   {
+    "player_name": "Quinn McGonigle",
+    "name": "Quinn McGonigle",
+    "team": "Fairfield",
+    "PA": 117,
+    "HR": 3,
+    "pitching_games": 0,
+    "RC7_raw": 4.05,
+    "OPAF": 0.97,
+    "RC7_adj": 3.93,
+    "ab": 100,
+    "hits": 23,
+    "doubles": 7,
+    "triples": 0,
+    "tb": 39,
+    "walks": 17,
+    "qualified": true,
+    "rc": 14.84,
+    "rc7": 4.05,
+    "rc7_adj": 3.93,
+    "rank": 1540
+  },
+  {
     "player_name": "Emily Whitwell",
     "name": "Emily Whitwell",
     "team": "UNCW",
@@ -33877,7 +33899,7 @@
     "rc": 20.4,
     "rc7": 3.93,
     "rc7_adj": 3.93,
-    "rank": 1540
+    "rank": 1541
   },
   {
     "player_name": "Carys Murakami",
@@ -33899,7 +33921,7 @@
     "rc": 19.48,
     "rc7": 4.09,
     "rc7_adj": 3.9,
-    "rank": 1541
+    "rank": 1542
   },
   {
     "player_name": "Michaella Salvatierra",
@@ -33921,7 +33943,7 @@
     "rc": 15.34,
     "rc7": 4.03,
     "rc7_adj": 3.9,
-    "rank": 1542
+    "rank": 1543
   },
   {
     "player_name": "Sammy Horn",
@@ -33943,7 +33965,7 @@
     "rc": 19.49,
     "rc7": 3.53,
     "rc7_adj": 3.89,
-    "rank": 1543
+    "rank": 1544
   },
   {
     "player_name": "Kieli Ryan",
@@ -33965,7 +33987,7 @@
     "rc": 16.81,
     "rc7": 4.25,
     "rc7_adj": 3.89,
-    "rank": 1544
+    "rank": 1545
   },
   {
     "player_name": "Shayna Suttles",
@@ -33987,7 +34009,7 @@
     "rc": 17.77,
     "rc7": 3.85,
     "rc7_adj": 3.89,
-    "rank": 1545
+    "rank": 1546
   },
   {
     "player_name": "Nicole Henke",
@@ -34009,7 +34031,7 @@
     "rc": 18.16,
     "rc7": 3.81,
     "rc7_adj": 3.89,
-    "rank": 1546
+    "rank": 1547
   },
   {
     "player_name": "Mia Zabat",
@@ -34031,7 +34053,7 @@
     "rc": 14.74,
     "rc7": 3.64,
     "rc7_adj": 3.89,
-    "rank": 1547
+    "rank": 1548
   },
   {
     "player_name": "Brenna Sherman",
@@ -34053,7 +34075,7 @@
     "rc": 19.93,
     "rc7": 3.74,
     "rc7_adj": 3.88,
-    "rank": 1548
+    "rank": 1549
   },
   {
     "player_name": "Lillie Scheivert",
@@ -34075,7 +34097,7 @@
     "rc": 15.38,
     "rc7": 4.09,
     "rc7_adj": 3.88,
-    "rank": 1549
+    "rank": 1550
   },
   {
     "player_name": "Avery Houlihan",
@@ -34097,7 +34119,7 @@
     "rc": 15.22,
     "rc7": 4.0,
     "rc7_adj": 3.88,
-    "rank": 1550
+    "rank": 1551
   },
   {
     "player_name": "Brooklyn Plitz",
@@ -34119,7 +34141,7 @@
     "rc": 19.69,
     "rc7": 4.7,
     "rc7_adj": 3.88,
-    "rank": 1551
+    "rank": 1552
   },
   {
     "player_name": "Sydney DeGram",
@@ -34141,7 +34163,7 @@
     "rc": 18.79,
     "rc7": 3.83,
     "rc7_adj": 3.88,
-    "rank": 1552
+    "rank": 1553
   },
   {
     "player_name": "Emily Brecht",
@@ -34163,7 +34185,7 @@
     "rc": 15.91,
     "rc7": 3.75,
     "rc7_adj": 3.88,
-    "rank": 1553
+    "rank": 1554
   },
   {
     "player_name": "Chloe Lackey",
@@ -34185,7 +34207,7 @@
     "rc": 18.1,
     "rc7": 4.27,
     "rc7_adj": 3.87,
-    "rank": 1554
+    "rank": 1555
   },
   {
     "player_name": "Abby Harvell",
@@ -34207,7 +34229,7 @@
     "rc": 21.42,
     "rc7": 3.98,
     "rc7_adj": 3.87,
-    "rank": 1555
+    "rank": 1556
   },
   {
     "player_name": "Paige Seemon",
@@ -34229,7 +34251,7 @@
     "rc": 19.13,
     "rc7": 4.06,
     "rc7_adj": 3.87,
-    "rank": 1556
+    "rank": 1557
   },
   {
     "player_name": "Camryn Hamilton",
@@ -34251,7 +34273,7 @@
     "rc": 13.9,
     "rc7": 3.84,
     "rc7_adj": 3.86,
-    "rank": 1557
+    "rank": 1558
   },
   {
     "player_name": "Brynn Romine",
@@ -34273,7 +34295,7 @@
     "rc": 16.83,
     "rc7": 3.68,
     "rc7_adj": 3.85,
-    "rank": 1558
+    "rank": 1559
   },
   {
     "player_name": "Madison Uptegrove",
@@ -34295,7 +34317,7 @@
     "rc": 18.16,
     "rc7": 3.32,
     "rc7_adj": 3.85,
-    "rank": 1559
+    "rank": 1560
   },
   {
     "player_name": "Abi Brown",
@@ -34317,7 +34339,7 @@
     "rc": 15.51,
     "rc7": 3.74,
     "rc7_adj": 3.85,
-    "rank": 1560
+    "rank": 1561
   },
   {
     "player_name": "Karisma Garcia",
@@ -34339,7 +34361,7 @@
     "rc": 18.08,
     "rc7": 4.93,
     "rc7_adj": 3.85,
-    "rank": 1561
+    "rank": 1562
   },
   {
     "player_name": "Kaytlin Greenwood",
@@ -34361,7 +34383,7 @@
     "rc": 21.04,
     "rc7": 4.25,
     "rc7_adj": 3.85,
-    "rank": 1562
+    "rank": 1563
   },
   {
     "player_name": "Zaedi Tagalog",
@@ -34383,7 +34405,7 @@
     "rc": 16.75,
     "rc7": 3.91,
     "rc7_adj": 3.84,
-    "rank": 1563
+    "rank": 1564
   },
   {
     "player_name": "Emily Konz",
@@ -34405,7 +34427,7 @@
     "rc": 19.87,
     "rc7": 3.69,
     "rc7_adj": 3.83,
-    "rank": 1564
+    "rank": 1565
   },
   {
     "player_name": "Jolie Hays",
@@ -34427,7 +34449,7 @@
     "rc": 14.39,
     "rc7": 3.36,
     "rc7_adj": 3.83,
-    "rank": 1565
+    "rank": 1566
   },
   {
     "player_name": "Lici Campbell",
@@ -34449,7 +34471,7 @@
     "rc": 19.68,
     "rc7": 3.56,
     "rc7_adj": 3.82,
-    "rank": 1566
+    "rank": 1567
   },
   {
     "player_name": "Abigail Ahern",
@@ -34471,7 +34493,7 @@
     "rc": 16.21,
     "rc7": 3.7,
     "rc7_adj": 3.82,
-    "rank": 1567
+    "rank": 1568
   },
   {
     "player_name": "Emalee Romero",
@@ -34493,7 +34515,7 @@
     "rc": 14.82,
     "rc7": 4.04,
     "rc7_adj": 3.81,
-    "rank": 1568
+    "rank": 1569
   },
   {
     "player_name": "Hannah SIMKO",
@@ -34515,7 +34537,7 @@
     "rc": 20.16,
     "rc7": 4.23,
     "rc7_adj": 3.81,
-    "rank": 1569
+    "rank": 1570
   },
   {
     "player_name": "Erin Howard",
@@ -34537,7 +34559,7 @@
     "rc": 17.89,
     "rc7": 3.83,
     "rc7_adj": 3.81,
-    "rank": 1570
+    "rank": 1571
   },
   {
     "player_name": "Madeline Flammia",
@@ -34559,7 +34581,7 @@
     "rc": 16.15,
     "rc7": 3.36,
     "rc7_adj": 3.81,
-    "rank": 1571
+    "rank": 1572
   },
   {
     "player_name": "Kayla Lyon",
@@ -34581,7 +34603,7 @@
     "rc": 18.14,
     "rc7": 3.93,
     "rc7_adj": 3.81,
-    "rank": 1572
+    "rank": 1573
   },
   {
     "player_name": "Sicily Windham",
@@ -34603,7 +34625,7 @@
     "rc": 20.45,
     "rc7": 4.09,
     "rc7_adj": 3.8,
-    "rank": 1573
+    "rank": 1574
   },
   {
     "player_name": "Eva Daniels",
@@ -34625,7 +34647,7 @@
     "rc": 22.61,
     "rc7": 3.83,
     "rc7_adj": 3.8,
-    "rank": 1574
+    "rank": 1575
   },
   {
     "player_name": "Shelby Frazier",
@@ -34647,7 +34669,7 @@
     "rc": 15.45,
     "rc7": 3.91,
     "rc7_adj": 3.8,
-    "rank": 1575
+    "rank": 1576
   },
   {
     "player_name": "Mia Martinez",
@@ -34669,7 +34691,7 @@
     "rc": 17.08,
     "rc7": 3.66,
     "rc7_adj": 3.8,
-    "rank": 1576
+    "rank": 1577
   },
   {
     "player_name": "Kaylee Oh",
@@ -34691,7 +34713,7 @@
     "rc": 16.32,
     "rc7": 3.46,
     "rc7_adj": 3.8,
-    "rank": 1577
+    "rank": 1578
   },
   {
     "player_name": "Amber Turner",
@@ -34713,7 +34735,7 @@
     "rc": 20.26,
     "rc7": 3.61,
     "rc7_adj": 3.8,
-    "rank": 1578
+    "rank": 1579
   },
   {
     "player_name": "Katherine Reed",
@@ -34735,7 +34757,7 @@
     "rc": 15.72,
     "rc7": 3.93,
     "rc7_adj": 3.8,
-    "rank": 1579
+    "rank": 1580
   },
   {
     "player_name": "Cassie Johnson",
@@ -34757,7 +34779,7 @@
     "rc": 16.28,
     "rc7": 3.52,
     "rc7_adj": 3.79,
-    "rank": 1580
+    "rank": 1581
   },
   {
     "player_name": "Ailey Schyck",
@@ -34779,7 +34801,7 @@
     "rc": 16.12,
     "rc7": 3.98,
     "rc7_adj": 3.79,
-    "rank": 1581
+    "rank": 1582
   },
   {
     "player_name": "Mallory Axline",
@@ -34801,7 +34823,7 @@
     "rc": 16.58,
     "rc7": 3.41,
     "rc7_adj": 3.79,
-    "rank": 1582
+    "rank": 1583
   },
   {
     "player_name": "Sarah Taylor",
@@ -34823,7 +34845,7 @@
     "rc": 20.08,
     "rc7": 4.44,
     "rc7_adj": 3.79,
-    "rank": 1583
+    "rank": 1584
   },
   {
     "player_name": "Sami Hood",
@@ -34845,7 +34867,7 @@
     "rc": 16.36,
     "rc7": 3.51,
     "rc7_adj": 3.79,
-    "rank": 1584
+    "rank": 1585
   },
   {
     "player_name": "Mo Hance",
@@ -34867,7 +34889,7 @@
     "rc": 18.97,
     "rc7": 3.69,
     "rc7_adj": 3.78,
-    "rank": 1585
+    "rank": 1586
   },
   {
     "player_name": "Alyssa Rebolledo",
@@ -34889,7 +34911,7 @@
     "rc": 16.13,
     "rc7": 3.6,
     "rc7_adj": 3.78,
-    "rank": 1586
+    "rank": 1587
   },
   {
     "player_name": "Jerzie Liana",
@@ -34911,7 +34933,7 @@
     "rc": 13.89,
     "rc7": 3.47,
     "rc7_adj": 3.78,
-    "rank": 1587
+    "rank": 1588
   },
   {
     "player_name": "Jamari Moss",
@@ -34933,7 +34955,7 @@
     "rc": 19.84,
     "rc7": 4.68,
     "rc7_adj": 3.78,
-    "rank": 1588
+    "rank": 1589
   },
   {
     "player_name": "Megan Johnston",
@@ -34955,7 +34977,7 @@
     "rc": 17.96,
     "rc7": 3.7,
     "rc7_adj": 3.77,
-    "rank": 1589
+    "rank": 1590
   },
   {
     "player_name": "Brooke Keltner",
@@ -34977,7 +34999,7 @@
     "rc": 15.59,
     "rc7": 4.48,
     "rc7_adj": 3.77,
-    "rank": 1590
+    "rank": 1591
   },
   {
     "player_name": "Sydney Long",
@@ -34999,7 +35021,7 @@
     "rc": 16.48,
     "rc7": 3.89,
     "rc7_adj": 3.77,
-    "rank": 1591
+    "rank": 1592
   },
   {
     "player_name": "Zoey Stewart",
@@ -35021,7 +35043,7 @@
     "rc": 19.1,
     "rc7": 3.71,
     "rc7_adj": 3.76,
-    "rank": 1592
+    "rank": 1593
   },
   {
     "player_name": "Alyssa Onyeagwa",
@@ -35042,28 +35064,6 @@
     "qualified": true,
     "rc": 15.09,
     "rc7": 4.17,
-    "rc7_adj": 3.76,
-    "rank": 1593
-  },
-  {
-    "player_name": "Martina Gutierrez",
-    "name": "Martina Gutierrez",
-    "team": "Fairfield",
-    "PA": 110,
-    "HR": 4,
-    "pitching_games": 0,
-    "RC7_raw": 3.86,
-    "OPAF": 0.97,
-    "RC7_adj": 3.76,
-    "ab": 101,
-    "hits": 26,
-    "doubles": 3,
-    "triples": 0,
-    "tb": 41,
-    "walks": 9,
-    "qualified": true,
-    "rc": 13.79,
-    "rc7": 3.86,
     "rc7_adj": 3.76,
     "rank": 1594
   },
@@ -36850,6 +36850,28 @@
     "rank": 1675
   },
   {
+    "player_name": "Martina Gutierrez",
+    "name": "Martina Gutierrez",
+    "team": "Fairfield",
+    "PA": 113,
+    "HR": 4,
+    "pitching_games": 0,
+    "RC7_raw": 3.61,
+    "OPAF": 0.97,
+    "RC7_adj": 3.51,
+    "ab": 104,
+    "hits": 26,
+    "doubles": 3,
+    "triples": 0,
+    "tb": 41,
+    "walks": 9,
+    "qualified": true,
+    "rc": 13.42,
+    "rc7": 3.61,
+    "rc7_adj": 3.51,
+    "rank": 1676
+  },
+  {
     "player_name": "Katie Peeler",
     "name": "Katie Peeler",
     "team": "Furman",
@@ -36869,7 +36891,7 @@
     "rc": 19.18,
     "rc7": 3.66,
     "rc7_adj": 3.51,
-    "rank": 1676
+    "rank": 1677
   },
   {
     "player_name": "Julia Larson",
@@ -36891,7 +36913,7 @@
     "rc": 18.86,
     "rc7": 3.6,
     "rc7_adj": 3.51,
-    "rank": 1677
+    "rank": 1678
   },
   {
     "player_name": "Hannah Klotz",
@@ -36913,7 +36935,7 @@
     "rc": 18.8,
     "rc7": 3.69,
     "rc7_adj": 3.51,
-    "rank": 1678
+    "rank": 1679
   },
   {
     "player_name": "Avery Barnard",
@@ -36935,7 +36957,7 @@
     "rc": 23.14,
     "rc7": 3.63,
     "rc7_adj": 3.5,
-    "rank": 1679
+    "rank": 1680
   },
   {
     "player_name": "Mandy Esman",
@@ -36957,7 +36979,7 @@
     "rc": 14.83,
     "rc7": 3.42,
     "rc7_adj": 3.5,
-    "rank": 1680
+    "rank": 1681
   },
   {
     "player_name": "Kennedy Semien",
@@ -36979,7 +37001,7 @@
     "rc": 14.35,
     "rc7": 3.21,
     "rc7_adj": 3.5,
-    "rank": 1681
+    "rank": 1682
   },
   {
     "player_name": "Megan Klein",
@@ -37001,7 +37023,7 @@
     "rc": 15.11,
     "rc7": 3.65,
     "rc7_adj": 3.5,
-    "rank": 1682
+    "rank": 1683
   },
   {
     "player_name": "Madison Evans",
@@ -37023,7 +37045,7 @@
     "rc": 17.75,
     "rc7": 3.42,
     "rc7_adj": 3.5,
-    "rank": 1683
+    "rank": 1684
   },
   {
     "player_name": "Julianne Torres",
@@ -37045,7 +37067,7 @@
     "rc": 11.61,
     "rc7": 3.48,
     "rc7_adj": 3.49,
-    "rank": 1684
+    "rank": 1685
   },
   {
     "player_name": "Kiana Kadena Matsuda",
@@ -37067,7 +37089,7 @@
     "rc": 12.87,
     "rc7": 3.81,
     "rc7_adj": 3.49,
-    "rank": 1685
+    "rank": 1686
   },
   {
     "player_name": "Marley Panziera",
@@ -37089,7 +37111,7 @@
     "rc": 16.92,
     "rc7": 3.66,
     "rc7_adj": 3.49,
-    "rank": 1686
+    "rank": 1687
   },
   {
     "player_name": "Grace Hennessy",
@@ -37111,7 +37133,7 @@
     "rc": 14.78,
     "rc7": 3.45,
     "rc7_adj": 3.49,
-    "rank": 1687
+    "rank": 1688
   },
   {
     "player_name": "Alexis Houge",
@@ -37133,7 +37155,7 @@
     "rc": 14.08,
     "rc7": 3.84,
     "rc7_adj": 3.48,
-    "rank": 1688
+    "rank": 1689
   },
   {
     "player_name": "Emily Smith",
@@ -37155,7 +37177,7 @@
     "rc": 14.15,
     "rc7": 3.16,
     "rc7_adj": 3.48,
-    "rank": 1689
+    "rank": 1690
   },
   {
     "player_name": "Jessa Snippes",
@@ -37177,7 +37199,7 @@
     "rc": 15.49,
     "rc7": 3.22,
     "rc7_adj": 3.48,
-    "rank": 1690
+    "rank": 1691
   },
   {
     "player_name": "Ava Scott",
@@ -37199,7 +37221,7 @@
     "rc": 19.22,
     "rc7": 3.84,
     "rc7_adj": 3.48,
-    "rank": 1691
+    "rank": 1692
   },
   {
     "player_name": "Addie Smith",
@@ -37221,7 +37243,7 @@
     "rc": 13.72,
     "rc7": 3.65,
     "rc7_adj": 3.47,
-    "rank": 1692
+    "rank": 1693
   },
   {
     "player_name": "Noelle Reid",
@@ -37243,7 +37265,7 @@
     "rc": 13.65,
     "rc7": 3.63,
     "rc7_adj": 3.47,
-    "rank": 1693
+    "rank": 1694
   },
   {
     "player_name": "Hannah Hernandez",
@@ -37265,7 +37287,7 @@
     "rc": 14.56,
     "rc7": 3.29,
     "rc7_adj": 3.47,
-    "rank": 1694
+    "rank": 1695
   },
   {
     "player_name": "Kae DePerio",
@@ -37287,7 +37309,7 @@
     "rc": 12.7,
     "rc7": 3.14,
     "rc7_adj": 3.46,
-    "rank": 1695
+    "rank": 1696
   },
   {
     "player_name": "Carlie Wilkins",
@@ -37309,7 +37331,7 @@
     "rc": 13.73,
     "rc7": 3.07,
     "rc7_adj": 3.46,
-    "rank": 1696
+    "rank": 1697
   },
   {
     "player_name": "Ella Van Alstyne",
@@ -37331,7 +37353,7 @@
     "rc": 15.54,
     "rc7": 3.84,
     "rc7_adj": 3.46,
-    "rank": 1697
+    "rank": 1698
   },
   {
     "player_name": "Morgan Volgraf",
@@ -37353,7 +37375,7 @@
     "rc": 15.05,
     "rc7": 3.07,
     "rc7_adj": 3.45,
-    "rank": 1698
+    "rank": 1699
   },
   {
     "player_name": "Dailynn Motes",
@@ -37375,7 +37397,7 @@
     "rc": 14.84,
     "rc7": 3.39,
     "rc7_adj": 3.45,
-    "rank": 1699
+    "rank": 1700
   },
   {
     "player_name": "Annabelle Smink",
@@ -37397,7 +37419,7 @@
     "rc": 13.29,
     "rc7": 3.32,
     "rc7_adj": 3.44,
-    "rank": 1700
+    "rank": 1701
   },
   {
     "player_name": "Abbey Tabaka",
@@ -37419,7 +37441,7 @@
     "rc": 16.18,
     "rc7": 3.86,
     "rc7_adj": 3.44,
-    "rank": 1701
+    "rank": 1702
   },
   {
     "player_name": "Madison Tarrant",
@@ -37441,7 +37463,7 @@
     "rc": 15.46,
     "rc7": 3.42,
     "rc7_adj": 3.44,
-    "rank": 1702
+    "rank": 1703
   },
   {
     "player_name": "Hannah Schlachter",
@@ -37463,7 +37485,7 @@
     "rc": 13.83,
     "rc7": 4.09,
     "rc7_adj": 3.43,
-    "rank": 1703
+    "rank": 1704
   },
   {
     "player_name": "Bri Lawson",
@@ -37485,7 +37507,7 @@
     "rc": 16.78,
     "rc7": 3.52,
     "rc7_adj": 3.43,
-    "rank": 1704
+    "rank": 1705
   },
   {
     "player_name": "Sierra Llamas",
@@ -37507,7 +37529,7 @@
     "rc": 10.68,
     "rc7": 3.4,
     "rc7_adj": 3.43,
-    "rank": 1705
+    "rank": 1706
   },
   {
     "player_name": "Ella Hayes",
@@ -37529,7 +37551,7 @@
     "rc": 19.16,
     "rc7": 3.47,
     "rc7_adj": 3.43,
-    "rank": 1706
+    "rank": 1707
   },
   {
     "player_name": "Julie Martin",
@@ -37551,7 +37573,7 @@
     "rc": 12.22,
     "rc7": 3.47,
     "rc7_adj": 3.43,
-    "rank": 1707
+    "rank": 1708
   },
   {
     "player_name": "Russalesi Sam",
@@ -37573,7 +37595,7 @@
     "rc": 11.13,
     "rc7": 3.65,
     "rc7_adj": 3.42,
-    "rank": 1708
+    "rank": 1709
   },
   {
     "player_name": "Emi Todoroki",
@@ -37595,7 +37617,7 @@
     "rc": 15.68,
     "rc7": 3.36,
     "rc7_adj": 3.41,
-    "rank": 1709
+    "rank": 1710
   },
   {
     "player_name": "Lauren Faulkner",
@@ -37617,7 +37639,7 @@
     "rc": 18.19,
     "rc7": 3.64,
     "rc7_adj": 3.41,
-    "rank": 1710
+    "rank": 1711
   },
   {
     "player_name": "Taya Hopfauf",
@@ -37639,7 +37661,7 @@
     "rc": 22.13,
     "rc7": 3.84,
     "rc7_adj": 3.41,
-    "rank": 1711
+    "rank": 1712
   },
   {
     "player_name": "Sequoia Dunlap",
@@ -37661,7 +37683,7 @@
     "rc": 17.91,
     "rc7": 4.7,
     "rc7_adj": 3.41,
-    "rank": 1712
+    "rank": 1713
   },
   {
     "player_name": "Alexa Riddel",
@@ -37683,7 +37705,7 @@
     "rc": 13.18,
     "rc7": 3.04,
     "rc7_adj": 3.4,
-    "rank": 1713
+    "rank": 1714
   },
   {
     "player_name": "Alayah Toscano",
@@ -37705,7 +37727,7 @@
     "rc": 15.51,
     "rc7": 3.62,
     "rc7_adj": 3.4,
-    "rank": 1714
+    "rank": 1715
   },
   {
     "player_name": "Jaiden Griffith",
@@ -37727,7 +37749,7 @@
     "rc": 16.51,
     "rc7": 3.24,
     "rc7_adj": 3.4,
-    "rank": 1715
+    "rank": 1716
   },
   {
     "player_name": "Tealla Rivera",
@@ -37749,7 +37771,7 @@
     "rc": 18.56,
     "rc7": 3.75,
     "rc7_adj": 3.39,
-    "rank": 1716
+    "rank": 1717
   },
   {
     "player_name": "Julianna Mejia",
@@ -37771,7 +37793,7 @@
     "rc": 9.78,
     "rc7": 3.67,
     "rc7_adj": 3.39,
-    "rank": 1717
+    "rank": 1718
   },
   {
     "player_name": "Alena Ball",
@@ -37793,7 +37815,7 @@
     "rc": 18.44,
     "rc7": 3.59,
     "rc7_adj": 3.39,
-    "rank": 1718
+    "rank": 1719
   },
   {
     "player_name": "Jaedyn Lincoln",
@@ -37815,7 +37837,7 @@
     "rc": 19.3,
     "rc7": 4.09,
     "rc7_adj": 3.38,
-    "rank": 1719
+    "rank": 1720
   },
   {
     "player_name": "Cierra Grice",
@@ -37837,7 +37859,7 @@
     "rc": 18.67,
     "rc7": 3.63,
     "rc7_adj": 3.38,
-    "rank": 1720
+    "rank": 1721
   },
   {
     "player_name": "Ava Mahnken",
@@ -37859,7 +37881,7 @@
     "rc": 13.11,
     "rc7": 3.24,
     "rc7_adj": 3.37,
-    "rank": 1721
+    "rank": 1722
   },
   {
     "player_name": "Kyra Smith",
@@ -37881,7 +37903,7 @@
     "rc": 18.21,
     "rc7": 3.27,
     "rc7_adj": 3.36,
-    "rank": 1722
+    "rank": 1723
   },
   {
     "player_name": "Arianna Exarchakis",
@@ -37903,7 +37925,7 @@
     "rc": 16.78,
     "rc7": 4.15,
     "rc7_adj": 3.36,
-    "rank": 1723
+    "rank": 1724
   },
   {
     "player_name": "Demiree Stafford",
@@ -37925,7 +37947,7 @@
     "rc": 14.55,
     "rc7": 3.32,
     "rc7_adj": 3.36,
-    "rank": 1724
+    "rank": 1725
   },
   {
     "player_name": "Kiara Blanchard",
@@ -37947,7 +37969,7 @@
     "rc": 12.45,
     "rc7": 3.27,
     "rc7_adj": 3.35,
-    "rank": 1725
+    "rank": 1726
   },
   {
     "player_name": "Francesca Guerrera",
@@ -37969,7 +37991,7 @@
     "rc": 18.02,
     "rc7": 3.54,
     "rc7_adj": 3.35,
-    "rank": 1726
+    "rank": 1727
   },
   {
     "player_name": "Katelyn Neumayer",
@@ -37991,7 +38013,7 @@
     "rc": 15.86,
     "rc7": 3.66,
     "rc7_adj": 3.35,
-    "rank": 1727
+    "rank": 1728
   },
   {
     "player_name": "Aryn Bombery",
@@ -38013,7 +38035,7 @@
     "rc": 14.32,
     "rc7": 3.54,
     "rc7_adj": 3.35,
-    "rank": 1728
+    "rank": 1729
   },
   {
     "player_name": "Hailey Hunt",
@@ -38035,7 +38057,7 @@
     "rc": 11.87,
     "rc7": 3.51,
     "rc7_adj": 3.35,
-    "rank": 1729
+    "rank": 1730
   },
   {
     "player_name": "Hilary Wilson",
@@ -38057,7 +38079,7 @@
     "rc": 15.41,
     "rc7": 3.34,
     "rc7_adj": 3.34,
-    "rank": 1730
+    "rank": 1731
   },
   {
     "player_name": "Dani Rosner",
@@ -38079,7 +38101,7 @@
     "rc": 18.36,
     "rc7": 3.44,
     "rc7_adj": 3.34,
-    "rank": 1731
+    "rank": 1732
   },
   {
     "player_name": "Ava Ratliff",
@@ -38101,7 +38123,7 @@
     "rc": 11.27,
     "rc7": 2.72,
     "rc7_adj": 3.33,
-    "rank": 1732
+    "rank": 1733
   },
   {
     "player_name": "Jada Davis",
@@ -38123,7 +38145,7 @@
     "rc": 19.08,
     "rc7": 4.05,
     "rc7_adj": 3.33,
-    "rank": 1733
+    "rank": 1734
   },
   {
     "player_name": "Makayla Register",
@@ -38145,7 +38167,7 @@
     "rc": 17.24,
     "rc7": 4.21,
     "rc7_adj": 3.33,
-    "rank": 1734
+    "rank": 1735
   },
   {
     "player_name": "Hannah Harvey",
@@ -38167,7 +38189,7 @@
     "rc": 14.9,
     "rc7": 3.07,
     "rc7_adj": 3.33,
-    "rank": 1735
+    "rank": 1736
   },
   {
     "player_name": "Prestaisha White",
@@ -38189,7 +38211,7 @@
     "rc": 16.95,
     "rc7": 4.34,
     "rc7_adj": 3.33,
-    "rank": 1736
+    "rank": 1737
   },
   {
     "player_name": "Ciarra Jefferson",
@@ -38211,7 +38233,7 @@
     "rc": 15.42,
     "rc7": 3.27,
     "rc7_adj": 3.32,
-    "rank": 1737
+    "rank": 1738
   },
   {
     "player_name": "Sydney Nesci",
@@ -38233,7 +38255,7 @@
     "rc": 21.55,
     "rc7": 4.08,
     "rc7_adj": 3.32,
-    "rank": 1738
+    "rank": 1739
   },
   {
     "player_name": "Natalia Apatiga",
@@ -38255,7 +38277,7 @@
     "rc": 12.68,
     "rc7": 3.37,
     "rc7_adj": 3.32,
-    "rank": 1739
+    "rank": 1740
   },
   {
     "player_name": "Lola Meyer",
@@ -38277,7 +38299,7 @@
     "rc": 17.26,
     "rc7": 4.42,
     "rc7_adj": 3.32,
-    "rank": 1740
+    "rank": 1741
   },
   {
     "player_name": "Zoe King",
@@ -38299,7 +38321,7 @@
     "rc": 17.1,
     "rc7": 3.29,
     "rc7_adj": 3.31,
-    "rank": 1741
+    "rank": 1742
   },
   {
     "player_name": "Maddy Hans",
@@ -38321,7 +38343,7 @@
     "rc": 13.47,
     "rc7": 3.63,
     "rc7_adj": 3.3,
-    "rank": 1742
+    "rank": 1743
   },
   {
     "player_name": "Emily Baumes",
@@ -38343,7 +38365,7 @@
     "rc": 17.23,
     "rc7": 3.58,
     "rc7_adj": 3.3,
-    "rank": 1743
+    "rank": 1744
   },
   {
     "player_name": "Jaclyn Morra",
@@ -38365,7 +38387,7 @@
     "rc": 13.26,
     "rc7": 3.31,
     "rc7_adj": 3.3,
-    "rank": 1744
+    "rank": 1745
   },
   {
     "player_name": "Mimi Thornton",
@@ -38387,7 +38409,7 @@
     "rc": 12.15,
     "rc7": 3.23,
     "rc7_adj": 3.29,
-    "rank": 1745
+    "rank": 1746
   },
   {
     "player_name": "Mackenzie Fitzgerald",
@@ -38409,7 +38431,7 @@
     "rc": 14.82,
     "rc7": 3.38,
     "rc7_adj": 3.29,
-    "rank": 1746
+    "rank": 1747
   },
   {
     "player_name": "Hailey Scott",
@@ -38431,7 +38453,7 @@
     "rc": 15.25,
     "rc7": 3.3,
     "rc7_adj": 3.29,
-    "rank": 1747
+    "rank": 1748
   },
   {
     "player_name": "Bree Kohler",
@@ -38453,7 +38475,7 @@
     "rc": 18.53,
     "rc7": 4.37,
     "rc7_adj": 3.29,
-    "rank": 1748
+    "rank": 1749
   },
   {
     "player_name": "Kendall Gaddie",
@@ -38475,7 +38497,7 @@
     "rc": 15.11,
     "rc7": 3.41,
     "rc7_adj": 3.28,
-    "rank": 1749
+    "rank": 1750
   },
   {
     "player_name": "Emma Fales",
@@ -38497,7 +38519,7 @@
     "rc": 11.53,
     "rc7": 3.27,
     "rc7_adj": 3.28,
-    "rank": 1750
+    "rank": 1751
   },
   {
     "player_name": "Ella HOLMAN",
@@ -38519,7 +38541,7 @@
     "rc": 13.15,
     "rc7": 3.17,
     "rc7_adj": 3.26,
-    "rank": 1751
+    "rank": 1752
   },
   {
     "player_name": "Brooke Wildes",
@@ -38541,7 +38563,7 @@
     "rc": 15.53,
     "rc7": 3.11,
     "rc7_adj": 3.26,
-    "rank": 1752
+    "rank": 1753
   },
   {
     "player_name": "Ella Emmert",
@@ -38563,7 +38585,7 @@
     "rc": 10.82,
     "rc7": 2.64,
     "rc7_adj": 3.25,
-    "rank": 1753
+    "rank": 1754
   },
   {
     "player_name": "Lea Kosinski",
@@ -38585,7 +38607,7 @@
     "rc": 11.88,
     "rc7": 3.28,
     "rc7_adj": 3.25,
-    "rank": 1754
+    "rank": 1755
   },
   {
     "player_name": "Morgan Farthing",
@@ -38607,7 +38629,7 @@
     "rc": 16.05,
     "rc7": 3.44,
     "rc7_adj": 3.24,
-    "rank": 1755
+    "rank": 1756
   },
   {
     "player_name": "Morgan Klein",
@@ -38629,7 +38651,7 @@
     "rc": 17.62,
     "rc7": 3.33,
     "rc7_adj": 3.24,
-    "rank": 1756
+    "rank": 1757
   },
   {
     "player_name": "Madi Duffel",
@@ -38651,7 +38673,7 @@
     "rc": 13.3,
     "rc7": 2.69,
     "rc7_adj": 3.23,
-    "rank": 1757
+    "rank": 1758
   },
   {
     "player_name": "Delaney White",
@@ -38673,7 +38695,7 @@
     "rc": 16.26,
     "rc7": 2.99,
     "rc7_adj": 3.23,
-    "rank": 1758
+    "rank": 1759
   },
   {
     "player_name": "Lauren Dundon",
@@ -38695,7 +38717,7 @@
     "rc": 16.22,
     "rc7": 3.1,
     "rc7_adj": 3.23,
-    "rank": 1759
+    "rank": 1760
   },
   {
     "player_name": "Abby Klaft",
@@ -38717,7 +38739,7 @@
     "rc": 12.93,
     "rc7": 3.88,
     "rc7_adj": 3.22,
-    "rank": 1760
+    "rank": 1761
   },
   {
     "player_name": "Kaylee Clarkson",
@@ -38739,7 +38761,7 @@
     "rc": 19.03,
     "rc7": 3.81,
     "rc7_adj": 3.22,
-    "rank": 1761
+    "rank": 1762
   },
   {
     "player_name": "Riley McNemar",
@@ -38761,7 +38783,7 @@
     "rc": 16.72,
     "rc7": 3.25,
     "rc7_adj": 3.22,
-    "rank": 1762
+    "rank": 1763
   },
   {
     "player_name": "Ally Thompson",
@@ -38783,7 +38805,7 @@
     "rc": 11.58,
     "rc7": 2.93,
     "rc7_adj": 3.21,
-    "rank": 1763
+    "rank": 1764
   },
   {
     "player_name": "Madison Dominguez",
@@ -38805,7 +38827,7 @@
     "rc": 12.49,
     "rc7": 3.32,
     "rc7_adj": 3.21,
-    "rank": 1764
+    "rank": 1765
   },
   {
     "player_name": "Briana WILLIAMS",
@@ -38827,7 +38849,7 @@
     "rc": 12.9,
     "rc7": 3.39,
     "rc7_adj": 3.2,
-    "rank": 1765
+    "rank": 1766
   },
   {
     "player_name": "Ariana Gonzalez",
@@ -38849,7 +38871,7 @@
     "rc": 12.82,
     "rc7": 3.74,
     "rc7_adj": 3.19,
-    "rank": 1766
+    "rank": 1767
   },
   {
     "player_name": "Sakora Harvell",
@@ -38871,7 +38893,7 @@
     "rc": 15.92,
     "rc7": 3.45,
     "rc7_adj": 3.19,
-    "rank": 1767
+    "rank": 1768
   },
   {
     "player_name": "Maggie Klug",
@@ -38893,7 +38915,7 @@
     "rc": 13.56,
     "rc7": 3.31,
     "rc7_adj": 3.19,
-    "rank": 1768
+    "rank": 1769
   },
   {
     "player_name": "Madelyne Lee",
@@ -38915,7 +38937,7 @@
     "rc": 13.83,
     "rc7": 3.16,
     "rc7_adj": 3.18,
-    "rank": 1769
+    "rank": 1770
   },
   {
     "player_name": "Gabby Higbee",
@@ -38937,7 +38959,7 @@
     "rc": 17.42,
     "rc7": 3.27,
     "rc7_adj": 3.18,
-    "rank": 1770
+    "rank": 1771
   },
   {
     "player_name": "Hollie Farmer",
@@ -38959,7 +38981,7 @@
     "rc": 15.01,
     "rc7": 2.97,
     "rc7_adj": 3.17,
-    "rank": 1771
+    "rank": 1772
   },
   {
     "player_name": "Shawnese Hogue-Lacy",
@@ -38981,7 +39003,7 @@
     "rc": 15.17,
     "rc7": 2.92,
     "rc7_adj": 3.17,
-    "rank": 1772
+    "rank": 1773
   },
   {
     "player_name": "DaNia Durr",
@@ -39003,7 +39025,7 @@
     "rc": 13.81,
     "rc7": 4.14,
     "rc7_adj": 3.17,
-    "rank": 1773
+    "rank": 1774
   },
   {
     "player_name": "Kaitlyn Sailor",
@@ -39025,7 +39047,7 @@
     "rc": 13.14,
     "rc7": 3.63,
     "rc7_adj": 3.16,
-    "rank": 1774
+    "rank": 1775
   },
   {
     "player_name": "Kam Utendorf",
@@ -39047,7 +39069,7 @@
     "rc": 17.55,
     "rc7": 3.65,
     "rc7_adj": 3.16,
-    "rank": 1775
+    "rank": 1776
   },
   {
     "player_name": "Emily Strittmatter",
@@ -39069,7 +39091,7 @@
     "rc": 10.87,
     "rc7": 3.17,
     "rc7_adj": 3.15,
-    "rank": 1776
+    "rank": 1777
   },
   {
     "player_name": "Scarlett Kuhn",
@@ -39091,7 +39113,7 @@
     "rc": 13.67,
     "rc7": 2.96,
     "rc7_adj": 3.15,
-    "rank": 1777
+    "rank": 1778
   },
   {
     "player_name": "Keely GOUSHA",
@@ -39113,7 +39135,7 @@
     "rc": 15.45,
     "rc7": 3.12,
     "rc7_adj": 3.15,
-    "rank": 1778
+    "rank": 1779
   },
   {
     "player_name": "Olivia Miller",
@@ -39135,7 +39157,7 @@
     "rc": 13.24,
     "rc7": 3.61,
     "rc7_adj": 3.14,
-    "rank": 1779
+    "rank": 1780
   },
   {
     "player_name": "Ava Butler",
@@ -39157,7 +39179,7 @@
     "rc": 17.56,
     "rc7": 3.26,
     "rc7_adj": 3.14,
-    "rank": 1780
+    "rank": 1781
   },
   {
     "player_name": "Maya Venegas",
@@ -39179,7 +39201,7 @@
     "rc": 14.95,
     "rc7": 3.2,
     "rc7_adj": 3.13,
-    "rank": 1781
+    "rank": 1782
   },
   {
     "player_name": "Christina Ginex",
@@ -39201,7 +39223,7 @@
     "rc": 13.96,
     "rc7": 3.15,
     "rc7_adj": 3.13,
-    "rank": 1782
+    "rank": 1783
   },
   {
     "player_name": "Madelyn Lopez",
@@ -39223,7 +39245,7 @@
     "rc": 11.78,
     "rc7": 3.26,
     "rc7_adj": 3.13,
-    "rank": 1783
+    "rank": 1784
   },
   {
     "player_name": "Mckenna Rinewalt",
@@ -39245,7 +39267,7 @@
     "rc": 12.74,
     "rc7": 3.11,
     "rc7_adj": 3.12,
-    "rank": 1784
+    "rank": 1785
   },
   {
     "player_name": "Brooke Roberts",
@@ -39267,7 +39289,7 @@
     "rc": 12.6,
     "rc7": 2.94,
     "rc7_adj": 3.11,
-    "rank": 1785
+    "rank": 1786
   },
   {
     "player_name": "Hadley Gardner",
@@ -39289,7 +39311,7 @@
     "rc": 15.91,
     "rc7": 3.09,
     "rc7_adj": 3.09,
-    "rank": 1786
+    "rank": 1787
   },
   {
     "player_name": "Bailey Alatorre",
@@ -39311,7 +39333,7 @@
     "rc": 14.35,
     "rc7": 3.39,
     "rc7_adj": 3.08,
-    "rank": 1787
+    "rank": 1788
   },
   {
     "player_name": "Eviana Robles",
@@ -39333,7 +39355,7 @@
     "rc": 15.49,
     "rc7": 3.29,
     "rc7_adj": 3.08,
-    "rank": 1788
+    "rank": 1789
   },
   {
     "player_name": "Liliana Robledo",
@@ -39355,7 +39377,7 @@
     "rc": 15.94,
     "rc7": 3.25,
     "rc7_adj": 3.08,
-    "rank": 1789
+    "rank": 1790
   },
   {
     "player_name": "Qween Edmonds",
@@ -39377,7 +39399,7 @@
     "rc": 18.43,
     "rc7": 3.95,
     "rc7_adj": 3.08,
-    "rank": 1790
+    "rank": 1791
   },
   {
     "player_name": "Emma Ginn",
@@ -39399,7 +39421,7 @@
     "rc": 13.82,
     "rc7": 3.45,
     "rc7_adj": 3.08,
-    "rank": 1791
+    "rank": 1792
   },
   {
     "player_name": "Dani Stewart",
@@ -39421,7 +39443,7 @@
     "rc": 11.11,
     "rc7": 3.03,
     "rc7_adj": 3.08,
-    "rank": 1792
+    "rank": 1793
   },
   {
     "player_name": "Jada Zepeda",
@@ -39443,7 +39465,7 @@
     "rc": 14.71,
     "rc7": 3.03,
     "rc7_adj": 3.07,
-    "rank": 1793
+    "rank": 1794
   },
   {
     "player_name": "Bridget Chapman",
@@ -39465,7 +39487,7 @@
     "rc": 13.84,
     "rc7": 3.03,
     "rc7_adj": 3.07,
-    "rank": 1794
+    "rank": 1795
   },
   {
     "player_name": "Destiny Sims",
@@ -39487,7 +39509,7 @@
     "rc": 15.31,
     "rc7": 3.65,
     "rc7_adj": 3.07,
-    "rank": 1795
+    "rank": 1796
   },
   {
     "player_name": "Angelina Ortiz",
@@ -39509,7 +39531,7 @@
     "rc": 16.43,
     "rc7": 3.63,
     "rc7_adj": 3.07,
-    "rank": 1796
+    "rank": 1797
   },
   {
     "player_name": "Jordan Peno",
@@ -39531,7 +39553,7 @@
     "rc": 13.24,
     "rc7": 3.02,
     "rc7_adj": 3.06,
-    "rank": 1797
+    "rank": 1798
   },
   {
     "player_name": "Jordan Stewart",
@@ -39553,7 +39575,7 @@
     "rc": 11.28,
     "rc7": 3.29,
     "rc7_adj": 3.06,
-    "rank": 1798
+    "rank": 1799
   },
   {
     "player_name": "Jayla Manning",
@@ -39575,7 +39597,7 @@
     "rc": 15.4,
     "rc7": 3.14,
     "rc7_adj": 3.05,
-    "rank": 1799
+    "rank": 1800
   },
   {
     "player_name": "Jocelyn Briseno",
@@ -39597,7 +39619,7 @@
     "rc": 11.63,
     "rc7": 3.09,
     "rc7_adj": 3.05,
-    "rank": 1800
+    "rank": 1801
   },
   {
     "player_name": "Hannah Welch",
@@ -39619,7 +39641,7 @@
     "rc": 16.25,
     "rc7": 3.38,
     "rc7_adj": 3.05,
-    "rank": 1801
+    "rank": 1802
   },
   {
     "player_name": "Lily Woodworth",
@@ -39641,7 +39663,7 @@
     "rc": 14.72,
     "rc7": 3.22,
     "rc7_adj": 3.05,
-    "rank": 1802
+    "rank": 1803
   },
   {
     "player_name": "Nichole Orozco",
@@ -39663,7 +39685,7 @@
     "rc": 13.38,
     "rc7": 2.96,
     "rc7_adj": 3.05,
-    "rank": 1803
+    "rank": 1804
   },
   {
     "player_name": "Katie Murphy",
@@ -39685,7 +39707,7 @@
     "rc": 14.19,
     "rc7": 3.35,
     "rc7_adj": 3.05,
-    "rank": 1804
+    "rank": 1805
   },
   {
     "player_name": "KILEY STROTT",
@@ -39707,7 +39729,7 @@
     "rc": 12.69,
     "rc7": 2.93,
     "rc7_adj": 3.04,
-    "rank": 1805
+    "rank": 1806
   },
   {
     "player_name": "Sa'Mya Jones",
@@ -39729,7 +39751,7 @@
     "rc": 12.27,
     "rc7": 2.77,
     "rc7_adj": 3.01,
-    "rank": 1806
+    "rank": 1807
   },
   {
     "player_name": "Jess Petit",
@@ -39751,7 +39773,7 @@
     "rc": 15.13,
     "rc7": 3.61,
     "rc7_adj": 3.01,
-    "rank": 1807
+    "rank": 1808
   },
   {
     "player_name": "Jaycee Holt",
@@ -39773,7 +39795,7 @@
     "rc": 10.59,
     "rc7": 2.71,
     "rc7_adj": 3.01,
-    "rank": 1808
+    "rank": 1809
   },
   {
     "player_name": "Ariana Murillo",
@@ -39795,7 +39817,7 @@
     "rc": 16.02,
     "rc7": 4.15,
     "rc7_adj": 3.0,
-    "rank": 1809
+    "rank": 1810
   },
   {
     "player_name": "Kendal Daniels",
@@ -39817,7 +39839,7 @@
     "rc": 14.3,
     "rc7": 3.19,
     "rc7_adj": 3.0,
-    "rank": 1810
+    "rank": 1811
   },
   {
     "player_name": "Brynne Songy",
@@ -39839,7 +39861,7 @@
     "rc": 12.22,
     "rc7": 3.02,
     "rc7_adj": 3.0,
-    "rank": 1811
+    "rank": 1812
   },
   {
     "player_name": "Brooklyn Jones",
@@ -39861,7 +39883,7 @@
     "rc": 14.06,
     "rc7": 2.92,
     "rc7_adj": 3.0,
-    "rank": 1812
+    "rank": 1813
   },
   {
     "player_name": "Kaia Garnica",
@@ -39883,7 +39905,7 @@
     "rc": 14.03,
     "rc7": 3.17,
     "rc7_adj": 2.99,
-    "rank": 1813
+    "rank": 1814
   },
   {
     "player_name": "Courtney Marks",
@@ -39905,7 +39927,7 @@
     "rc": 14.07,
     "rc7": 3.25,
     "rc7_adj": 2.99,
-    "rank": 1814
+    "rank": 1815
   },
   {
     "player_name": "Gabrielle Willis",
@@ -39927,7 +39949,7 @@
     "rc": 13.21,
     "rc7": 3.96,
     "rc7_adj": 2.98,
-    "rank": 1815
+    "rank": 1816
   },
   {
     "player_name": "Greta Hessenthaler",
@@ -39949,7 +39971,7 @@
     "rc": 14.12,
     "rc7": 2.85,
     "rc7_adj": 2.97,
-    "rank": 1816
+    "rank": 1817
   },
   {
     "player_name": "Teryn Brown",
@@ -39971,7 +39993,7 @@
     "rc": 12.7,
     "rc7": 3.03,
     "rc7_adj": 2.97,
-    "rank": 1817
+    "rank": 1818
   },
   {
     "player_name": "Ava Wallace",
@@ -39993,7 +40015,7 @@
     "rc": 16.96,
     "rc7": 3.67,
     "rc7_adj": 2.97,
-    "rank": 1818
+    "rank": 1819
   },
   {
     "player_name": "Sophia Sanchez",
@@ -40015,7 +40037,7 @@
     "rc": 15.53,
     "rc7": 3.51,
     "rc7_adj": 2.97,
-    "rank": 1819
+    "rank": 1820
   },
   {
     "player_name": "Tristen Head",
@@ -40037,7 +40059,7 @@
     "rc": 12.99,
     "rc7": 2.97,
     "rc7_adj": 2.97,
-    "rank": 1820
+    "rank": 1821
   },
   {
     "player_name": "Tavia Leadon",
@@ -40059,7 +40081,7 @@
     "rc": 11.32,
     "rc7": 3.66,
     "rc7_adj": 2.95,
-    "rank": 1821
+    "rank": 1822
   },
   {
     "player_name": "Caroline Calkins",
@@ -40081,7 +40103,7 @@
     "rc": 13.73,
     "rc7": 3.2,
     "rc7_adj": 2.95,
-    "rank": 1822
+    "rank": 1823
   },
   {
     "player_name": "Ciana Arguijo",
@@ -40103,7 +40125,7 @@
     "rc": 14.94,
     "rc7": 3.08,
     "rc7_adj": 2.94,
-    "rank": 1823
+    "rank": 1824
   },
   {
     "player_name": "Raenna Liscano",
@@ -40125,7 +40147,7 @@
     "rc": 11.05,
     "rc7": 2.9,
     "rc7_adj": 2.94,
-    "rank": 1824
+    "rank": 1825
   },
   {
     "player_name": "Alex Trevena",
@@ -40147,7 +40169,7 @@
     "rc": 10.07,
     "rc7": 2.9,
     "rc7_adj": 2.94,
-    "rank": 1825
+    "rank": 1826
   },
   {
     "player_name": "Kayley Lenger",
@@ -40169,7 +40191,7 @@
     "rc": 11.27,
     "rc7": 2.57,
     "rc7_adj": 2.94,
-    "rank": 1826
+    "rank": 1827
   },
   {
     "player_name": "Amber Wolfe",
@@ -40191,7 +40213,7 @@
     "rc": 12.85,
     "rc7": 2.9,
     "rc7_adj": 2.94,
-    "rank": 1827
+    "rank": 1828
   },
   {
     "player_name": "Erin Lee",
@@ -40213,7 +40235,7 @@
     "rc": 15.95,
     "rc7": 3.1,
     "rc7_adj": 2.94,
-    "rank": 1828
+    "rank": 1829
   },
   {
     "player_name": "Kayla Santiago",
@@ -40235,7 +40257,7 @@
     "rc": 12.34,
     "rc7": 2.94,
     "rc7_adj": 2.93,
-    "rank": 1829
+    "rank": 1830
   },
   {
     "player_name": "Silje Emery",
@@ -40257,7 +40279,7 @@
     "rc": 12.16,
     "rc7": 3.23,
     "rc7_adj": 2.93,
-    "rank": 1830
+    "rank": 1831
   },
   {
     "player_name": "Abby Bossler",
@@ -40279,7 +40301,7 @@
     "rc": 12.92,
     "rc7": 2.95,
     "rc7_adj": 2.93,
-    "rank": 1831
+    "rank": 1832
   },
   {
     "player_name": "Kassidy Munoz",
@@ -40301,7 +40323,7 @@
     "rc": 15.74,
     "rc7": 3.09,
     "rc7_adj": 2.93,
-    "rank": 1832
+    "rank": 1833
   },
   {
     "player_name": "Liv Smith",
@@ -40323,7 +40345,7 @@
     "rc": 12.19,
     "rc7": 2.98,
     "rc7_adj": 2.92,
-    "rank": 1833
+    "rank": 1834
   },
   {
     "player_name": "Tricia Yarotsky",
@@ -40345,7 +40367,7 @@
     "rc": 13.61,
     "rc7": 2.92,
     "rc7_adj": 2.92,
-    "rank": 1834
+    "rank": 1835
   },
   {
     "player_name": "Maddy Bermudez",
@@ -40367,7 +40389,7 @@
     "rc": 12.93,
     "rc7": 3.02,
     "rc7_adj": 2.9,
-    "rank": 1835
+    "rank": 1836
   },
   {
     "player_name": "Clara Hudgens",
@@ -40389,7 +40411,7 @@
     "rc": 10.85,
     "rc7": 2.53,
     "rc7_adj": 2.9,
-    "rank": 1836
+    "rank": 1837
   },
   {
     "player_name": "Charli Anger",
@@ -40411,7 +40433,7 @@
     "rc": 12.32,
     "rc7": 2.94,
     "rc7_adj": 2.9,
-    "rank": 1837
+    "rank": 1838
   },
   {
     "player_name": "Jolee Benson",
@@ -40433,7 +40455,7 @@
     "rc": 8.99,
     "rc7": 2.66,
     "rc7_adj": 2.9,
-    "rank": 1838
+    "rank": 1839
   },
   {
     "player_name": "Kate Proffitt",
@@ -40455,7 +40477,7 @@
     "rc": 12.39,
     "rc7": 2.63,
     "rc7_adj": 2.9,
-    "rank": 1839
+    "rank": 1840
   },
   {
     "player_name": "Alana Cypress",
@@ -40477,7 +40499,7 @@
     "rc": 16.22,
     "rc7": 3.62,
     "rc7_adj": 2.89,
-    "rank": 1840
+    "rank": 1841
   },
   {
     "player_name": "Merci HART",
@@ -40499,7 +40521,7 @@
     "rc": 11.82,
     "rc7": 3.1,
     "rc7_adj": 2.89,
-    "rank": 1841
+    "rank": 1842
   },
   {
     "player_name": "Nolah Moyer",
@@ -40521,7 +40543,7 @@
     "rc": 14.28,
     "rc7": 2.83,
     "rc7_adj": 2.89,
-    "rank": 1842
+    "rank": 1843
   },
   {
     "player_name": "Brooke Aberle",
@@ -40543,7 +40565,7 @@
     "rc": 10.57,
     "rc7": 3.0,
     "rc7_adj": 2.88,
-    "rank": 1843
+    "rank": 1844
   },
   {
     "player_name": "Colsten Beers",
@@ -40565,7 +40587,7 @@
     "rc": 15.56,
     "rc7": 2.82,
     "rc7_adj": 2.88,
-    "rank": 1844
+    "rank": 1845
   },
   {
     "player_name": "Grayson Buckner",
@@ -40587,7 +40609,7 @@
     "rc": 15.79,
     "rc7": 3.04,
     "rc7_adj": 2.88,
-    "rank": 1845
+    "rank": 1846
   },
   {
     "player_name": "Nikki Gibson",
@@ -40609,7 +40631,7 @@
     "rc": 12.85,
     "rc7": 2.59,
     "rc7_adj": 2.87,
-    "rank": 1846
+    "rank": 1847
   },
   {
     "player_name": "Z'#393aNatria Evans",
@@ -40631,7 +40653,7 @@
     "rc": 11.07,
     "rc7": 3.57,
     "rc7_adj": 2.87,
-    "rank": 1847
+    "rank": 1848
   },
   {
     "player_name": "Payton Conroy",
@@ -40653,7 +40675,7 @@
     "rc": 11.82,
     "rc7": 2.89,
     "rc7_adj": 2.87,
-    "rank": 1848
+    "rank": 1849
   },
   {
     "player_name": "Kalli Petty",
@@ -40675,7 +40697,7 @@
     "rc": 15.71,
     "rc7": 3.11,
     "rc7_adj": 2.87,
-    "rank": 1849
+    "rank": 1850
   },
   {
     "player_name": "Audree Mendoza",
@@ -40697,7 +40719,7 @@
     "rc": 15.77,
     "rc7": 2.88,
     "rc7_adj": 2.86,
-    "rank": 1850
+    "rank": 1851
   },
   {
     "player_name": "Kymora Wang",
@@ -40719,7 +40741,7 @@
     "rc": 13.92,
     "rc7": 2.81,
     "rc7_adj": 2.86,
-    "rank": 1851
+    "rank": 1852
   },
   {
     "player_name": "Sierra Sass",
@@ -40741,7 +40763,7 @@
     "rc": 10.24,
     "rc7": 2.59,
     "rc7_adj": 2.85,
-    "rank": 1852
+    "rank": 1853
   },
   {
     "player_name": "Bella Stephens",
@@ -40763,7 +40785,7 @@
     "rc": 10.7,
     "rc7": 2.58,
     "rc7_adj": 2.85,
-    "rank": 1853
+    "rank": 1854
   },
   {
     "player_name": "Jae Cosgriff",
@@ -40785,7 +40807,7 @@
     "rc": 10.56,
     "rc7": 2.67,
     "rc7_adj": 2.84,
-    "rank": 1854
+    "rank": 1855
   },
   {
     "player_name": "Emma Morgan",
@@ -40807,7 +40829,7 @@
     "rc": 12.2,
     "rc7": 2.72,
     "rc7_adj": 2.84,
-    "rank": 1855
+    "rank": 1856
   },
   {
     "player_name": "Makayla Navarro",
@@ -40829,7 +40851,7 @@
     "rc": 11.88,
     "rc7": 2.83,
     "rc7_adj": 2.83,
-    "rank": 1856
+    "rank": 1857
   },
   {
     "player_name": "Ashlee Lovett",
@@ -40851,7 +40873,7 @@
     "rc": 15.1,
     "rc7": 3.2,
     "rc7_adj": 2.83,
-    "rank": 1857
+    "rank": 1858
   },
   {
     "player_name": "Aitirihna Aiken",
@@ -40873,7 +40895,7 @@
     "rc": 9.57,
     "rc7": 2.83,
     "rc7_adj": 2.83,
-    "rank": 1858
+    "rank": 1859
   },
   {
     "player_name": "Jazzy Santos",
@@ -40895,7 +40917,7 @@
     "rc": 16.83,
     "rc7": 2.87,
     "rc7_adj": 2.83,
-    "rank": 1859
+    "rank": 1860
   },
   {
     "player_name": "Jordyn Hustey",
@@ -40917,7 +40939,7 @@
     "rc": 15.34,
     "rc7": 2.98,
     "rc7_adj": 2.83,
-    "rank": 1860
+    "rank": 1861
   },
   {
     "player_name": "Cadence Gilliland",
@@ -40939,7 +40961,7 @@
     "rc": 14.13,
     "rc7": 2.75,
     "rc7_adj": 2.82,
-    "rank": 1861
+    "rank": 1862
   },
   {
     "player_name": "Adaeze Nwogbo",
@@ -40961,7 +40983,7 @@
     "rc": 11.31,
     "rc7": 2.73,
     "rc7_adj": 2.82,
-    "rank": 1862
+    "rank": 1863
   },
   {
     "player_name": "Kayla Visser",
@@ -40983,7 +41005,7 @@
     "rc": 9.97,
     "rc7": 2.83,
     "rc7_adj": 2.81,
-    "rank": 1863
+    "rank": 1864
   },
   {
     "player_name": "Taylor Carraway",
@@ -41005,7 +41027,7 @@
     "rc": 12.63,
     "rc7": 3.49,
     "rc7_adj": 2.81,
-    "rank": 1864
+    "rank": 1865
   },
   {
     "player_name": "Emily Quintero",
@@ -41027,7 +41049,7 @@
     "rc": 9.36,
     "rc7": 3.07,
     "rc7_adj": 2.8,
-    "rank": 1865
+    "rank": 1866
   },
   {
     "player_name": "Riley Frickleton",
@@ -41049,7 +41071,7 @@
     "rc": 11.15,
     "rc7": 2.66,
     "rc7_adj": 2.8,
-    "rank": 1866
+    "rank": 1867
   },
   {
     "player_name": "Josephine Heuberger",
@@ -41071,7 +41093,7 @@
     "rc": 12.68,
     "rc7": 2.77,
     "rc7_adj": 2.79,
-    "rank": 1867
+    "rank": 1868
   },
   {
     "player_name": "Madison Garcia",
@@ -41093,7 +41115,7 @@
     "rc": 10.8,
     "rc7": 2.67,
     "rc7_adj": 2.79,
-    "rank": 1868
+    "rank": 1869
   },
   {
     "player_name": "Madison Ostrowski",
@@ -41115,7 +41137,7 @@
     "rc": 10.82,
     "rc7": 2.7,
     "rc7_adj": 2.79,
-    "rank": 1869
+    "rank": 1870
   },
   {
     "player_name": "Wendy Ketola",
@@ -41137,7 +41159,7 @@
     "rc": 12.52,
     "rc7": 3.37,
     "rc7_adj": 2.78,
-    "rank": 1870
+    "rank": 1871
   },
   {
     "player_name": "Hailey Porter",
@@ -41159,7 +41181,29 @@
     "rc": 16.14,
     "rc7": 3.08,
     "rc7_adj": 2.78,
-    "rank": 1871
+    "rank": 1872
+  },
+  {
+    "player_name": "Cara Kochakian",
+    "name": "Cara Kochakian",
+    "team": "Fairfield",
+    "PA": 110,
+    "HR": 4,
+    "pitching_games": 0,
+    "RC7_raw": 2.91,
+    "OPAF": 0.96,
+    "RC7_adj": 2.78,
+    "ab": 107,
+    "hits": 24,
+    "doubles": 8,
+    "triples": 1,
+    "tb": 46,
+    "walks": 3,
+    "qualified": true,
+    "rc": 11.48,
+    "rc7": 2.91,
+    "rc7_adj": 2.78,
+    "rank": 1873
   },
   {
     "player_name": "Malissa George",
@@ -41181,7 +41225,7 @@
     "rc": 10.94,
     "rc7": 2.77,
     "rc7_adj": 2.78,
-    "rank": 1872
+    "rank": 1874
   },
   {
     "player_name": "Lyla Gonzalez",
@@ -41203,7 +41247,7 @@
     "rc": 12.94,
     "rc7": 2.77,
     "rc7_adj": 2.78,
-    "rank": 1873
+    "rank": 1875
   },
   {
     "player_name": "Rayah Snyder",
@@ -41225,7 +41269,7 @@
     "rc": 11.54,
     "rc7": 2.66,
     "rc7_adj": 2.77,
-    "rank": 1874
+    "rank": 1876
   },
   {
     "player_name": "Tori Green",
@@ -41247,7 +41291,7 @@
     "rc": 14.07,
     "rc7": 3.89,
     "rc7_adj": 2.76,
-    "rank": 1875
+    "rank": 1877
   },
   {
     "player_name": "Emma SMITH",
@@ -41269,7 +41313,7 @@
     "rc": 10.27,
     "rc7": 2.63,
     "rc7_adj": 2.75,
-    "rank": 1876
+    "rank": 1878
   },
   {
     "player_name": "Tiffany Meek",
@@ -41291,7 +41335,7 @@
     "rc": 11.29,
     "rc7": 2.52,
     "rc7_adj": 2.75,
-    "rank": 1877
+    "rank": 1879
   },
   {
     "player_name": "Valerie Combs",
@@ -41313,7 +41357,7 @@
     "rc": 12.91,
     "rc7": 2.47,
     "rc7_adj": 2.75,
-    "rank": 1878
+    "rank": 1880
   },
   {
     "player_name": "Zariah Billinger",
@@ -41335,7 +41379,7 @@
     "rc": 14.86,
     "rc7": 3.55,
     "rc7_adj": 2.74,
-    "rank": 1879
+    "rank": 1881
   },
   {
     "player_name": "JAMIA NELSON",
@@ -41357,7 +41401,7 @@
     "rc": 14.71,
     "rc7": 2.51,
     "rc7_adj": 2.74,
-    "rank": 1880
+    "rank": 1882
   },
   {
     "player_name": "Brynna Seitz",
@@ -41379,7 +41423,7 @@
     "rc": 11.91,
     "rc7": 2.84,
     "rc7_adj": 2.72,
-    "rank": 1881
+    "rank": 1883
   },
   {
     "player_name": "Olivia Catalina",
@@ -41401,7 +41445,7 @@
     "rc": 12.69,
     "rc7": 2.84,
     "rc7_adj": 2.72,
-    "rank": 1882
+    "rank": 1884
   },
   {
     "player_name": "Carmella Phelan",
@@ -41423,7 +41467,7 @@
     "rc": 12.12,
     "rc7": 2.99,
     "rc7_adj": 2.72,
-    "rank": 1883
+    "rank": 1885
   },
   {
     "player_name": "Madison Hornback",
@@ -41445,7 +41489,7 @@
     "rc": 11.5,
     "rc7": 2.54,
     "rc7_adj": 2.71,
-    "rank": 1884
+    "rank": 1886
   },
   {
     "player_name": "Morgan Pool",
@@ -41467,7 +41511,7 @@
     "rc": 10.68,
     "rc7": 2.87,
     "rc7_adj": 2.7,
-    "rank": 1885
+    "rank": 1887
   },
   {
     "player_name": "Vic Brunette",
@@ -41489,7 +41533,7 @@
     "rc": 13.04,
     "rc7": 2.63,
     "rc7_adj": 2.69,
-    "rank": 1886
+    "rank": 1888
   },
   {
     "player_name": "Ella Shafer",
@@ -41511,7 +41555,7 @@
     "rc": 12.22,
     "rc7": 2.79,
     "rc7_adj": 2.68,
-    "rank": 1887
+    "rank": 1889
   },
   {
     "player_name": "Kami Diaz",
@@ -41533,7 +41577,7 @@
     "rc": 10.26,
     "rc7": 2.69,
     "rc7_adj": 2.68,
-    "rank": 1888
+    "rank": 1890
   },
   {
     "player_name": "Sydney Harvey",
@@ -41555,7 +41599,7 @@
     "rc": 11.46,
     "rc7": 2.41,
     "rc7_adj": 2.68,
-    "rank": 1889
+    "rank": 1891
   },
   {
     "player_name": "Samantha Gallegos",
@@ -41577,7 +41621,7 @@
     "rc": 16.31,
     "rc7": 3.17,
     "rc7_adj": 2.67,
-    "rank": 1890
+    "rank": 1892
   },
   {
     "player_name": "Jadyn Tinsley",
@@ -41599,7 +41643,7 @@
     "rc": 9.34,
     "rc7": 2.84,
     "rc7_adj": 2.67,
-    "rank": 1891
+    "rank": 1893
   },
   {
     "player_name": "Kachelle Refour",
@@ -41621,7 +41665,7 @@
     "rc": 11.97,
     "rc7": 3.35,
     "rc7_adj": 2.66,
-    "rank": 1892
+    "rank": 1894
   },
   {
     "player_name": "Mari Narvaiz",
@@ -41643,7 +41687,7 @@
     "rc": 10.1,
     "rc7": 2.79,
     "rc7_adj": 2.65,
-    "rank": 1893
+    "rank": 1895
   },
   {
     "player_name": "Jordan Smith",
@@ -41665,7 +41709,7 @@
     "rc": 13.08,
     "rc7": 2.72,
     "rc7_adj": 2.65,
-    "rank": 1894
+    "rank": 1896
   },
   {
     "player_name": "Erynn Thompson",
@@ -41687,7 +41731,7 @@
     "rc": 13.07,
     "rc7": 3.27,
     "rc7_adj": 2.65,
-    "rank": 1895
+    "rank": 1897
   },
   {
     "player_name": "Kristina BOZEK",
@@ -41709,7 +41753,7 @@
     "rc": 12.74,
     "rc7": 3.15,
     "rc7_adj": 2.64,
-    "rank": 1896
+    "rank": 1898
   },
   {
     "player_name": "Maggie Helms",
@@ -41731,7 +41775,7 @@
     "rc": 10.32,
     "rc7": 2.85,
     "rc7_adj": 2.64,
-    "rank": 1897
+    "rank": 1899
   },
   {
     "player_name": "Claire Turner",
@@ -41753,7 +41797,7 @@
     "rc": 10.55,
     "rc7": 2.67,
     "rc7_adj": 2.63,
-    "rank": 1898
+    "rank": 1900
   },
   {
     "player_name": "Chloe Foster",
@@ -41775,7 +41819,7 @@
     "rc": 12.07,
     "rc7": 2.72,
     "rc7_adj": 2.63,
-    "rank": 1899
+    "rank": 1901
   },
   {
     "player_name": "Kinsley Cox",
@@ -41797,7 +41841,7 @@
     "rc": 11.94,
     "rc7": 2.75,
     "rc7_adj": 2.63,
-    "rank": 1900
+    "rank": 1902
   },
   {
     "player_name": "Caroline Fox",
@@ -41819,7 +41863,7 @@
     "rc": 9.6,
     "rc7": 2.62,
     "rc7_adj": 2.62,
-    "rank": 1901
+    "rank": 1903
   },
   {
     "player_name": "Madyson Clark",
@@ -41841,7 +41885,7 @@
     "rc": 13.23,
     "rc7": 2.26,
     "rc7_adj": 2.61,
-    "rank": 1902
+    "rank": 1904
   },
   {
     "player_name": "Leiora Davidson",
@@ -41863,7 +41907,7 @@
     "rc": 10.18,
     "rc7": 2.57,
     "rc7_adj": 2.61,
-    "rank": 1903
+    "rank": 1905
   },
   {
     "player_name": "Tinley Easton",
@@ -41885,7 +41929,7 @@
     "rc": 13.39,
     "rc7": 2.47,
     "rc7_adj": 2.6,
-    "rank": 1904
+    "rank": 1906
   },
   {
     "player_name": "Jaz Johnson",
@@ -41907,7 +41951,7 @@
     "rc": 11.01,
     "rc7": 2.89,
     "rc7_adj": 2.6,
-    "rank": 1905
+    "rank": 1907
   },
   {
     "player_name": "Dominique Gallardo",
@@ -41929,7 +41973,7 @@
     "rc": 9.26,
     "rc7": 2.74,
     "rc7_adj": 2.59,
-    "rank": 1906
+    "rank": 1908
   },
   {
     "player_name": "Hailey Bethune",
@@ -41951,7 +41995,7 @@
     "rc": 11.49,
     "rc7": 2.94,
     "rc7_adj": 2.58,
-    "rank": 1907
+    "rank": 1909
   },
   {
     "player_name": "Grace Huffman",
@@ -41973,7 +42017,7 @@
     "rc": 10.0,
     "rc7": 2.76,
     "rc7_adj": 2.58,
-    "rank": 1908
+    "rank": 1910
   },
   {
     "player_name": "Julia Sitterding",
@@ -41995,7 +42039,7 @@
     "rc": 13.91,
     "rc7": 2.45,
     "rc7_adj": 2.57,
-    "rank": 1909
+    "rank": 1911
   },
   {
     "player_name": "Devyn Johnson",
@@ -42017,7 +42061,7 @@
     "rc": 8.7,
     "rc7": 2.65,
     "rc7_adj": 2.57,
-    "rank": 1910
+    "rank": 1912
   },
   {
     "player_name": "Regan Dillon",
@@ -42039,7 +42083,7 @@
     "rc": 13.86,
     "rc7": 2.67,
     "rc7_adj": 2.57,
-    "rank": 1911
+    "rank": 1913
   },
   {
     "player_name": "Kate VANCE",
@@ -42061,7 +42105,7 @@
     "rc": 14.61,
     "rc7": 2.51,
     "rc7_adj": 2.57,
-    "rank": 1912
+    "rank": 1914
   },
   {
     "player_name": "Ashley CHEVALIER",
@@ -42083,7 +42127,7 @@
     "rc": 11.74,
     "rc7": 2.9,
     "rc7_adj": 2.56,
-    "rank": 1913
+    "rank": 1915
   },
   {
     "player_name": "Shea Malone",
@@ -42105,7 +42149,7 @@
     "rc": 11.81,
     "rc7": 2.95,
     "rc7_adj": 2.56,
-    "rank": 1914
+    "rank": 1916
   },
   {
     "player_name": "Kaylynn English",
@@ -42127,7 +42171,7 @@
     "rc": 10.05,
     "rc7": 2.54,
     "rc7_adj": 2.56,
-    "rank": 1915
+    "rank": 1917
   },
   {
     "player_name": "Brianna Gutierrez",
@@ -42149,7 +42193,7 @@
     "rc": 11.7,
     "rc7": 2.61,
     "rc7_adj": 2.56,
-    "rank": 1916
+    "rank": 1918
   },
   {
     "player_name": "Mariyah Brown",
@@ -42171,7 +42215,7 @@
     "rc": 9.65,
     "rc7": 2.67,
     "rc7_adj": 2.56,
-    "rank": 1917
+    "rank": 1919
   },
   {
     "player_name": "Mia Vannelli",
@@ -42193,7 +42237,7 @@
     "rc": 9.11,
     "rc7": 2.55,
     "rc7_adj": 2.55,
-    "rank": 1918
+    "rank": 1920
   },
   {
     "player_name": "Nina Sarlo",
@@ -42215,7 +42259,7 @@
     "rc": 10.89,
     "rc7": 2.69,
     "rc7_adj": 2.54,
-    "rank": 1919
+    "rank": 1921
   },
   {
     "player_name": "Brianna Holguin",
@@ -42237,7 +42281,7 @@
     "rc": 14.63,
     "rc7": 2.95,
     "rc7_adj": 2.53,
-    "rank": 1920
+    "rank": 1922
   },
   {
     "player_name": "Devon Medina",
@@ -42259,7 +42303,7 @@
     "rc": 18.48,
     "rc7": 3.01,
     "rc7_adj": 2.53,
-    "rank": 1921
+    "rank": 1923
   },
   {
     "player_name": "Ella Milante",
@@ -42281,7 +42325,7 @@
     "rc": 10.37,
     "rc7": 2.53,
     "rc7_adj": 2.53,
-    "rank": 1922
+    "rank": 1924
   },
   {
     "player_name": "Aubrey Hensley",
@@ -42303,7 +42347,7 @@
     "rc": 11.51,
     "rc7": 2.52,
     "rc7_adj": 2.52,
-    "rank": 1923
+    "rank": 1925
   },
   {
     "player_name": "Erynne Castillo",
@@ -42325,7 +42369,7 @@
     "rc": 11.21,
     "rc7": 2.5,
     "rc7_adj": 2.51,
-    "rank": 1924
+    "rank": 1926
   },
   {
     "player_name": "Raven Jones",
@@ -42347,7 +42391,7 @@
     "rc": 13.03,
     "rc7": 2.76,
     "rc7_adj": 2.51,
-    "rank": 1925
+    "rank": 1927
   },
   {
     "player_name": "Kendall Smiley",
@@ -42369,7 +42413,7 @@
     "rc": 13.82,
     "rc7": 2.44,
     "rc7_adj": 2.51,
-    "rank": 1926
+    "rank": 1928
   },
   {
     "player_name": "Charlee Yourman",
@@ -42391,7 +42435,7 @@
     "rc": 11.09,
     "rc7": 2.45,
     "rc7_adj": 2.5,
-    "rank": 1927
+    "rank": 1929
   },
   {
     "player_name": "Maddie Lemasters",
@@ -42413,7 +42457,7 @@
     "rc": 12.08,
     "rc7": 2.54,
     "rc7_adj": 2.5,
-    "rank": 1928
+    "rank": 1930
   },
   {
     "player_name": "Ava Abromavage",
@@ -42435,7 +42479,7 @@
     "rc": 14.47,
     "rc7": 2.64,
     "rc7_adj": 2.5,
-    "rank": 1929
+    "rank": 1931
   },
   {
     "player_name": "Hailey Hughes",
@@ -42457,7 +42501,7 @@
     "rc": 10.3,
     "rc7": 3.01,
     "rc7_adj": 2.49,
-    "rank": 1930
+    "rank": 1932
   },
   {
     "player_name": "Claire Connelly",
@@ -42479,7 +42523,7 @@
     "rc": 9.84,
     "rc7": 2.83,
     "rc7_adj": 2.49,
-    "rank": 1931
+    "rank": 1933
   },
   {
     "player_name": "Annika Shearer",
@@ -42501,7 +42545,7 @@
     "rc": 12.11,
     "rc7": 2.68,
     "rc7_adj": 2.49,
-    "rank": 1932
+    "rank": 1934
   },
   {
     "player_name": "Juztyne Torres",
@@ -42523,7 +42567,7 @@
     "rc": 14.78,
     "rc7": 2.54,
     "rc7_adj": 2.49,
-    "rank": 1933
+    "rank": 1935
   },
   {
     "player_name": "Keira Brady",
@@ -42545,7 +42589,7 @@
     "rc": 12.79,
     "rc7": 2.66,
     "rc7_adj": 2.49,
-    "rank": 1934
+    "rank": 1936
   },
   {
     "player_name": "Drew McKown",
@@ -42567,7 +42611,7 @@
     "rc": 11.07,
     "rc7": 2.8,
     "rc7_adj": 2.49,
-    "rank": 1935
+    "rank": 1937
   },
   {
     "player_name": "Kylie Thorpe",
@@ -42589,7 +42633,7 @@
     "rc": 10.24,
     "rc7": 2.99,
     "rc7_adj": 2.48,
-    "rank": 1936
+    "rank": 1938
   },
   {
     "player_name": "Zaelyn Harding",
@@ -42611,7 +42655,7 @@
     "rc": 9.37,
     "rc7": 2.98,
     "rc7_adj": 2.46,
-    "rank": 1937
+    "rank": 1939
   },
   {
     "player_name": "Anna Brait",
@@ -42633,7 +42677,7 @@
     "rc": 9.93,
     "rc7": 2.71,
     "rc7_adj": 2.45,
-    "rank": 1938
+    "rank": 1940
   },
   {
     "player_name": "Grace Colucci",
@@ -42655,7 +42699,7 @@
     "rc": 9.11,
     "rc7": 2.59,
     "rc7_adj": 2.44,
-    "rank": 1939
+    "rank": 1941
   },
   {
     "player_name": "Hannah McGonigle",
@@ -42677,7 +42721,7 @@
     "rc": 10.86,
     "rc7": 2.62,
     "rc7_adj": 2.44,
-    "rank": 1940
+    "rank": 1942
   },
   {
     "player_name": "Britt Bourgoyne",
@@ -42699,7 +42743,7 @@
     "rc": 11.93,
     "rc7": 2.56,
     "rc7_adj": 2.44,
-    "rank": 1941
+    "rank": 1943
   },
   {
     "player_name": "Naiah Ackerman",
@@ -42721,7 +42765,7 @@
     "rc": 9.62,
     "rc7": 2.49,
     "rc7_adj": 2.44,
-    "rank": 1942
+    "rank": 1944
   },
   {
     "player_name": "Riley Kairer",
@@ -42743,7 +42787,7 @@
     "rc": 9.36,
     "rc7": 2.62,
     "rc7_adj": 2.42,
-    "rank": 1943
+    "rank": 1945
   },
   {
     "player_name": "Sophie Collins",
@@ -42765,7 +42809,7 @@
     "rc": 9.53,
     "rc7": 2.6,
     "rc7_adj": 2.42,
-    "rank": 1944
+    "rank": 1946
   },
   {
     "player_name": "Grace Miller",
@@ -42787,7 +42831,7 @@
     "rc": 11.15,
     "rc7": 2.39,
     "rc7_adj": 2.41,
-    "rank": 1945
+    "rank": 1947
   },
   {
     "player_name": "Carly Ruiz",
@@ -42809,7 +42853,7 @@
     "rc": 8.76,
     "rc7": 2.14,
     "rc7_adj": 2.4,
-    "rank": 1946
+    "rank": 1948
   },
   {
     "player_name": "Lani Wyrick",
@@ -42831,7 +42875,7 @@
     "rc": 10.05,
     "rc7": 2.32,
     "rc7_adj": 2.39,
-    "rank": 1947
+    "rank": 1949
   },
   {
     "player_name": "Mary MossWirt",
@@ -42853,7 +42897,7 @@
     "rc": 9.89,
     "rc7": 2.33,
     "rc7_adj": 2.38,
-    "rank": 1948
+    "rank": 1950
   },
   {
     "player_name": "Avery Linn",
@@ -42875,7 +42919,7 @@
     "rc": 10.97,
     "rc7": 2.92,
     "rc7_adj": 2.38,
-    "rank": 1949
+    "rank": 1951
   },
   {
     "player_name": "Jojo Johnson",
@@ -42897,7 +42941,7 @@
     "rc": 11.16,
     "rc7": 2.13,
     "rc7_adj": 2.37,
-    "rank": 1950
+    "rank": 1952
   },
   {
     "player_name": "Rachel Sysum",
@@ -42919,7 +42963,7 @@
     "rc": 9.63,
     "rc7": 2.3,
     "rc7_adj": 2.36,
-    "rank": 1951
+    "rank": 1953
   },
   {
     "player_name": "Isabella Arzola",
@@ -42941,7 +42985,7 @@
     "rc": 9.95,
     "rc7": 2.32,
     "rc7_adj": 2.35,
-    "rank": 1952
+    "rank": 1954
   },
   {
     "player_name": "Ella Boyer",
@@ -42963,7 +43007,7 @@
     "rc": 10.18,
     "rc7": 2.4,
     "rc7_adj": 2.35,
-    "rank": 1953
+    "rank": 1955
   },
   {
     "player_name": "Alexa Barbera",
@@ -42985,29 +43029,7 @@
     "rc": 11.28,
     "rc7": 2.28,
     "rc7_adj": 2.35,
-    "rank": 1954
-  },
-  {
-    "player_name": "Kaitlyn Moody",
-    "name": "Kaitlyn Moody",
-    "team": "Manhattan",
-    "PA": 121,
-    "HR": 3,
-    "pitching_games": 0,
-    "RC7_raw": 2.41,
-    "OPAF": 0.97,
-    "RC7_adj": 2.34,
-    "ab": 116,
-    "hits": 26,
-    "doubles": 4,
-    "triples": 0,
-    "tb": 39,
-    "walks": 5,
-    "qualified": true,
-    "rc": 10.32,
-    "rc7": 2.41,
-    "rc7_adj": 2.34,
-    "rank": 1955
+    "rank": 1956
   },
   {
     "player_name": "Chandler Martin",
@@ -43029,7 +43051,7 @@
     "rc": 9.77,
     "rc7": 2.93,
     "rc7_adj": 2.33,
-    "rank": 1956
+    "rank": 1957
   },
   {
     "player_name": "Jina Baffuto",
@@ -43051,7 +43073,7 @@
     "rc": 8.84,
     "rc7": 2.13,
     "rc7_adj": 2.33,
-    "rank": 1957
+    "rank": 1958
   },
   {
     "player_name": "Madison Cantoni",
@@ -43073,28 +43095,6 @@
     "rc": 10.03,
     "rc7": 2.26,
     "rc7_adj": 2.32,
-    "rank": 1958
-  },
-  {
-    "player_name": "Cara Kochakian",
-    "name": "Cara Kochakian",
-    "team": "Fairfield",
-    "PA": 106,
-    "HR": 3,
-    "pitching_games": 0,
-    "RC7_raw": 2.41,
-    "OPAF": 0.96,
-    "RC7_adj": 2.31,
-    "ab": 104,
-    "hits": 22,
-    "doubles": 8,
-    "triples": 1,
-    "tb": 41,
-    "walks": 2,
-    "qualified": true,
-    "rc": 9.4,
-    "rc7": 2.41,
-    "rc7_adj": 2.31,
     "rank": 1959
   },
   {
@@ -43340,6 +43340,28 @@
     "rank": 1970
   },
   {
+    "player_name": "Kaitlyn Moody",
+    "name": "Kaitlyn Moody",
+    "team": "Manhattan",
+    "PA": 124,
+    "HR": 3,
+    "pitching_games": 0,
+    "RC7_raw": 2.27,
+    "OPAF": 0.98,
+    "RC7_adj": 2.23,
+    "ab": 119,
+    "hits": 26,
+    "doubles": 4,
+    "triples": 0,
+    "tb": 39,
+    "walks": 5,
+    "qualified": true,
+    "rc": 10.07,
+    "rc7": 2.27,
+    "rc7_adj": 2.23,
+    "rank": 1971
+  },
+  {
     "player_name": "Maura Condon",
     "name": "Maura Condon",
     "team": "Purdue",
@@ -43359,7 +43381,7 @@
     "rc": 10.31,
     "rc7": 2.23,
     "rc7_adj": 2.22,
-    "rank": 1971
+    "rank": 1972
   },
   {
     "player_name": "Kyrsten Brown",
@@ -43381,7 +43403,7 @@
     "rc": 10.19,
     "rc7": 2.52,
     "rc7_adj": 2.22,
-    "rank": 1972
+    "rank": 1973
   },
   {
     "player_name": "Savannah Schultz",
@@ -43403,7 +43425,7 @@
     "rc": 10.46,
     "rc7": 2.71,
     "rc7_adj": 2.21,
-    "rank": 1973
+    "rank": 1974
   },
   {
     "player_name": "Ali Sniegocki",
@@ -43425,7 +43447,7 @@
     "rc": 10.08,
     "rc7": 2.43,
     "rc7_adj": 2.21,
-    "rank": 1974
+    "rank": 1975
   },
   {
     "player_name": "Mia De La Fuente",
@@ -43447,7 +43469,7 @@
     "rc": 10.44,
     "rc7": 2.36,
     "rc7_adj": 2.2,
-    "rank": 1975
+    "rank": 1976
   },
   {
     "player_name": "Gracie DeCuir",
@@ -43469,7 +43491,7 @@
     "rc": 11.24,
     "rc7": 2.41,
     "rc7_adj": 2.2,
-    "rank": 1976
+    "rank": 1977
   },
   {
     "player_name": "Avery Spinello-Branch",
@@ -43491,7 +43513,7 @@
     "rc": 10.24,
     "rc7": 2.42,
     "rc7_adj": 2.2,
-    "rank": 1977
+    "rank": 1978
   },
   {
     "player_name": "Brantley Lavas",
@@ -43513,7 +43535,7 @@
     "rc": 10.25,
     "rc7": 2.26,
     "rc7_adj": 2.2,
-    "rank": 1978
+    "rank": 1979
   },
   {
     "player_name": "Lucy Hooper",
@@ -43535,7 +43557,7 @@
     "rc": 8.23,
     "rc7": 2.06,
     "rc7_adj": 2.18,
-    "rank": 1979
+    "rank": 1980
   },
   {
     "player_name": "Grace Taylor",
@@ -43557,7 +43579,7 @@
     "rc": 9.77,
     "rc7": 2.21,
     "rc7_adj": 2.18,
-    "rank": 1980
+    "rank": 1981
   },
   {
     "player_name": "Caitlyn Hall",
@@ -43579,7 +43601,7 @@
     "rc": 9.11,
     "rc7": 2.06,
     "rc7_adj": 2.17,
-    "rank": 1981
+    "rank": 1982
   },
   {
     "player_name": "Carlie Venables",
@@ -43601,7 +43623,7 @@
     "rc": 9.43,
     "rc7": 2.23,
     "rc7_adj": 2.17,
-    "rank": 1982
+    "rank": 1983
   },
   {
     "player_name": "Gianna DiMeglio",
@@ -43623,7 +43645,7 @@
     "rc": 9.98,
     "rc7": 2.23,
     "rc7_adj": 2.17,
-    "rank": 1983
+    "rank": 1984
   },
   {
     "player_name": "Emma Roberson",
@@ -43645,7 +43667,7 @@
     "rc": 8.35,
     "rc7": 2.28,
     "rc7_adj": 2.17,
-    "rank": 1984
+    "rank": 1985
   },
   {
     "player_name": "Hannah Garcia",
@@ -43667,7 +43689,7 @@
     "rc": 9.38,
     "rc7": 2.16,
     "rc7_adj": 2.16,
-    "rank": 1985
+    "rank": 1986
   },
   {
     "player_name": "Alexia Castro",
@@ -43689,7 +43711,7 @@
     "rc": 8.4,
     "rc7": 2.2,
     "rc7_adj": 2.16,
-    "rank": 1986
+    "rank": 1987
   },
   {
     "player_name": "Aleksia Severson",
@@ -43711,7 +43733,7 @@
     "rc": 12.68,
     "rc7": 2.49,
     "rc7_adj": 2.16,
-    "rank": 1987
+    "rank": 1988
   },
   {
     "player_name": "Caitlyn Cornwell",
@@ -43733,7 +43755,7 @@
     "rc": 8.2,
     "rc7": 2.1,
     "rc7_adj": 2.15,
-    "rank": 1988
+    "rank": 1989
   },
   {
     "player_name": "Aniyah Haley",
@@ -43755,7 +43777,7 @@
     "rc": 8.8,
     "rc7": 2.37,
     "rc7_adj": 2.14,
-    "rank": 1989
+    "rank": 1990
   },
   {
     "player_name": "Isabella Perez",
@@ -43777,7 +43799,7 @@
     "rc": 9.02,
     "rc7": 2.1,
     "rc7_adj": 2.14,
-    "rank": 1990
+    "rank": 1991
   },
   {
     "player_name": "Madison Hand",
@@ -43799,7 +43821,7 @@
     "rc": 9.42,
     "rc7": 2.38,
     "rc7_adj": 2.14,
-    "rank": 1991
+    "rank": 1992
   },
   {
     "player_name": "Calkins Jamie",
@@ -43821,28 +43843,6 @@
     "rc": 7.91,
     "rc7": 2.28,
     "rc7_adj": 2.14,
-    "rank": 1992
-  },
-  {
-    "player_name": "SJ Mull",
-    "name": "SJ Mull",
-    "team": "Fairfield",
-    "PA": 118,
-    "HR": 0,
-    "pitching_games": 0,
-    "RC7_raw": 2.25,
-    "OPAF": 0.95,
-    "RC7_adj": 2.13,
-    "ab": 107,
-    "hits": 25,
-    "doubles": 1,
-    "triples": 0,
-    "tb": 26,
-    "walks": 11,
-    "qualified": true,
-    "rc": 8.8,
-    "rc7": 2.25,
-    "rc7_adj": 2.13,
     "rank": 1993
   },
   {
@@ -43978,6 +43978,28 @@
     "rank": 1999
   },
   {
+    "player_name": "SJ Mull",
+    "name": "SJ Mull",
+    "team": "Fairfield",
+    "PA": 119,
+    "HR": 0,
+    "pitching_games": 0,
+    "RC7_raw": 2.21,
+    "OPAF": 0.95,
+    "RC7_adj": 2.09,
+    "ab": 108,
+    "hits": 25,
+    "doubles": 1,
+    "triples": 0,
+    "tb": 26,
+    "walks": 11,
+    "qualified": true,
+    "rc": 8.73,
+    "rc7": 2.21,
+    "rc7_adj": 2.09,
+    "rank": 2000
+  },
+  {
     "player_name": "Dallis Darnell",
     "name": "Dallis Darnell",
     "team": "Lindenwood",
@@ -43997,7 +44019,7 @@
     "rc": 9.3,
     "rc7": 2.24,
     "rc7_adj": 2.03,
-    "rank": 2000
+    "rank": 2001
   },
   {
     "player_name": "Mitrou Anna",
@@ -44019,7 +44041,7 @@
     "rc": 6.96,
     "rc7": 2.06,
     "rc7_adj": 2.03,
-    "rank": 2001
+    "rank": 2002
   },
   {
     "player_name": "Sophia Kiseloski",
@@ -44041,7 +44063,7 @@
     "rc": 8.44,
     "rc7": 2.11,
     "rc7_adj": 2.02,
-    "rank": 2002
+    "rank": 2003
   },
   {
     "player_name": "Payton Abiley",
@@ -44063,7 +44085,7 @@
     "rc": 9.59,
     "rc7": 2.01,
     "rc7_adj": 2.02,
-    "rank": 2003
+    "rank": 2004
   },
   {
     "player_name": "Abbie Gregus",
@@ -44085,7 +44107,7 @@
     "rc": 7.1,
     "rc7": 1.78,
     "rc7_adj": 1.97,
-    "rank": 2004
+    "rank": 2005
   },
   {
     "player_name": "Karlie Barba",
@@ -44107,7 +44129,7 @@
     "rc": 7.64,
     "rc7": 2.06,
     "rc7_adj": 1.96,
-    "rank": 2005
+    "rank": 2006
   },
   {
     "player_name": "JaKeyla McDaniel",
@@ -44129,7 +44151,7 @@
     "rc": 6.81,
     "rc7": 2.1,
     "rc7_adj": 1.95,
-    "rank": 2006
+    "rank": 2007
   },
   {
     "player_name": "Alona Boydston",
@@ -44151,7 +44173,7 @@
     "rc": 8.54,
     "rc7": 2.19,
     "rc7_adj": 1.93,
-    "rank": 2007
+    "rank": 2008
   },
   {
     "player_name": "Brooke Sivek",
@@ -44173,7 +44195,7 @@
     "rc": 9.61,
     "rc7": 1.96,
     "rc7_adj": 1.92,
-    "rank": 2008
+    "rank": 2009
   },
   {
     "player_name": "Sienna Erskine",
@@ -44195,7 +44217,7 @@
     "rc": 7.58,
     "rc7": 1.85,
     "rc7_adj": 1.92,
-    "rank": 2009
+    "rank": 2010
   },
   {
     "player_name": "Megan Waites",
@@ -44217,7 +44239,7 @@
     "rc": 10.95,
     "rc7": 1.9,
     "rc7_adj": 1.92,
-    "rank": 2010
+    "rank": 2011
   },
   {
     "player_name": "Miller Alex",
@@ -44239,7 +44261,7 @@
     "rc": 7.44,
     "rc7": 1.91,
     "rc7_adj": 1.9,
-    "rank": 2011
+    "rank": 2012
   },
   {
     "player_name": "Briley Burns",
@@ -44261,7 +44283,7 @@
     "rc": 8.07,
     "rc7": 1.77,
     "rc7_adj": 1.88,
-    "rank": 2012
+    "rank": 2013
   },
   {
     "player_name": "Bella Chenet",
@@ -44283,7 +44305,7 @@
     "rc": 8.36,
     "rc7": 2.25,
     "rc7_adj": 1.87,
-    "rank": 2013
+    "rank": 2014
   },
   {
     "player_name": "Cianna Benamati",
@@ -44305,7 +44327,7 @@
     "rc": 11.47,
     "rc7": 2.32,
     "rc7_adj": 1.85,
-    "rank": 2014
+    "rank": 2015
   },
   {
     "player_name": "H. Graveline",
@@ -44327,7 +44349,7 @@
     "rc": 9.35,
     "rc7": 2.07,
     "rc7_adj": 1.85,
-    "rank": 2015
+    "rank": 2016
   },
   {
     "player_name": "Shannon Weems",
@@ -44349,7 +44371,7 @@
     "rc": 7.92,
     "rc7": 1.66,
     "rc7_adj": 1.85,
-    "rank": 2016
+    "rank": 2017
   },
   {
     "player_name": "Angel RIGGINS",
@@ -44371,7 +44393,7 @@
     "rc": 6.8,
     "rc7": 1.9,
     "rc7_adj": 1.84,
-    "rank": 2017
+    "rank": 2018
   },
   {
     "player_name": "Sophia Kissling",
@@ -44393,7 +44415,7 @@
     "rc": 7.26,
     "rc7": 1.84,
     "rc7_adj": 1.84,
-    "rank": 2018
+    "rank": 2019
   },
   {
     "player_name": "Kate Trudgen",
@@ -44415,7 +44437,7 @@
     "rc": 7.46,
     "rc7": 1.91,
     "rc7_adj": 1.77,
-    "rank": 2019
+    "rank": 2020
   },
   {
     "player_name": "Kamryn Inman",
@@ -44437,7 +44459,7 @@
     "rc": 9.89,
     "rc7": 1.74,
     "rc7_adj": 1.73,
-    "rank": 2020
+    "rank": 2021
   },
   {
     "player_name": "Kendall Stull",
@@ -44459,7 +44481,7 @@
     "rc": 7.27,
     "rc7": 1.64,
     "rc7_adj": 1.71,
-    "rank": 2021
+    "rank": 2022
   },
   {
     "player_name": "Jessica Alaan",
@@ -44481,7 +44503,7 @@
     "rc": 8.54,
     "rc7": 1.99,
     "rc7_adj": 1.68,
-    "rank": 2022
+    "rank": 2023
   },
   {
     "player_name": "Sienna Solis",
@@ -44503,7 +44525,7 @@
     "rc": 9.08,
     "rc7": 1.69,
     "rc7_adj": 1.63,
-    "rank": 2023
+    "rank": 2024
   },
   {
     "player_name": "Analiah Lummus",
@@ -44525,7 +44547,7 @@
     "rc": 7.39,
     "rc7": 1.76,
     "rc7_adj": 1.62,
-    "rank": 2024
+    "rank": 2025
   },
   {
     "player_name": "Estrella ROWE",
@@ -44547,7 +44569,7 @@
     "rc": 7.15,
     "rc7": 1.56,
     "rc7_adj": 1.6,
-    "rank": 2025
+    "rank": 2026
   },
   {
     "player_name": "Mylina Garza",
@@ -44569,7 +44591,7 @@
     "rc": 7.33,
     "rc7": 1.62,
     "rc7_adj": 1.59,
-    "rank": 2026
+    "rank": 2027
   },
   {
     "player_name": "Grace Bechtol",
@@ -44591,7 +44613,7 @@
     "rc": 6.34,
     "rc7": 1.51,
     "rc7_adj": 1.5,
-    "rank": 2027
+    "rank": 2028
   },
   {
     "player_name": "Savannah Simons",
@@ -44613,7 +44635,7 @@
     "rc": 5.8,
     "rc7": 1.47,
     "rc7_adj": 1.48,
-    "rank": 2028
+    "rank": 2029
   },
   {
     "player_name": "Payton Shimansky",
@@ -44635,7 +44657,7 @@
     "rc": 5.32,
     "rc7": 1.53,
     "rc7_adj": 1.46,
-    "rank": 2029
+    "rank": 2030
   },
   {
     "player_name": "Mia Cascio",
@@ -44657,7 +44679,7 @@
     "rc": 9.78,
     "rc7": 1.6,
     "rc7_adj": 1.45,
-    "rank": 2030
+    "rank": 2031
   },
   {
     "player_name": "Ava Moore",
@@ -44679,7 +44701,7 @@
     "rc": 6.82,
     "rc7": 1.38,
     "rc7_adj": 1.41,
-    "rank": 2031
+    "rank": 2032
   },
   {
     "player_name": "Jada Lacey",
@@ -44701,7 +44723,7 @@
     "rc": 7.08,
     "rc7": 1.73,
     "rc7_adj": 1.4,
-    "rank": 2032
+    "rank": 2033
   },
   {
     "player_name": "Jordan Donato",
@@ -44723,7 +44745,7 @@
     "rc": 5.76,
     "rc7": 1.49,
     "rc7_adj": 1.37,
-    "rank": 2033
+    "rank": 2034
   },
   {
     "player_name": "Ashley Frantz",
@@ -44745,7 +44767,7 @@
     "rc": 3.89,
     "rc7": 1.3,
     "rc7_adj": 1.33,
-    "rank": 2034
+    "rank": 2035
   },
   {
     "player_name": "Julia Kearney",
@@ -44767,7 +44789,7 @@
     "rc": 5.43,
     "rc7": 1.56,
     "rc7_adj": 1.25,
-    "rank": 2035
+    "rank": 2036
   },
   {
     "player_name": "Lauren Jones",
@@ -44789,7 +44811,7 @@
     "rc": 5.69,
     "rc7": 1.24,
     "rc7_adj": 1.11,
-    "rank": 2036
+    "rank": 2037
   },
   {
     "player_name": "Hailey Akers",
@@ -44811,7 +44833,7 @@
     "rc": 4.87,
     "rc7": 1.38,
     "rc7_adj": 1.06,
-    "rank": 2037
+    "rank": 2038
   },
   {
     "player_name": "Adriana Hills",
@@ -44833,7 +44855,7 @@
     "rc": 4.25,
     "rc7": 1.19,
     "rc7_adj": 1.06,
-    "rank": 2038
+    "rank": 2039
   },
   {
     "player_name": "Jamiyah Gary",
@@ -44855,7 +44877,7 @@
     "rc": 4.42,
     "rc7": 1.43,
     "rc7_adj": 1.05,
-    "rank": 2039
+    "rank": 2040
   },
   {
     "player_name": "Madison Wesley",
@@ -44877,6 +44899,6 @@
     "rc": 3.99,
     "rc7": 1.23,
     "rc7_adj": 0.91,
-    "rank": 2040
+    "rank": 2041
   }
 ]

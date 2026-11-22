@@ -100,6 +100,26 @@
     "rank": 5
   },
   {
+    "player_name": "Karlyn Pickens",
+    "name": "Karlyn Pickens",
+    "team": "Tennessee",
+    "appearances": 6,
+    "IP": 32.7,
+    "ER": 0,
+    "R": 12,
+    "H": 27,
+    "BB": 0,
+    "SO": 37,
+    "WHIP": 0.83,
+    "K7": 7.93,
+    "ERA_raw": 0.0,
+    "OOAF": 0.7,
+    "ERA_adj": 0.0,
+    "RA7_adj": 1.79,
+    "qualified": false,
+    "rank": 6
+  },
+  {
     "player_name": "Kaitlyn Terry",
     "name": "Kaitlyn Terry",
     "team": "Texas Tech",
@@ -117,7 +137,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.63,
     "qualified": false,
-    "rank": 6
+    "rank": 7
   },
   {
     "player_name": "Keagan Rothrock",
@@ -137,7 +157,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.46,
     "qualified": false,
-    "rank": 7
+    "rank": 8
   },
   {
     "player_name": "Alyssa Faircloth",
@@ -156,26 +176,6 @@
     "OOAF": 0.65,
     "ERA_adj": 0.0,
     "RA7_adj": 2.72,
-    "qualified": false,
-    "rank": 8
-  },
-  {
-    "player_name": "Karlyn Pickens",
-    "name": "Karlyn Pickens",
-    "team": "Tennessee",
-    "appearances": 5,
-    "IP": 25.7,
-    "ER": 0,
-    "R": 11,
-    "H": 20,
-    "BB": 0,
-    "SO": 27,
-    "WHIP": 0.78,
-    "K7": 7.36,
-    "ERA_raw": 0.0,
-    "OOAF": 0.69,
-    "ERA_adj": 0.0,
-    "RA7_adj": 2.07,
     "qualified": false,
     "rank": 9
   },
@@ -580,6 +580,26 @@
     "rank": 29
   },
   {
+    "player_name": "Addisen Fisher",
+    "name": "Addisen Fisher",
+    "team": "Georgia",
+    "appearances": 3,
+    "IP": 14.3,
+    "ER": 0,
+    "R": 2,
+    "H": 7,
+    "BB": 0,
+    "SO": 13,
+    "WHIP": 0.49,
+    "K7": 6.35,
+    "ERA_raw": 0.0,
+    "OOAF": 1.03,
+    "ERA_adj": 0.0,
+    "RA7_adj": 1.01,
+    "qualified": false,
+    "rank": 30
+  },
+  {
     "player_name": "Kasey Ricard",
     "name": "Kasey Ricard",
     "team": "Boston U.",
@@ -597,7 +617,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 6.72,
     "qualified": false,
-    "rank": 30
+    "rank": 31
   },
   {
     "player_name": "Randi Roelling",
@@ -617,7 +637,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.04,
     "qualified": false,
-    "rank": 31
+    "rank": 32
   },
   {
     "player_name": "Tori Payne",
@@ -637,7 +657,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.3,
     "qualified": false,
-    "rank": 32
+    "rank": 33
   },
   {
     "player_name": "Jazzy Francik",
@@ -657,7 +677,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.46,
     "qualified": false,
-    "rank": 33
+    "rank": 34
   },
   {
     "player_name": "Payton Burnham",
@@ -677,7 +697,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.44,
     "qualified": false,
-    "rank": 34
+    "rank": 35
   },
   {
     "player_name": "Odhi Vasquez",
@@ -697,7 +717,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.07,
     "qualified": false,
-    "rank": 35
+    "rank": 36
   },
   {
     "player_name": "Madie Jamrog",
@@ -717,7 +737,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 4.4,
     "qualified": false,
-    "rank": 36
+    "rank": 37
   },
   {
     "player_name": "Jayden Heavener",
@@ -737,7 +757,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 1.8,
     "qualified": false,
-    "rank": 37
+    "rank": 38
   },
   {
     "player_name": "Madison Evans",
@@ -757,7 +777,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.33,
     "qualified": false,
-    "rank": 38
+    "rank": 39
   },
   {
     "player_name": "Hayley Arnold",
@@ -777,7 +797,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.24,
     "qualified": false,
-    "rank": 39
+    "rank": 40
   },
   {
     "player_name": "Erin Nuwer",
@@ -797,7 +817,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.96,
     "qualified": false,
-    "rank": 40
+    "rank": 41
   },
   {
     "player_name": "Madison Azua",
@@ -817,7 +837,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.89,
     "qualified": false,
-    "rank": 41
+    "rank": 42
   },
   {
     "player_name": "Meika Lauppe",
@@ -837,7 +857,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 1.69,
     "qualified": false,
-    "rank": 42
+    "rank": 43
   },
   {
     "player_name": "Jori Heard",
@@ -857,7 +877,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 4.39,
     "qualified": false,
-    "rank": 43
+    "rank": 44
   },
   {
     "player_name": "Samantha Lincoln",
@@ -877,7 +897,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 5.5,
     "qualified": false,
-    "rank": 44
+    "rank": 45
   },
   {
     "player_name": "Oakley Vickers",
@@ -897,7 +917,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.82,
     "qualified": false,
-    "rank": 45
+    "rank": 46
   },
   {
     "player_name": "Delainey Everett",
@@ -917,7 +937,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.59,
     "qualified": false,
-    "rank": 46
+    "rank": 47
   },
   {
     "player_name": "Mackenzie Mathis",
@@ -937,7 +957,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.44,
     "qualified": false,
-    "rank": 47
+    "rank": 48
   },
   {
     "player_name": "Jalen Adams",
@@ -957,7 +977,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 5.87,
     "qualified": false,
-    "rank": 48
+    "rank": 49
   },
   {
     "player_name": "Emilee Boyer",
@@ -977,7 +997,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 5.12,
     "qualified": false,
-    "rank": 49
+    "rank": 50
   },
   {
     "player_name": "Jessica Walter",
@@ -997,7 +1017,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 4.3,
     "qualified": false,
-    "rank": 50
+    "rank": 51
   },
   {
     "player_name": "Isabella Vega",
@@ -1017,7 +1037,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 4.18,
     "qualified": false,
-    "rank": 51
+    "rank": 52
   },
   {
     "player_name": "Morgan Reimer",
@@ -1037,7 +1057,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.88,
     "qualified": false,
-    "rank": 52
+    "rank": 53
   },
   {
     "player_name": "Ashtyn Danley",
@@ -1056,26 +1076,6 @@
     "OOAF": 0.82,
     "ERA_adj": 0.0,
     "RA7_adj": 3.12,
-    "qualified": false,
-    "rank": 53
-  },
-  {
-    "player_name": "Addisen Fisher",
-    "name": "Addisen Fisher",
-    "team": "Georgia",
-    "appearances": 2,
-    "IP": 11.0,
-    "ER": 0,
-    "R": 0,
-    "H": 2,
-    "BB": 0,
-    "SO": 8,
-    "WHIP": 0.18,
-    "K7": 5.09,
-    "ERA_raw": 0.0,
-    "OOAF": 1.06,
-    "ERA_adj": 0.0,
-    "RA7_adj": 0.0,
     "qualified": false,
     "rank": 54
   },
@@ -3300,6 +3300,26 @@
     "rank": 165
   },
   {
+    "player_name": "Presley Harrison",
+    "name": "Presley Harrison",
+    "team": "Georgia",
+    "appearances": 1,
+    "IP": 2.7,
+    "ER": 0,
+    "R": 1,
+    "H": 2,
+    "BB": 0,
+    "SO": 1,
+    "WHIP": 0.75,
+    "K7": 2.62,
+    "ERA_raw": 0.0,
+    "OOAF": 0.95,
+    "ERA_adj": 0.0,
+    "RA7_adj": 2.49,
+    "qualified": false,
+    "rank": 166
+  },
+  {
     "player_name": "Brooke Gray",
     "name": "Brooke Gray",
     "team": "Louisville",
@@ -3317,7 +3337,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.08,
     "qualified": false,
-    "rank": 166
+    "rank": 167
   },
   {
     "player_name": "Anna Sidlowski",
@@ -3337,7 +3357,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 13.66,
     "qualified": false,
-    "rank": 167
+    "rank": 168
   },
   {
     "player_name": "Lyndsey Grein",
@@ -3357,7 +3377,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 20.42,
     "qualified": false,
-    "rank": 168
+    "rank": 169
   },
   {
     "player_name": "Brynne Nally",
@@ -3377,7 +3397,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.43,
     "qualified": false,
-    "rank": 169
+    "rank": 170
   },
   {
     "player_name": "Jordan Felci",
@@ -3397,7 +3417,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.74,
     "qualified": false,
-    "rank": 170
+    "rank": 171
   },
   {
     "player_name": "Kinsley Byrd",
@@ -3417,7 +3437,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 14.73,
     "qualified": false,
-    "rank": 171
+    "rank": 172
   },
   {
     "player_name": "Mya Young",
@@ -3437,7 +3457,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 9.82,
     "qualified": false,
-    "rank": 172
+    "rank": 173
   },
   {
     "player_name": "Nealy Lamb",
@@ -3457,7 +3477,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 6.47,
     "qualified": false,
-    "rank": 173
+    "rank": 174
   },
   {
     "player_name": "JOCELYN WILKES",
@@ -3477,7 +3497,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 2.38,
     "qualified": false,
-    "rank": 174
+    "rank": 175
   },
   {
     "player_name": "Karlee Pierson",
@@ -3497,7 +3517,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 14.73,
     "qualified": false,
-    "rank": 175
+    "rank": 176
   },
   {
     "player_name": "Delaney Glover",
@@ -3517,7 +3537,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 11.22,
     "qualified": false,
-    "rank": 176
+    "rank": 177
   },
   {
     "player_name": "Leanna Garcia",
@@ -3537,7 +3557,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.52,
     "qualified": false,
-    "rank": 177
+    "rank": 178
   },
   {
     "player_name": "Sariah Espada",
@@ -3557,7 +3577,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 13.36,
     "qualified": false,
-    "rank": 178
+    "rank": 179
   },
   {
     "player_name": "Zoryana Hughes",
@@ -3577,7 +3597,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 13.36,
     "qualified": false,
-    "rank": 179
+    "rank": 180
   },
   {
     "player_name": "Makenna Reid",
@@ -3597,7 +3617,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 180
+    "rank": 181
   },
   {
     "player_name": "Taylor Hess",
@@ -3617,7 +3637,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 18.21,
     "qualified": false,
-    "rank": 181
+    "rank": 182
   },
   {
     "player_name": "Madi Reeves",
@@ -3637,7 +3657,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 13.92,
     "qualified": false,
-    "rank": 182
+    "rank": 183
   },
   {
     "player_name": "Jules King",
@@ -3657,7 +3677,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 9.67,
     "qualified": false,
-    "rank": 183
+    "rank": 184
   },
   {
     "player_name": "Macie LaRue",
@@ -3677,7 +3697,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 184
+    "rank": 185
   },
   {
     "player_name": "Rhyann Jones",
@@ -3697,7 +3717,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.35,
     "qualified": false,
-    "rank": 185
+    "rank": 186
   },
   {
     "player_name": "Bryanna French",
@@ -3717,7 +3737,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 16.76,
     "qualified": false,
-    "rank": 186
+    "rank": 187
   },
   {
     "player_name": "Jaliyah Holmes",
@@ -3737,7 +3757,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 10.87,
     "qualified": false,
-    "rank": 187
+    "rank": 188
   },
   {
     "player_name": "Lizzy Ludwig",
@@ -3757,7 +3777,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 10.1,
     "qualified": false,
-    "rank": 188
+    "rank": 189
   },
   {
     "player_name": "Jayden Gohs",
@@ -3777,7 +3797,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.33,
     "qualified": false,
-    "rank": 189
+    "rank": 190
   },
   {
     "player_name": "Peyton Paulsen",
@@ -3797,7 +3817,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.33,
     "qualified": false,
-    "rank": 190
+    "rank": 191
   },
   {
     "player_name": "Kennedy Temples",
@@ -3817,7 +3837,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 11.75,
     "qualified": false,
-    "rank": 191
+    "rank": 192
   },
   {
     "player_name": "Allison Sparkman",
@@ -3837,7 +3857,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 8.04,
     "qualified": false,
-    "rank": 192
+    "rank": 193
   },
   {
     "player_name": "Makayla Coffield",
@@ -3857,7 +3877,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 10.02,
     "qualified": false,
-    "rank": 193
+    "rank": 194
   },
   {
     "player_name": "Lilly Camp",
@@ -3877,7 +3897,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 194
+    "rank": 195
   },
   {
     "player_name": "Makala Smith",
@@ -3897,7 +3917,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 3.92,
     "qualified": false,
-    "rank": 195
+    "rank": 196
   },
   {
     "player_name": "Caprice Bohmer",
@@ -3917,7 +3937,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 30.36,
     "qualified": false,
-    "rank": 196
+    "rank": 197
   },
   {
     "player_name": "Ryan Maddox",
@@ -3937,7 +3957,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 18.19,
     "qualified": false,
-    "rank": 197
+    "rank": 198
   },
   {
     "player_name": "Alea Johnson",
@@ -3957,7 +3977,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 198
+    "rank": 199
   },
   {
     "player_name": "Darien McDonough",
@@ -3977,7 +3997,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 16.83,
     "qualified": false,
-    "rank": 199
+    "rank": 200
   },
   {
     "player_name": "Keira Crosby",
@@ -3997,7 +4017,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 200
+    "rank": 201
   },
   {
     "player_name": "Kendall Thackston",
@@ -4017,7 +4037,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 5.05,
     "qualified": false,
-    "rank": 201
+    "rank": 202
   },
   {
     "player_name": "K. Mathis",
@@ -4037,7 +4057,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 13.66,
     "qualified": false,
-    "rank": 202
+    "rank": 203
   },
   {
     "player_name": "Rylan Gick",
@@ -4057,7 +4077,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 16.76,
     "qualified": false,
-    "rank": 203
+    "rank": 204
   },
   {
     "player_name": "Kenley Hilleary",
@@ -4077,7 +4097,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 4.45,
     "qualified": false,
-    "rank": 204
+    "rank": 205
   },
   {
     "player_name": "Ada Little",
@@ -4097,7 +4117,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 205
+    "rank": 206
   },
   {
     "player_name": "Yulai Woodruff",
@@ -4117,7 +4137,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 206
+    "rank": 207
   },
   {
     "player_name": "Kaelee Washington",
@@ -4137,7 +4157,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 9.67,
     "qualified": false,
-    "rank": 207
+    "rank": 208
   },
   {
     "player_name": "Ellie Loveless",
@@ -4157,7 +4177,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 11.22,
     "qualified": false,
-    "rank": 208
+    "rank": 209
   },
   {
     "player_name": "Kaylie DeChicchis",
@@ -4177,7 +4197,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 209
+    "rank": 210
   },
   {
     "player_name": "Kadence Williams",
@@ -4197,7 +4217,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 4.94,
     "qualified": false,
-    "rank": 210
+    "rank": 211
   },
   {
     "player_name": "Kat Meyers",
@@ -4217,7 +4237,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 10.62,
     "qualified": false,
-    "rank": 211
+    "rank": 212
   },
   {
     "player_name": "Allyssa Parker",
@@ -4237,7 +4257,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 212
+    "rank": 213
   },
   {
     "player_name": "Kierston Deal",
@@ -4257,7 +4277,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 213
+    "rank": 214
   },
   {
     "player_name": "Cambria Salmon",
@@ -4277,7 +4297,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 214
+    "rank": 215
   },
   {
     "player_name": "Nadia Andarowski",
@@ -4297,7 +4317,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 10.1,
     "qualified": false,
-    "rank": 215
+    "rank": 216
   },
   {
     "player_name": "Olivia Miller",
@@ -4317,7 +4337,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 21.43,
     "qualified": false,
-    "rank": 216
+    "rank": 217
   },
   {
     "player_name": "Maggie Place",
@@ -4337,7 +4357,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 217
+    "rank": 218
   },
   {
     "player_name": "Mackinley Portillo",
@@ -4357,7 +4377,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 20.38,
     "qualified": false,
-    "rank": 218
+    "rank": 219
   },
   {
     "player_name": "Kynlei Chapman",
@@ -4377,7 +4397,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 22.23,
     "qualified": false,
-    "rank": 219
+    "rank": 220
   },
   {
     "player_name": "Preslee Downing",
@@ -4397,7 +4417,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 220
+    "rank": 221
   },
   {
     "player_name": "Kealla Hollenkamp",
@@ -4417,7 +4437,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 7.81,
     "qualified": false,
-    "rank": 221
+    "rank": 222
   },
   {
     "player_name": "Taylor Pannell",
@@ -4437,7 +4457,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 222
+    "rank": 223
   },
   {
     "player_name": "Macy Walters",
@@ -4457,7 +4477,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 18.54,
     "qualified": false,
-    "rank": 223
+    "rank": 224
   },
   {
     "player_name": "Danika Nell",
@@ -4477,7 +4497,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 224
+    "rank": 225
   },
   {
     "player_name": "Haley Ganino",
@@ -4497,7 +4517,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 73.56,
     "qualified": false,
-    "rank": 225
+    "rank": 226
   },
   {
     "player_name": "Sierra Maness",
@@ -4517,7 +4537,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 226
+    "rank": 227
   },
   {
     "player_name": "Elizabeth Gaisior",
@@ -4537,7 +4557,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 227
+    "rank": 228
   },
   {
     "player_name": "Destiny Calloway",
@@ -4557,7 +4577,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 228
+    "rank": 229
   },
   {
     "player_name": "Blakely Barber",
@@ -4577,7 +4597,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 33.66,
     "qualified": false,
-    "rank": 229
+    "rank": 230
   },
   {
     "player_name": "Emma Bayor",
@@ -4597,7 +4617,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 13.66,
     "qualified": false,
-    "rank": 230
+    "rank": 231
   },
   {
     "player_name": "Taylor Lloyd",
@@ -4617,7 +4637,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 0.0,
     "qualified": false,
-    "rank": 231
+    "rank": 232
   },
   {
     "player_name": "Graycen Jordan",
@@ -4637,7 +4657,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 21.43,
     "qualified": false,
-    "rank": 232
+    "rank": 233
   },
   {
     "player_name": "Caitlin Kulczyski",
@@ -4657,7 +4677,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 27.17,
     "qualified": false,
-    "rank": 233
+    "rank": 234
   },
   {
     "player_name": "Reagan Vokoun",
@@ -4677,7 +4697,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 18.1,
     "qualified": false,
-    "rank": 234
+    "rank": 235
   },
   {
     "player_name": "Salem Ward",
@@ -4697,7 +4717,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 15.15,
     "qualified": false,
-    "rank": 235
+    "rank": 236
   },
   {
     "player_name": "Sophie Kleiman",
@@ -4717,7 +4737,7 @@
     "ERA_adj": 0.0,
     "RA7_adj": 18.54,
     "qualified": false,
-    "rank": 236
+    "rank": 237
   },
   {
     "player_name": "Allie Thomsen",
@@ -4737,6 +4757,6 @@
     "ERA_adj": 0.0,
     "RA7_adj": 24.26,
     "qualified": false,
-    "rank": 237
+    "rank": 238
   }
 ]
