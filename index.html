@@ -295,7 +295,7 @@
 
         @media (max-width: 600px) {
             .super-matchup {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr !important;
             }
         }
 
@@ -502,6 +502,13 @@
     let conferenceRows = [];
     let tourneyTeamSet = new Set();
 
+    const CONF_OVERRIDES = {
+        'West Florida': 'ASUN Conference',
+        'UWF': 'ASUN Conference',
+        'UMBC': 'America East Conference',
+        'Maryland-Baltimore County': 'America East Conference'
+    };
+
     const rSort = { key: 'rank', asc: true };
     const pSort = { key: 'rank', asc: true };
     const cSort = { key: 'rank', asc: true };
@@ -687,7 +694,7 @@
         `).join('');
     }
 
-    // 4. 2026 4-QUADRANT BRACKET BUILDER (FALLBACK FROM allTeams IF JSON HAS OLD SCHEMA)
+    // 4. 2026 4-QUADRANT BRACKET BUILDER
     function build2026BracketFromTeams(teams) {
         const ranked = [...teams].sort((a, b) => a.rank - b.rank);
         const aqByConf = {};
@@ -715,8 +722,8 @@
 
         const quadrantSpecs = [
             { id: 'Q1', title: 'Quadrant 1 — Upper Left (#1 Overall)', super_pairs: [[ [1, 32], [16, 17] ], [ [9, 24], [8, 25] ]] },
-            { id: 'Q4', title: 'Quadrant 4 — Bottom Left (#4 Overall)', super_pairs: [[ [4, 29], [13, 20] ], [ [12, 21], [5, 28] ]] },
             { id: 'Q3', title: 'Quadrant 3 — Top Right (#3 Overall)', super_pairs: [[ [3, 30], [14, 19] ], [ [11, 22], [6, 27] ]] },
+            { id: 'Q4', title: 'Quadrant 4 — Bottom Left (#4 Overall)', super_pairs: [[ [4, 29], [13, 20] ], [ [12, 21], [5, 28] ]] },
             { id: 'Q2', title: 'Quadrant 2 — Bottom Right (#2 Overall)', super_pairs: [[ [2, 31], [15, 18] ], [ [10, 23], [7, 26] ]] },
         ];
 
@@ -776,13 +783,12 @@
         const bubbleContainer = document.getElementById('bubble-container');
         const quadsContainer = document.getElementById('quadrants-container');
 
-        // Use server quadrants if available, otherwise compute 2026 4-Quadrant bracket from allTeams
-        const fallback = build2026BracketFromTeams(allTeams);
+        const computed = build2026BracketFromTeams(allTeams);
         const bracket = {
-            quadrants: (rawBracket && rawBracket.quadrants && rawBracket.quadrants.length) ? rawBracket.quadrants : fallback.quadrants,
-            last_four_in: (rawBracket && rawBracket.last_four_in && rawBracket.last_four_in.length) ? rawBracket.last_four_in : fallback.last_four_in,
-            first_four_out: (rawBracket && rawBracket.first_four_out && rawBracket.first_four_out.length) ? rawBracket.first_four_out : fallback.first_four_out,
-            next_four_out: (rawBracket && rawBracket.next_four_out && rawBracket.next_four_out.length) ? rawBracket.next_four_out : fallback.next_four_out,
+            quadrants: computed.quadrants.length ? computed.quadrants : (rawBracket.quadrants || []),
+            last_four_in: computed.last_four_in.length ? computed.last_four_in : (rawBracket.last_four_in || []),
+            first_four_out: computed.first_four_out.length ? computed.first_four_out : (rawBracket.first_four_out || []),
+            next_four_out: computed.next_four_out.length ? computed.next_four_out : (rawBracket.next_four_out || []),
         };
 
         tourneyTeamSet = new Set();
@@ -809,7 +815,7 @@
                         <div class="bubble-row">
                             <span class="bubble-left">
                                 <strong>${t.team}</strong>
-                                <span class="conf-pill">${t.conference}</span>
+                                <span class="conf-pill">${CONF_OVERRIDES[t.team] || t.conference}</span>
                             </span>
                             <span style="color:var(--text-muted);font-size:0.82rem;white-space:nowrap;">#${t.rank} (${Number(t.raa).toFixed(2)})</span>
                         </div>
@@ -818,43 +824,53 @@
             `;
         }).join('');
 
-        const quads = bracket.quadrants || [];
-        quadsContainer.innerHTML = quads.map(q => `
-            <div class="quadrant-card">
-                <div class="quadrant-title">
-                    <span>${q.title}</span>
-                    <span>WCWS Path</span>
-                </div>
-                ${(q.super_regionals || []).map((sr, idx) => `
-                    <div class="super-matchup">
-                        <div class="pods-stack">
-                            ${[sr.regional_a, sr.regional_b].map(pod => `
-                                <div class="regional-card">
-                                    <div class="regional-header">
-                                        <span>${pod.host_team} Regional (#${pod.host_overall_seed} Overall)</span>
-                                        <span>1–8 Quad Pod</span>
-                                    </div>
-                                    ${(pod.teams || []).map(tm => `
-                                        <div class="regional-team">
-                                            <span class="regional-team-left">
-                                                <span class="seed-badge">${tm.regional_seed}</span>
-                                                <strong>${tm.team}</strong>
-                                                <span style="font-size:0.75rem;color:var(--text-muted);">(${tm.bid_type}${tm.overall_seed <= 32 ? ` • #${tm.overall_seed}` : ''})</span>
-                                            </span>
-                                            <span style="font-size:0.78rem;color:var(--text-muted);">${tm.conference}</span>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="super-node">
-                            <strong>Super Regional ${idx + 1}</strong>
-                            ${sr.regional_a.host_team} / ${sr.regional_b.host_team} Winners
-                        </div>
+        const gridOrder = { Q1: 0, Q3: 1, Q4: 2, Q2: 3 };
+        const quads = [...(bracket.quadrants || [])].sort((a, b) => (gridOrder[a.id] ?? 9) - (gridOrder[b.id] ?? 9));
+
+        quadsContainer.innerHTML = quads.map(q => {
+            const isRightSide = q.id === 'Q3' || q.id === 'Q2';
+            return `
+                <div class="quadrant-card">
+                    <div class="quadrant-title">
+                        <span>${q.title}</span>
+                        <span>WCWS Path</span>
                     </div>
-                `).join('')}
-            </div>
-        `).join('');
+                    ${(q.super_regionals || []).map((sr, idx) => {
+                        const podsHTML = `
+                            <div class="pods-stack">
+                                ${[sr.regional_a, sr.regional_b].map(pod => `
+                                    <div class="regional-card">
+                                        <div class="regional-header">
+                                            <span>${pod.host_team} Regional (#${pod.host_overall_seed} Overall)</span>
+                                            <span>1–8 Quad Pod</span>
+                                        </div>
+                                        ${(pod.teams || []).map(tm => `
+                                            <div class="regional-team">
+                                                <span class="regional-team-left">
+                                                    <span class="seed-badge">${tm.regional_seed}</span>
+                                                    <strong>${tm.team}</strong>
+                                                    <span style="font-size:0.75rem;color:var(--text-muted);">(${tm.bid_type}${tm.overall_seed <= 32 ? ` • #${tm.overall_seed}` : ''})</span>
+                                                </span>
+                                                <span style="font-size:0.78rem;color:var(--text-muted);">${CONF_OVERRIDES[tm.team] || tm.conference}</span>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                `).join('')}
+                            </div>`;
+                        const superHTML = `
+                            <div class="super-node">
+                                <strong>Super Regional ${idx + 1}</strong>
+                                ${sr.regional_a.host_team} / ${sr.regional_b.host_team} Winners
+                            </div>`;
+                        return `
+                            <div class="super-matchup" style="${isRightSide ? 'grid-template-columns: 140px 1fr;' : ''}">
+                                ${isRightSide ? superHTML + podsHTML : podsHTML + superHTML}
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }).join('');
 
         document.getElementById('bracket-loading').style.display = 'none';
         document.getElementById('bracket-container').style.display = 'block';
@@ -873,6 +889,9 @@
             allTeams = await ratingsRes.json();
 
             allTeams.forEach(t => {
+                if (CONF_OVERRIDES[t.team]) {
+                    t.conference = CONF_OVERRIDES[t.team];
+                }
                 teamConfLookup[t.team] = t.conference || 'Independent / Other';
             });
 
@@ -892,7 +911,7 @@
                         ...p,
                         rank: p.rank || (idx + 1),
                         player_name: p.player_name || p.name || 'N/A',
-                        conference: p.conference || teamConfLookup[p.team] || 'Independent / Other'
+                        conference: CONF_OVERRIDES[p.team] || p.conference || teamConfLookup[p.team] || 'Independent / Other'
                     }));
 
                 const pConfSel = document.getElementById('players-conf-filter');
