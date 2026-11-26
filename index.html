@@ -1,723 +1,870 @@
-import json
-import math
-import os
-import re
-import time
-import urllib.parse
-import urllib.request
-from bs4 import BeautifulSoup
-
-# ---------------------------------------------------------------------------
-# CONFIGURATION & PATHS
-# ---------------------------------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-COLOR_CACHE_PATH = os.path.join(BASE_DIR, "team_colors.json")
-OUTPUT_JSON_PATH = os.path.join(BASE_DIR, "softball_data.json")
-
-HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/124.0.0.0 Safari/537.36"
-    )
-}
-
-# Qualified hitter threshold: 2.0 PA per team game (standard NCAA softball)
-QUALIFIED_PA_PER_GAME = 2.0
-
-# 2026 NCAA D1 Softball Automatic Qualifier Conferences (32 AQs + 32 At-Large = 64 Teams)
-CONFERENCES = [
-    "ACC", "America East", "American", "ASUN", "Atlantic 10", "Big 12",
-    "Big East", "Big Sky", "Big South", "Big Ten", "Big West", "CAA",
-    "CUSA", "Horizon", "Ivy League", "MAAC", "MAC", "MEAC", "Missouri Valley",
-    "Mountain West", "NEC", "OVC", "Patriot", "SEC", "SoCon", "Southland",
-    "Summit", "Sun Belt", "SWAC", "WAC", "WCC"
-]
-
-# Common NCAA stats name -> TeamColorCodes school slug/name aliases
-TEAM_NAME_ALIASES = {
-    "uconn": "connecticut huskies",
-    "ole miss": "mississippi rebels",
-    "lsu": "lsu tigers",
-    "ucla": "ucla bruins",
-    "usc": "usc trojans",
-    "ucf": "ucf knights",
-    "unlv": "unlv rebels",
-    "utep": "utep miners",
-    "utsa": "utsa roadrunners",
-    "smu": "smu mustangs",
-    "tcu": "tcu horned frogs",
-    "byu": "byu cougars",
-    "vcu": "vcu rams",
-    "umbc": "umbc retrievers",
-    "uab": "uab blazers",
-    "ut arlington": "texas arlington mavericks",
-    "ut martin": "tennessee martin skyhawks",
-    "utrgv": "texas rio grande valley vaqueros",
-    "texas a&m": "texas am aggies",
-    "miami (fl)": "miami hurricanes",
-    "miami (oh)": "miami redhawks",
-    "st. john's (ny)": "st johns red storm",
-    "saint mary's (ca)": "saint marys gaels",
-    "loyola marymount": "loyola marymount lions",
-    "loyola chicago": "loyola ramblers",
-    "nc state": "north carolina state wolfpack",
-    "pitt": "pittsburgh panthers",
-    "umass": "massachusetts minutemen",
-    "louisiana": "louisiana ragin cajuns",
-    "ul monroe": "louisiana monroe warhawks",
-    "app state": "appalachian state mountaineers",
-    "southern miss": "southern mississippi golden eagles",
-    "fla. atlantic": "florida atlantic owls",
-    "fiu": "florida international panthers",
-    "fgcu": "florida gulf coast eagles",
-    "usc upstate": "south carolina upstate spartans",
-    "csun": "cal state northridge matadors",
-    "cal st. fullerton": "cal state fullerton titans",
-    "uc santa barbara": "uc santa barbara gauchos",
-    "uc san diego": "uc san diego tritons",
-    "uc davis": "uc davis aggies",
-    "uc riverside": "uc riverside highland",
-    "siue": "siu edwardsville cougars",
-    "southern ill.": "southern illinois salukis",
-    "eastern ill.": "eastern illinois panthers",
-    "western ill.": "western illinois leathernecks",
-    "northern ill.": "northern illinois huskies",
-    "central mich.": "central michigan chippewas",
-    "eastern mich.": "eastern michigan eagles",
-    "western mich.": "western michigan broncos",
-    "eastern ky.": "eastern kentucky colonels",
-    "western ky.": "western kentucky hilltoppers",
-    "middle tenn.": "middle tennessee blue raiders",
-    "east tenn. st.": "east tennessee state buccaneers",
-    "tennessee tech": "tennessee tech golden eagles",
-    "southeast mo. st.": "southeast missouri state redhawks",
-    "missouri st.": "missouri state bears",
-    "sam houston": "sam houston state bearkats",
-    "sfa": "stephen f austin lumberjacks",
-    "mcneese": "mcneese state cowboys",
-    "nicholls": "nicholls state colonels",
-    "southeastern la.": "southeastern louisiana lions",
-    "northwestern st.": "northwestern state demons",
-    "am-corpus christi": "texas am corpus christi islanders",
-    "uiw": "incarnate word cardinals",
-    "prairie view": "prairie view am panthers",
-    "ark.-pine bluff": "arkansas pine bluff golden lions",
-    "mississippi val.": "mississippi valley state delta devils",
-    "alabama a&m": "alabama am bulldogs",
-    "alabama st.": "alabama state hornets",
-    "jackson st.": "jackson state tigers",
-    "alcorn": "alcorn state braves",
-    "grambling": "grambling state tigers",
-    "bethune-cookman": "bethune cookman wildcats",
-    "florida a&m": "florida am rattlers",
-    "n.c. a&t": "north carolina at aggies",
-    "n.c. central": "north carolina central eagles",
-    "south carolina st.": "south carolina state bulldogs",
-    "coppin st.": "coppin state eagles",
-    "morgan st.": "morgan state bears",
-    "delaware st.": "delaware state hornets",
-    "norfolk st.": "norfolk state spartans",
-    "umes": "maryland eastern shore hawks",
-    "army west point": "army black knights",
-    "boston u.": "boston university terriers",
-    "col. of charleston": "charleston cougars",
-    "uncw": "unc wilmington seahawks",
-    "uncg": "unc greensboro spartans",
-    "etsu": "east tennessee state buccaneers",
-    "uni": "northern iowa panthers",
-    "uic": "illinois chicago flames",
-    "iupui": "iu indy jaguars",
-    "iu indy": "iu indy jaguars",
-    "green bay": "wisconsin green bay phoenix",
-    "milwaukee": "wisconsin milwaukee panthers",
-    "omaha": "nebraska omaha mavericks",
-    "south dakota st.": "south dakota state jackrabbits",
-    "north dakota st.": "north dakota state bison",
-    "st. thomas (mn)": "st thomas tommies",
-    "cal baptist": "california baptist lancers",
-    "grand canyon": "grand canyon antelopes",
-    "seattle u": "seattle redhawks",
-    "utah tech": "utah tech trailblazers",
-    "tarleton st.": "tarleton state texans",
-    "abilene christian": "abilene christian wildcats",
-    "saint francis (pa)": "saint francis red flash",
-    "central conn. st.": "central connecticut state blue devils",
-    "liu": "long island sharks",
-    "fdu": "fairleigh dickinson knights",
-    "mount st. mary's": "mount st marys mountaineers",
-    "sacred heart": "sacred heart pioneers",
-    "stonehill": "stonehill skyhawks",
-    "le moyne": "le moyne dolphins",
-    "queens (nc)": "queens royals",
-    "west ga.": "west georgia wolves",
-    "lindenwood": "lindenwood lions",
-    "southern ind.": "southern indiana screaming eagles",
-    "east tex. a&m": "texas am commerce lions",
-}
-
-
-# ---------------------------------------------------------------------------
-# 1. TEAM COLOR SCRAPER (teamcolorcodes.com/ncaa-color-codes/)
-# ---------------------------------------------------------------------------
-def _fetch_html(url: str, timeout: int = 12) -> str:
-    req = urllib.request.Request(url, headers=HEADERS)
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
-        return resp.read().decode("utf-8", errors="ignore")
-
-
-def _normalize_key(name: str) -> str:
-    s = name.lower().strip()
-    s = s.replace("&", "and").replace("'", "").replace(".", "")
-    s = re.sub(r"\(.*?\)", "", s)
-    s = re.sub(r"[^a-z0-9\s-]", "", s)
-    return re.sub(r"\s+", " ", s).strip()
-
-
-def _extract_hex_from_team_page(html: str) -> tuple[str, str]:
-    """Extract primary and secondary hex codes from a teamcolorcodes.com team page."""
-    soup = BeautifulSoup(html, "html.parser")
-    hexes = []
-
-    # TeamColorCodes stores swatches in .colorblock divs or inline background-color styles
-    for block in soup.select(".colorblock, [style*='background-color']"):
-        style = block.get("style", "")
-        m = re.search(r"background-color:\s*(#[0-9a-fA-F]{6})", style)
-        if m:
-            code = m.group(1).upper()
-            if code not in ("#FFFFFF", "#000000", "#F5F5F5", "#EEEEEE") and code not in hexes:
-                hexes.append(code)
-        text = block.get_text(" ", strip=True)
-        for hm in re.findall(r"#[0-9a-fA-F]{6}", text):
-            code = hm.upper()
-            if code not in ("#FFFFFF", "#000000") and code not in hexes:
-                hexes.append(code)
-
-    # Fallback: scan page body text for Hex Color: #XXXXXX
-    if len(hexes) < 2:
-        for hm in re.findall(r"Hex(?:\s+Color)?:\s*(#[0-9a-fA-F]{6})", soup.get_text(), re.I):
-            code = hm.upper()
-            if code not in ("#FFFFFF", "#000000") and code not in hexes:
-                hexes.append(code)
-
-    primary = hexes[0] if len(hexes) >= 1 else "#1E293B"
-    secondary = hexes[1] if len(hexes) >= 2 else "#64748B"
-    return primary, secondary
-
-
-def scrape_ncaa_team_colors(force_refresh: bool = False) -> dict[str, dict[str, str]]:
-    """
-    Scrapes NCAA team primary & secondary hex codes from
-    https://teamcolorcodes.com/ncaa-color-codes/ and caches to team_colors.json.
-    """
-    if not force_refresh and os.path.exists(COLOR_CACHE_PATH):
-        try:
-            with open(COLOR_CACHE_PATH, "r", encoding="utf-8") as f:
-                cached = json.load(f)
-                if len(cached) > 50:
-                    return cached
-        except Exception:
-            pass
-
-    color_map: dict[str, dict[str, str]] = {}
-    root_url = "https://teamcolorcodes.com/ncaa-color-codes/"
-
-    try:
-        root_html = _fetch_html(root_url)
-        soup = BeautifulSoup(root_html, "html.parser")
-
-        conf_links = set()
-        team_links = set()
-
-        for a in soup.select("a[href*='teamcolorcodes.com/']"):
-            href = a.get("href", "").split("#")[0].rstrip("/") + "/"
-            if "/ncaa-color-codes/" in href and href != root_url:
-                conf_links.add(href)
-            elif href.endswith("-color-codes/") or href.endswith("-colors/"):
-                if "/ncaa-color-codes/" not in href:
-                    team_links.add(href)
-
-        # Crawl conference subpages to collect all individual school pages
-        for clink in sorted(conf_links):
-            try:
-                chtml = _fetch_html(clink, timeout=10)
-                csoup = BeautifulSoup(chtml, "html.parser")
-                for a in csoup.select("a[href*='teamcolorcodes.com/']"):
-                    href = a.get("href", "").split("#")[0].rstrip("/") + "/"
-                    if (href.endswith("-color-codes/") or href.endswith("-colors/")) and "/ncaa-color-codes/" not in href:
-                        team_links.add(href)
-                time.sleep(0.08)
-            except Exception:
-                continue
-
-        # Fetch each school page and parse primary/secondary hex codes
-        for tlink in sorted(team_links):
-            slug = tlink.rstrip("/").split("/")[-1]
-            clean_slug = re.sub(r"-(team-)?color(s|-codes)\$", "", slug).replace("-", " ")
-            try:
-                thtml = _fetch_html(tlink, timeout=10)
-                primary, secondary = _extract_hex_from_team_page(thtml)
-                entry = {"primary": primary, "secondary": secondary, "slug": slug}
-                color_map[_normalize_key(clean_slug)] = entry
-                # Also index without mascot (first 1-3 words)
-                words = clean_slug.split()
-                if len(words) >= 2:
-                    color_map.setdefault(_normalize_key(" ".join(words[:-1])), entry)
-                time.sleep(0.05)
-            except Exception:
-                continue
-
-        if color_map:
-            with open(COLOR_CACHE_PATH, "w", encoding="utf-8") as f:
-                json.dump(color_map, f, indent=2)
-    except Exception as e:
-        print(f"[Warn] Color scrape fallback triggered: {e}")
-
-    return color_map
-
-
-def resolve_team_colors(team_name: str, color_map: dict[str, dict[str, str]]) -> dict[str, str]:
-    """Resolves a team's primary and secondary hex colors with deterministic fallback."""
-    norm = _normalize_key(team_name)
-    alias = TEAM_NAME_ALIASES.get(norm)
-    candidates = [norm]
-    if alias:
-        candidates.insert(0, _normalize_key(alias))
-
-    # Expand common abbreviations (St. -> State)
-    if " st" in norm:
-        candidates.append(norm.replace(" st", " state"))
-
-    for cand in candidates:
-        if cand in color_map:
-            return {"primary": color_map[cand]["primary"], "secondary": color_map[cand]["secondary"]}
-        # Prefix match against scraped school + mascot keys
-        for k, val in color_map.items():
-            if k.startswith(cand + " ") or cand.startswith(k + " "):
-                return {"primary": val["primary"], "secondary": val["secondary"]}
-
-    # Deterministic fallback palette if offline/unmatched
-    h = sum(ord(c) * (i + 1) for i, c in enumerate(norm))
-    palette = [
-        ("#990000", "#FFC72C"), ("#00274C", "#FFCB05"), ("#BA0C2F", "#000000"),
-        ("#0033A0", "#FFFFFF"), ("#4E2A84", "#B6ACD1"), ("#005030", "#F47321"),
-        ("#0021A5", "#FA4616"), ("#841617", "#FDF9D8"), ("#BF5700", "#333F48"),
-        ("#006747", "#CFC493"), ("#154734", "#FFB81C"), ("#0C2340", "#C8102E"),
-    ]
-    p, s = palette[h % len(palette)]
-    return {"primary": p, "secondary": s}
-
-
-# ---------------------------------------------------------------------------
-# 2. KAHL INDEX, R/7 & RA/7 TEAM CALCULATIONS
-# ---------------------------------------------------------------------------
-def compute_team_metrics(teams: list[dict], games: list[dict], color_map: dict) -> list[dict]:
-    """
-    Computes:
-      - R/7  (Runs Scored per 7 innings)
-      - RA/7 (Runs Allowed per 7 innings)
-      - SOS  (Strength of Schedule via iterative opponent rating)
-      - Kahl Index (opponent-adjusted net run differential per 7 innings + SOS)
-      - Team Primary & Secondary Colors
-    """
-    team_lookup = {t["team"]: t for t in teams}
-
-    # Accumulate raw runs, runs allowed, innings, and opponent lists
-    for t in teams:
-        t.setdefault("runs", 0.0)
-        t.setdefault("runs_allowed", 0.0)
-        t.setdefault("innings_off", 0.0)
-        t.setdefault("innings_def", 0.0)
-        t.setdefault("wins", 0)
-        t.setdefault("losses", 0)
-        t["opponents"] = []
-
-    for g in games:
-        t1, t2 = g["home"], g["away"]
-        r1, r2 = float(g["home_runs"]), float(g["away_runs"])
-        inn = float(g.get("innings", 7.0))
-        if t1 in team_lookup and t2 in team_lookup:
-            team_lookup[t1]["runs"] += r1
-            team_lookup[t1]["runs_allowed"] += r2
-            team_lookup[t1]["innings_off"] += inn
-            team_lookup[t1]["innings_def"] += inn
-            team_lookup[t1]["opponents"].append(t2)
-            if r1 > r2:
-                team_lookup[t1]["wins"] += 1
-            else:
-                team_lookup[t1]["losses"] += 1
-
-            team_lookup[t2]["runs"] += r2
-            team_lookup[t2]["runs_allowed"] += r1
-            team_lookup[t2]["innings_off"] += inn
-            team_lookup[t2]["innings_def"] += inn
-            team_lookup[t2]["opponents"].append(t1)
-            if r2 > r1:
-                team_lookup[t2]["wins"] += 1
-            else:
-                team_lookup[t2]["losses"] += 1
-
-    # Straight-up R/7 and RA/7
-    for t in teams:
-        off_inn = t["innings_off"] if t["innings_off"] > 0 else max(1, (t["wins"] + t["losses"]) * 7)
-        def_inn = t["innings_def"] if t["innings_def"] > 0 else max(1, (t["wins"] + t["losses"]) * 7)
-        t["r_per_7"] = round((t["runs"] / off_inn) * 7.0, 2)
-        t["ra_per_7"] = round((t["runs_allowed"] / def_inn) * 7.0, 2)
-        t["raw_margin"] = t["r_per_7"] - t["ra_per_7"]
-
-    # Iterative Kahl Index & SOS solver (25 iterations to convergence)
-    ratings = {t["team"]: t["raw_margin"] for t in teams}
-    sos_map = {t["team"]: 0.0 for t in teams}
-
-    for _ in range(25):
-        new_ratings = {}
-        for t in teams:
-            name = t["team"]
-            opps = [o for o in t["opponents"] if o in ratings]
-            if opps:
-                avg_opp = sum(ratings[o] for o in opps) / len(opps)
-            else:
-                avg_opp = 0.0
-            sos_map[name] = avg_opp
-            new_ratings[name] = t["raw_margin"] + avg_opp
-        mean_r = sum(new_ratings.values()) / max(1, len(new_ratings))
-        ratings = {k: v - mean_r for k, v in new_ratings.items()}
-
-    # Normalize SOS on a clean 0-100 or signed scale (signed SOS runs/7 centered at 0.00)
-    for t in teams:
-        name = t["team"]
-        colors = resolve_team_colors(name, color_map)
-        t["kahl_index"] = round(ratings[name], 2)
-        t["sos"] = round(sos_map[name], 2)
-        t["primary_color"] = colors["primary"]
-        t["secondary_color"] = colors["secondary"]
-        t["games_played"] = t["wins"] + t["losses"]
-        t.pop("opponents", None)
-
-    teams.sort(key=lambda x: x["kahl_index"], reverse=True)
-    for idx, t in enumerate(teams, 1):
-        t["rank"] = idx
-
-    return teams
-
-
-# ---------------------------------------------------------------------------
-# 3. RC7 PLAYER METRICS (QUALIFIED ONLY, NO PA/HR IN OUTPUT)
-# ---------------------------------------------------------------------------
-def compute_player_rc7(players: list[dict], team_lookup: dict[str, dict]) -> list[dict]:
-    """
-    Filters to qualified hitters (PA >= 2.0 * team games played),
-    computes RC7 (Raw), OPAF (Opponent Pitching Adjustment Factor), and RC7 (Adj),
-    and strips PA/HR from the final display payload.
-    """
-    qualified = []
-    d1_avg_ra7 = (
-        sum(t["ra_per_7"] for t in team_lookup.values()) / max(1, len(team_lookup))
-    )
-
-    for p in players:
-        team_name = p["team"]
-        team_info = team_lookup.get(team_name)
-        if not team_info:
-            continue
-
-        gp = team_info.get("games_played", 0)
-        min_pa = math.ceil(gp * QUALIFIED_PA_PER_GAME)
-        pa = int(p.get("pa", 0))
-        if pa < max(1, min_pa):
-            continue
-
-        # Runs Created per 21 outs (7 innings): RC = ((H + BB) * TB) / (AB + BB)
-        ab = float(p.get("ab", 0))
-        h = float(p.get("h", 0))
-        bb = float(p.get("bb", 0))
-        hbp = float(p.get("hbp", 0))
-        tb = float(p.get("tb", 0))
-        outs = max(1.0, (ab - h) + float(p.get("sh", 0)) + float(p.get("sf", 0)))
-
-        on_base = h + bb + hbp
-        denom = ab + bb + hbp
-        rc_total = (on_base * tb) / denom if denom > 0 else 0.0
-        rc7_raw = (rc_total / outs) * 21.0
-
-        # OPAF: Opponent Pitching Adjustment Factor based on team SOS & opponent RA/7
-        opp_ra7_est = max(1.5, d1_avg_ra7 - (team_info["sos"] * 0.5))
-        opaf = p.get("opaf") if p.get("opaf") is not None else (d1_avg_ra7 / opp_ra7_est)
-        rc7_adj = rc7_raw * opaf
-
-        qualified.append({
-            "player": p["player"],
-            "team": team_name,
-            "conference": team_info["conference"],
-            "primary_color": team_info["primary_color"],
-            "secondary_color": team_info["secondary_color"],
-            "rc7_raw": round(rc7_raw, 2),
-            "opaf": round(opaf, 3),
-            "rc7_adj": round(rc7_adj, 2),
-        })
-
-    qualified.sort(key=lambda x: x["rc7_adj"], reverse=True)
-    for idx, p in enumerate(qualified, 1):
-        p["rank"] = idx
-
-    return qualified
-
-
-# ---------------------------------------------------------------------------
-# 4. 2026 NCAA SOFTBALL BRACKETOLOGY (64 TEAMS, 1-8 QUADRANT SEEDING, BUBBLE)
-# ---------------------------------------------------------------------------
-def build_2026_bracketology(teams: list[dict]) -> dict:
-    """
-    Implements the 2026 NCAA Division I Softball Championship structure:
-      - 32 Automatic Qualifiers (highest-ranked Kahl Index team per conference)
-      - 32 At-Large selections (top 32 remaining teams by Kahl Index)
-      - Bubble lists: Last Four In (at-large #29-#32), First Four Out (#33-#36), Next Four Out (#37-#40)
-      - Top 32 overall teams seeded in four 1-8 groups across 4 Quadrants:
-          * Quadrant 1 (Upper Left, #1 Overall):  1-seed (#1),  8-seed (#32) | 4-seed (#16), 5-seed (#17)
-          * Quadrant 2 (Bottom Right, #2 Overall): 1-seed (#2),  8-seed (#31) | 4-seed (#15), 5-seed (#18)
-          * Quadrant 3 (Top Right, #3 Overall):    1-seed (#3),  8-seed (#30) | 4-seed (#14), 5-seed (#19)
-          * Quadrant 4 (Bottom Left, #4 Overall):  1-seed (#4),  8-seed (#29) | 4-seed (#13), 5-seed (#20)
-        And the 2/7 & 3/6 pods in each quadrant:
-          * Q1: 2-seed (#8) + 7-seed (#25) | 3-seed (#9)  + 6-seed (#24)
-          * Q2: 2-seed (#7) + 7-seed (#26) | 3-seed (#10) + 6-seed (#23)
-          * Q3: 2-seed (#6) + 7-seed (#27) | 3-seed (#11) + 6-seed (#22)
-          * Q4: 2-seed (#5) + 7-seed (#28) | 3-seed (#12) + 6-seed (#21)
-      - Enforces one team per conference per 4-team regional pod.
-    """
-    ranked = sorted(teams, key=lambda x: x["kahl_index"], reverse=True)
-
-    # 1. Determine Conference Automatic Qualifiers (best team per conference)
-    aq_by_conf: dict[str, dict] = {}
-    for t in ranked:
-        conf = t["conference"]
-        if conf not in aq_by_conf:
-            aq_by_conf[conf] = t
-
-    aq_names = {t["team"] for t in aq_by_conf.values()}
-
-    # 2. Rank all non-AQ teams for At-Large & Bubble Watch
-    at_large_pool = [t for t in ranked if t["team"] not in aq_names]
-    num_aqs = len(aq_names)
-    at_large_slots = max(0, 64 - num_aqs)
-
-    at_large_in = at_large_pool[:at_large_slots]
-    last_four_in = at_large_in[-4:] if len(at_large_in) >= 4 else at_large_in
-    first_four_out = at_large_pool[at_large_slots : at_large_slots + 4]
-    next_four_out = at_large_pool[at_large_slots + 4 : at_large_slots + 8]
-
-    # 3. Combine full 64-team tournament field sorted by Kahl Index
-    field_names = aq_names | {t["team"] for t in at_large_in}
-    field = [t for t in ranked if t["team"] in field_names][:64]
-
-    for idx, t in enumerate(field, 1):
-        t["overall_seed"] = idx
-        t["bid_type"] = "AQ" if t["team"] in aq_names else "AL"
-
-    # Top 32 get 1-8 regional seeds; teams 33-64 are unseeded regional pod teams
-    top32 = field[:32]
-    unseeded = field[32:64]
-
-    def _fmt_team(t: dict, regional_seed: int | str) -> dict:
-        return {
-            "team": t["team"],
-            "conference": t["conference"],
-            "kahl_index": t["kahl_index"],
-            "record": f"{t['wins']}-{t['losses']}",
-            "overall_seed": t["overall_seed"],
-            "regional_seed": regional_seed,
-            "bid_type": t["bid_type"],
-            "primary_color": t["primary_color"],
-            "secondary_color": t["secondary_color"],
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Kahl Index | NCAA Softball Ratings & Bracketology</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent-color: #38bdf8;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
         }
 
-    # 2026 NCAA 4-Quadrant S-Curve Pod Assignments
-    # Each quadrant has 4 regionals: (1 vs 8), (4 vs 5), (3 vs 6), (2 vs 7)
-    quadrant_specs = [
-        {
-            "id": "Q1",
-            "title": "Quadrant 1 — Upper Left (#1 Overall)",
-            "super_pairs": [
-                [(1, 32), (16, 17)],  # Regional 1 (1/8) vs Regional 4 (4/5)
-                [(9, 24), (8, 25)],   # Regional 3 (3/6) vs Regional 2 (2/7)
-            ],
-        },
-        {
-            "id": "Q4",
-            "title": "Quadrant 4 — Bottom Left (#4 Overall)",
-            "super_pairs": [
-                [(4, 29), (13, 20)],
-                [(12, 21), (5, 28)],
-            ],
-        },
-        {
-            "id": "Q3",
-            "title": "Quadrant 3 — Top Right (#3 Overall)",
-            "super_pairs": [
-                [(3, 30), (14, 19)],
-                [(11, 22), (6, 27)],
-            ],
-        },
-        {
-            "id": "Q2",
-            "title": "Quadrant 2 — Bottom Right (#2 Overall)",
-            "super_pairs": [
-                [(2, 31), (15, 18)],
-                [(10, 23), (7, 26)],
-            ],
-        },
-    ]
-
-    # Flatten all 16 regional pods in snake order to assign unseeded teams (33-64) without conference conflicts
-    pods = []
-    for q in quadrant_specs:
-        for sp_idx, pair in enumerate(q["super_pairs"]):
-            for top_ovr, second_ovr in pair:
-                t_top = top32[top_ovr - 1]
-                t_sec = top32[second_ovr - 1]
-                r_seed_top = ((top_ovr - 1) // 4) + 1       # 1, 2, 3, or 4
-                r_seed_sec = ((second_ovr - 1) // 4) + 1    # 5, 6, 7, or 8
-                pods.append({
-                    "quadrant": q["id"],
-                    "super_idx": sp_idx,
-                    "host": t_top["team"],
-                    "host_seed": top_ovr,
-                    "confs_used": {t_top["conference"], t_sec["conference"]},
-                    "teams": [
-                        _fmt_team(t_top, r_seed_top),
-                        _fmt_team(t_sec, r_seed_sec),
-                    ],
-                })
-
-    # Assign 3-line (ranks 33-48) and 4-line (ranks 49-64) avoiding same-conference pods
-    tier3 = unseeded[:16]
-    tier4 = unseeded[16:32]
-
-    for tier_list in (tier3, tier4):
-        remaining_pods = list(range(len(pods)))
-        for ut in tier_list:
-            chosen_idx = None
-            for pidx in remaining_pods:
-                if ut["conference"] not in pods[pidx]["confs_used"]:
-                    chosen_idx = pidx
-                    break
-            if chosen_idx is None:
-                chosen_idx = remaining_pods[0]
-            remaining_pods.remove(chosen_idx)
-            pods[chosen_idx]["confs_used"].add(ut["conference"])
-            pods[chosen_idx]["teams"].append(_fmt_team(ut, "—"))
-
-    # Group pods back into their 4 Quadrants & Super Regional pairings
-    pod_cursor = 0
-    quadrants_out = []
-    for q in quadrant_specs:
-        super_regionals = []
-        for sp_idx in range(2):
-            p_a = pods[pod_cursor]
-            p_b = pods[pod_cursor + 1]
-            pod_cursor += 2
-            p_a.pop("confs_used", None)
-            p_b.pop("confs_used", None)
-            super_regionals.append({
-                "super_id": f"{q['id']}-SR{sp_idx + 1}",
-                "regional_a": p_a,
-                "regional_b": p_b,
-            })
-        quadrants_out.append({
-            "id": q["id"],
-            "title": q["title"],
-            "super_regionals": super_regionals,
-        })
-
-    def _bubble_card(t: dict, idx: int) -> dict:
-        return {
-            "order": idx,
-            "team": t["team"],
-            "conference": t["conference"],
-            "kahl_index": t["kahl_index"],
-            "sos": t["sos"],
-            "record": f"{t['wins']}-{t['losses']}",
-            "primary_color": t["primary_color"],
-            "secondary_color": t["secondary_color"],
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 20px;
         }
 
-    return {
-        "field_teams": list(field_names),
-        "quadrants": quadrants_out,
-        "bubble": {
-            "last_four_in": [_bubble_card(t, i + 1) for i, t in enumerate(last_four_in)],
-            "first_four_out": [_bubble_card(t, i + 1) for i, t in enumerate(first_four_out)],
-            "next_four_out": [_bubble_card(t, i + 1) for i, t in enumerate(next_four_out)],
-        },
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--accent-color);
+            margin-bottom: 5px;
+            font-size: 2.2rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background-color: var(--accent-color);
+            color: #000;
+            border-color: var(--accent-color);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        /* Filter Controls */
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            align-items: center;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-bottom: 18px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .filter-group label {
+            font-size: 0.78rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: var(--text-muted);
+        }
+
+        .filter-group select, .filter-group input {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            min-width: 190px;
+        }
+
+        /* Tables */
+        .table-wrapper {
+            overflow-x: auto;
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: rgba(15, 23, 42, 0.7);
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+
+        th:hover {
+            color: var(--text-main);
+        }
+
+        th .sort-ind {
+            color: var(--accent-color);
+            margin-left: 4px;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .num {
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        /* Team Color Swatches */
+        .team-cell {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-swatch {
+            display: inline-flex;
+            width: 15px;
+            height: 15px;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .color-swatch span {
+            width: 50%;
+            height: 100%;
+            display: block;
+        }
+
+        .conf-pill {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            background-color: rgba(15, 23, 42, 0.6);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Bubble Watch Cards */
+        .bubble-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .bubble-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 16px;
+        }
+
+        .bubble-card h3 {
+            margin: 0 0 12px 0;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .bubble-card.l4i h3 { color: #34d399; }
+        .bubble-card.f4o h3 { color: #fbbf24; }
+        .bubble-card.n4o h3 { color: #f87171; }
+
+        .bubble-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 7px 10px;
+            background-color: rgba(15, 23, 42, 0.55);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            font-size: 0.88rem;
+        }
+
+        /* 2026 4-Quadrant Bracket Layout */
+        .wcws-header {
+            background-color: var(--card-bg);
+            border: 1px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 14px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .wcws-header h2 {
+            margin: 0 0 4px 0;
+            font-size: 1.15rem;
+            color: var(--accent-color);
+        }
+
+        .wcws-header p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .quadrants-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 1050px) {
+            .quadrants-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .quadrant-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+        }
+
+        .quadrant-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-color);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .super-matchup {
+            display: grid;
+            grid-template-columns: 1fr 135px;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .super-matchup:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .pods-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .regional-card {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .regional-header {
+            background-color: rgba(30, 41, 59, 0.9);
+            padding: 6px 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .regional-team {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 10px;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .seed-badge {
+            display: inline-block;
+            min-width: 22px;
+            text-align: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border-radius: 4px;
+            padding: 1px 4px;
+        }
+
+        .super-node {
+            background-color: rgba(15, 23, 42, 0.75);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+        }
+
+        .super-node strong {
+            display: block;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            font-size: 0.82rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>The Kahl Index</h1>
+        <div class="subtitle">NCAA Softball Ratings, Player Sabermetrics & 2026 Bracketology</div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(event, 'rankings')">Kahl Index Rankings</button>
+        <button class="tab-btn" onclick="switchTab(event, 'players')">Player Metrics (RC7/adj)</button>
+        <button class="tab-btn" onclick="switchTab(event, 'conferences')">Conference Rankings</button>
+        <button class="tab-btn" onclick="switchTab(event, 'bracketology')">2026 Bracketology (64-Team)</button>
+    </div>
+
+    <!-- Kahl Index Rankings Tab -->
+    <div id="rankings" class="tab-content active">
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="rankings-conf-filter">Filter by Conference</label>
+                <select id="rankings-conf-filter" onchange="renderRatingsTable()">
+                    <option value="ALL">All Conferences</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="rankings-search">Search Team</label>
+                <input type="text" id="rankings-search" placeholder="Search school..." oninput="renderRatingsTable()">
+            </div>
+        </div>
+
+        <div id="rankings-loading" class="loading">Loading Kahl Index Rankings...</div>
+        <div class="table-wrapper" id="rankings-wrapper" style="display:none;">
+            <table id="rankings-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortRatings('rank')">Rank <span class="sort-ind" id="sort-r-rank">▲</span></th>
+                        <th onclick="sortRatings('team')">Team <span class="sort-ind" id="sort-r-team"></span></th>
+                        <th onclick="sortRatings('conference')">Conference <span class="sort-ind" id="sort-r-conference"></span></th>
+                        <th class="num" onclick="sortRatings('wins')">Record <span class="sort-ind" id="sort-r-wins"></span></th>
+                        <th class="num" onclick="sortRatings('raa')">Kahl Index <span class="sort-ind" id="sort-r-raa"></span></th>
+                        <th class="num" onclick="sortRatings('sos')">SOS <span class="sort-ind" id="sort-r-sos"></span></th>
+                        <th class="num" onclick="sortRatings('r_per_7')">R/7 <span class="sort-ind" id="sort-r-r_per_7"></span></th>
+                        <th class="num" onclick="sortRatings('ra_per_7')">RA/7 <span class="sort-ind" id="sort-r-ra_per_7"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="rankings-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Player Metrics Tab (Qualified Only, No PA/HR) -->
+    <div id="players" class="tab-content">
+        <div class="filter-bar">
+            <div class="filter-group">
+                <label for="players-conf-filter">Filter by Conference</label>
+                <select id="players-conf-filter" onchange="onPlayerConfChange()">
+                    <option value="ALL">All Conferences</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="players-team-filter">Filter by Team</label>
+                <select id="players-team-filter" onchange="renderPlayersTable()">
+                    <option value="ALL">All Teams</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="players-search">Search Player</label>
+                <input type="text" id="players-search" placeholder="Search hitter..." oninput="renderPlayersTable()">
+            </div>
+        </div>
+
+        <div id="players-loading" class="loading">Loading Qualified Player RC7 Data...</div>
+        <div class="table-wrapper" id="players-wrapper" style="display:none;">
+            <table id="players-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortPlayers('rank')">Rank <span class="sort-ind" id="sort-p-rank">▲</span></th>
+                        <th onclick="sortPlayers('player_name')">Player <span class="sort-ind" id="sort-p-player_name"></span></th>
+                        <th onclick="sortPlayers('team')">Team <span class="sort-ind" id="sort-p-team"></span></th>
+                        <th onclick="sortPlayers('conference')">Conference <span class="sort-ind" id="sort-p-conference"></span></th>
+                        <th class="num" onclick="sortPlayers('RC7_raw')">RC7 (Raw) <span class="sort-ind" id="sort-p-RC7_raw"></span></th>
+                        <th class="num" onclick="sortPlayers('OPAF')">OPAF <span class="sort-ind" id="sort-p-OPAF"></span></th>
+                        <th class="num" onclick="sortPlayers('RC7_adj')">RC7 (Adj) <span class="sort-ind" id="sort-p-RC7_adj"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="players-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Conference Rankings Tab -->
+    <div id="conferences" class="tab-content">
+        <div id="conferences-loading" class="loading">Loading Conference Rankings...</div>
+        <div class="table-wrapper" id="conferences-wrapper" style="display:none;">
+            <table id="conferences-table">
+                <thead>
+                    <tr>
+                        <th onclick="sortConferences('rank')">Rank <span class="sort-ind" id="sort-c-rank">▲</span></th>
+                        <th onclick="sortConferences('conference')">Conference <span class="sort-ind" id="sort-c-conference"></span></th>
+                        <th class="num" onclick="sortConferences('avg_raa')">Avg Kahl Index <span class="sort-ind" id="sort-c-avg_raa"></span></th>
+                        <th onclick="sortConferences('best_team')">Best Team <span class="sort-ind" id="sort-c-best_team"></span></th>
+                        <th class="num" onclick="sortConferences('top25_teams')">Total Top 25 Teams <span class="sort-ind" id="sort-c-top25_teams"></span></th>
+                        <th class="num" onclick="sortConferences('projected_tourney_teams')">Projected Tourney Teams <span class="sort-ind" id="sort-c-projected_tourney_teams"></span></th>
+                    </tr>
+                </thead>
+                <tbody id="conferences-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- 2026 Bracketology Tab -->
+    <div id="bracketology" class="tab-content">
+        <div id="bracket-loading" class="loading">Loading 2026 Bracketology...</div>
+        <div id="bracket-container" style="display:none;">
+            <div class="bubble-grid" id="bubble-container"></div>
+
+            <div class="wcws-header">
+                <h2>2026 NCAA Division I Softball Tournament — 4-Quadrant Bracket (1–8 Seeding)</h2>
+                <p>Top 32 National Seeds arranged in four 1–8 Quadrant pods • Quadrant Winners advance to the Women's College World Series</p>
+            </div>
+
+            <div class="quadrants-grid" id="quadrants-container"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let allTeams = [];
+    let teamColorLookup = {};
+    let teamConfLookup = {};
+    let qualifiedPlayers = [];
+    let conferenceRows = [];
+    let tourneyTeamSet = new Set();
+
+    const rSort = { key: 'rank', asc: true };
+    const pSort = { key: 'rank', asc: true };
+    const cSort = { key: 'rank', asc: true };
+
+    function switchTab(e, tabId) {
+        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+        if (e && e.target) e.target.classList.add('active');
     }
 
-
-# ---------------------------------------------------------------------------
-# 5. CONFERENCE RANKINGS (WITH BEST TEAM, TOP 25 COUNT & PROJECTED TOURNEY TEAMS)
-# ---------------------------------------------------------------------------
-def compute_conference_rankings(teams: list[dict], tourney_team_names: set[str]) -> list[dict]:
-    """
-    Aggregates conference metrics:
-      - Avg Kahl Index
-      - Best Team (name + colors + Kahl Index)
-      - Total Top 25 Teams (teams ranked #1-#25 in Kahl Index)
-      - Projected Tournament Teams (teams in the 64-team Bracketology field)
-    """
-    top25_names = {t["team"] for t in teams if t["rank"] <= 25}
-    by_conf: dict[str, list[dict]] = {}
-    for t in teams:
-        by_conf.setdefault(t["conference"], []).append(t)
-
-    conf_rows = []
-    for conf, members in by_conf.items():
-        members_sorted = sorted(members, key=lambda x: x["kahl_index"], reverse=True)
-        best = members_sorted[0]
-        avg_kahl = sum(m["kahl_index"] for m in members_sorted) / len(members_sorted)
-        top25_count = sum(1 for m in members_sorted if m["team"] in top25_names)
-        tourney_count = sum(1 for m in members_sorted if m["team"] in tourney_team_names)
-
-        conf_rows.append({
-            "conference": conf,
-            "team_count": len(members_sorted),
-            "avg_kahl": round(avg_kahl, 2),
-            "best_team": best["team"],
-            "best_team_kahl": best["kahl_index"],
-            "best_team_primary": best["primary_color"],
-            "best_team_secondary": best["secondary_color"],
-            "top25_teams": top25_count,
-            "projected_tourney_teams": tourney_count,
-        })
-
-    conf_rows.sort(key=lambda x: x["avg_kahl"], reverse=True)
-    for idx, c in enumerate(conf_rows, 1):
-        c["rank"] = idx
-
-    return conf_rows
-
-
-# ---------------------------------------------------------------------------
-# 6. PIPELINE RUNNER
-# ---------------------------------------------------------------------------
-def run_pipeline(raw_teams: list[dict], raw_games: list[dict], raw_players: list[dict]) -> dict:
-    color_map = scrape_ncaa_team_colors(force_refresh=False)
-    teams = compute_team_metrics(raw_teams, raw_games, color_map)
-    team_lookup = {t["team"]: t for t in teams}
-    players = compute_player_rc7(raw_players, team_lookup)
-    bracketology = build_2026_bracketology(teams)
-    conferences = compute_conference_rankings(teams, set(bracketology["field_teams"]))
-
-    payload = {
-        "updated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
-        "teams": teams,
-        "players": players,
-        "conferences": conferences,
-        "bracketology": bracketology,
+    function swatchHTML(primary, secondary) {
+        const p = primary || '#38bdf8';
+        const s = secondary || '#1e293b';
+        return `<span class="color-swatch"><span style="background:${p};"></span><span style="background:${s};"></span></span>`;
     }
-    with open(OUTPUT_JSON_PATH, "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2)
-    return payload
 
+    function genericSort(list, key, asc) {
+        return [...list].sort((a, b) => {
+            const va = a[key] ?? '';
+            const vb = b[key] ?? '';
+            if (typeof va === 'number' && typeof vb === 'number') {
+                return asc ? va - vb : vb - va;
+            }
+            return asc ? String(va).localeCompare(String(vb)) : String(vb).localeCompare(String(va));
+        });
+    }
 
-if __name__ == "__main__":
-    # Pre-warm color cache when executed directly
-    colors = scrape_ncaa_team_colors(force_refresh=False)
-    print(f"Loaded {len(colors)} NCAA team color profiles.")
+    // 1. KAHL INDEX RANKINGS
+    function sortRatings(key) {
+        const descByDefault = ['wins', 'raa', 'sos', 'r_per_7'];
+        if (rSort.key === key) {
+            rSort.asc = !rSort.asc;
+        } else {
+            rSort.key = key;
+            rSort.asc = !descByDefault.includes(key);
+        }
+        document.querySelectorAll('[id^="sort-r-"]').forEach(el => el.textContent = '');
+        const ind = document.getElementById(`sort-r-${key}`);
+        if (ind) ind.textContent = rSort.asc ? '▲' : '▼';
+        renderRatingsTable();
+    }
+
+    function renderRatingsTable() {
+        const confFilter = document.getElementById('rankings-conf-filter').value;
+        const search = document.getElementById('rankings-search').value.toLowerCase().trim();
+        const tbodyEl = document.getElementById('rankings-body');
+
+        let filtered = allTeams.filter(t =>
+            (confFilter === 'ALL' || t.conference === confFilter) &&
+            (!search || t.team.toLowerCase().includes(search))
+        );
+        filtered = genericSort(filtered, rSort.key, rSort.asc);
+
+        tbodyEl.innerHTML = filtered.map(t => {
+            const pCol = t.primary_color || '#38bdf8';
+            const sCol = t.secondary_color || '#1e293b';
+            const sosVal = Number(t.sos ?? 0);
+            return `
+                <tr style="border-left: 4px solid ${pCol};">
+                    <td>${t.rank}</td>
+                    <td><span class="team-cell">${swatchHTML(pCol, sCol)}<strong>${t.team}</strong></span></td>
+                    <td><span class="conf-pill">${t.conference}</span></td>
+                    <td class="num">${t.wins}-${t.losses}</td>
+                    <td class="num"><strong>${Number(t.raa).toFixed(2)}</strong></td>
+                    <td class="num">${sosVal >= 0 ? '+' : ''}${sosVal.toFixed(2)}</td>
+                    <td class="num">${Number(t.r_per_7).toFixed(2)}</td>
+                    <td class="num">${Number(t.ra_per_7).toFixed(2)}</td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 2. QUALIFIED PLAYER RC7 RANKINGS (NO PA / HR)
+    function sortPlayers(key) {
+        const descByDefault = ['RC7_raw', 'OPAF', 'RC7_adj'];
+        if (pSort.key === key) {
+            pSort.asc = !pSort.asc;
+        } else {
+            pSort.key = key;
+            pSort.asc = !descByDefault.includes(key);
+        }
+        document.querySelectorAll('[id^="sort-p-"]').forEach(el => el.textContent = '');
+        const ind = document.getElementById(`sort-p-${key}`);
+        if (ind) ind.textContent = pSort.asc ? '▲' : '▼';
+        renderPlayersTable();
+    }
+
+    function onPlayerConfChange() {
+        const conf = document.getElementById('players-conf-filter').value;
+        const teamSelect = document.getElementById('players-team-filter');
+        const teamsInConf = [...new Set(
+            qualifiedPlayers
+                .filter(p => conf === 'ALL' || p.conference === conf)
+                .map(p => p.team)
+        )].sort();
+
+        teamSelect.innerHTML = `<option value="ALL">All Teams</option>` +
+            teamsInConf.map(tm => `<option value="${tm}">${tm}</option>`).join('');
+        renderPlayersTable();
+    }
+
+    function renderPlayersTable() {
+        const conf = document.getElementById('players-conf-filter').value;
+        const team = document.getElementById('players-team-filter').value;
+        const search = document.getElementById('players-search').value.toLowerCase().trim();
+        const tbodyEl = document.getElementById('players-body');
+
+        let filtered = qualifiedPlayers.filter(p =>
+            (conf === 'ALL' || p.conference === conf) &&
+            (team === 'ALL' || p.team === team) &&
+            (!search || (p.player_name || '').toLowerCase().includes(search))
+        );
+        filtered = genericSort(filtered, pSort.key, pSort.asc);
+
+        tbodyEl.innerHTML = filtered.map(p => {
+            const cols = teamColorLookup[p.team] || { primary: p.primary_color || '#38bdf8', secondary: p.secondary_color || '#1e293b' };
+            return `
+                <tr style="border-left: 4px solid ${cols.primary};">
+                    <td>${p.rank}</td>
+                    <td><strong>${p.player_name}</strong></td>
+                    <td><span class="team-cell">${swatchHTML(cols.primary, cols.secondary)}<span>${p.team}</span></span></td>
+                    <td><span class="conf-pill">${p.conference}</span></td>
+                    <td class="num">${Number(p.RC7_raw).toFixed(2)}</td>
+                    <td class="num">${Number(p.OPAF).toFixed(2)}</td>
+                    <td class="num"><strong>${Number(p.RC7_adj).toFixed(2)}</strong></td>
+                </tr>
+            `;
+        }).join('');
+    }
+
+    // 3. CONFERENCE RANKINGS (BEST TEAM, TOP 25 TEAMS, PROJECTED TOURNEY TEAMS)
+    function sortConferences(key) {
+        const descByDefault = ['avg_raa', 'top25_teams', 'projected_tourney_teams'];
+        if (cSort.key === key) {
+            cSort.asc = !cSort.asc;
+        } else {
+            cSort.key = key;
+            cSort.asc = !descByDefault.includes(key);
+        }
+        document.querySelectorAll('[id^="sort-c-"]').forEach(el => el.textContent = '');
+        const ind = document.getElementById(`sort-c-${key}`);
+        if (ind) ind.textContent = cSort.asc ? '▲' : '▼';
+        renderConferencesTable();
+    }
+
+    function buildConferenceRows() {
+        const byConf = {};
+        allTeams.forEach(t => {
+            if (!t.conference || t.conference === 'Independent / Other') return;
+            if (!byConf[t.conference]) byConf[t.conference] = [];
+            byConf[t.conference].push(t);
+        });
+
+        const rows = Object.entries(byConf).map(([conf, members]) => {
+            const sortedMembers = [...members].sort((a, b) => b.raa - a.raa);
+            const best = sortedMembers[0];
+            const avgRaa = sortedMembers.reduce((sum, m) => sum + Number(m.raa), 0) / sortedMembers.length;
+            const top25Count = sortedMembers.filter(m => m.rank <= 25).length;
+            const tourneyCount = sortedMembers.filter(m => tourneyTeamSet.has(m.team)).length;
+
+            return {
+                conference: conf,
+                avg_raa: Number(avgRaa.toFixed(2)),
+                best_team: best.team,
+                best_team_raa: Number(best.raa).toFixed(2),
+                best_primary: best.primary_color || '#38bdf8',
+                best_secondary: best.secondary_color || '#1e293b',
+                top25_teams: top25Count,
+                projected_tourney_teams: tourneyCount
+            };
+        });
+
+        rows.sort((a, b) => b.avg_raa - a.avg_raa);
+        rows.forEach((r, idx) => r.rank = idx + 1);
+        conferenceRows = rows;
+
+        document.getElementById('conferences-loading').style.display = 'none';
+        document.getElementById('conferences-wrapper').style.display = 'block';
+        renderConferencesTable();
+    }
+
+    function renderConferencesTable() {
+        const tbodyEl = document.getElementById('conferences-body');
+        const rows = genericSort(conferenceRows, cSort.key, cSort.asc);
+
+        tbodyEl.innerHTML = rows.map(c => `
+            <tr>
+                <td>${c.rank}</td>
+                <td><strong>${c.conference}</strong></td>
+                <td class="num">${c.avg_raa >= 0 ? '+' : ''}${c.avg_raa.toFixed(2)}</td>
+                <td>
+                    <span class="team-cell">
+                        ${swatchHTML(c.best_primary, c.best_secondary)}
+                        <strong>${c.best_team}</strong>
+                        <span class="conf-pill">${c.best_team_raa}</span>
+                    </span>
+                </td>
+                <td class="num"><strong>${c.top25_teams}</strong></td>
+                <td class="num"><strong>${c.projected_tourney_teams}</strong></td>
+            </tr>
+        `).join('');
+    }
+
+    // 4. LOAD DATA & 2026 BRACKETOLOGY
+    async function initDashboard() {
+        try {
+            const [ratingsRes, playersRes, bracketRes] = await Promise.all([
+                fetch(`ratings.json?v=${Date.now()}`),
+                fetch(`qualified_players.json?v=${Date.now()}`),
+                fetch(`bracketology.json?v=${Date.now()}`)
+            ]);
+
+            if (!ratingsRes.ok) throw new Error(`ratings.json HTTP ${ratingsRes.status}`);
+            allTeams = await ratingsRes.json();
+
+            allTeams.forEach(t => {
+                teamColorLookup[t.team] = {
+                    primary: t.primary_color || '#38bdf8',
+                    secondary: t.secondary_color || '#1e293b'
+                };
+                teamConfLookup[t.team] = t.conference || 'Independent / Other';
+            });
+
+            // Populate Ratings conference filter
+            const confs = [...new Set(allTeams.map(t => t.conference).filter(Boolean))].sort();
+            const rConfSel = document.getElementById('rankings-conf-filter');
+            confs.forEach(c => rConfSel.insertAdjacentHTML('beforeend', `<option value="${c}">${c}</option>`));
+
+            document.getElementById('rankings-loading').style.display = 'none';
+            document.getElementById('rankings-wrapper').style.display = 'block';
+            renderRatingsTable();
+
+            // Load Qualified Players
+            if (playersRes.ok) {
+                const rawPlayers = await playersRes.json();
+                qualifiedPlayers = rawPlayers
+                    .filter(p => p.qualified !== false)
+                    .map((p, idx) => ({
+                        ...p,
+                        rank: p.rank || (idx + 1),
+                        player_name: p.player_name || p.name || 'N/A',
+                        conference: p.conference || teamConfLookup[p.team] || 'Independent / Other'
+                    }));
+
+                const pConfSel = document.getElementById('players-conf-filter');
+                const pConfs = [...new Set(qualifiedPlayers.map(p => p.conference).filter(Boolean))].sort();
+                pConfs.forEach(c => pConfSel.insertAdjacentHTML('beforeend', `<option value="${c}">${c}</option>`));
+                onPlayerConfChange();
+
+                document.getElementById('players-loading').style.display = 'none';
+                document.getElementById('players-wrapper').style.display = 'block';
+            }
+
+            // Load 2026 Bracketology
+            if (bracketRes.ok) {
+                const bracket = await bracketRes.json();
+                renderBracketology(bracket);
+            }
+
+            // Build Conference Rankings using Bracketology field
+            buildConferenceRows();
+
+        } catch (err) {
+            console.error('Dashboard Load Error:', err);
+            document.getElementById('rankings-loading').innerHTML =
+                `<p style="color:#ef4444;">Failed to load data (${err.message}).</p>`;
+        }
+    }
+
+    function renderBracketology(bracket) {
+        const bubbleContainer = document.getElementById('bubble-container');
+        const quadsContainer = document.getElementById('quadrants-container');
+
+        // Track all 64 tournament teams for Conference Rankings
+        tourneyTeamSet = new Set();
+        (bracket.quadrants || []).forEach(q => {
+            (q.super_regionals || []).forEach(sr => {
+                [sr.regional_a, sr.regional_b].forEach(pod => {
+                    (pod.teams || []).forEach(tm => tourneyTeamSet.add(tm.team));
+                });
+            });
+        });
+
+        // Bubble Cards: Last Four In, First Four Out, Next Four Out
+        const bubbleGroups = [
+            { key: 'last_four_in', title: 'Last Four In', cls: 'l4i' },
+            { key: 'first_four_out', title: 'First Four Out', cls: 'f4o' },
+            { key: 'next_four_out', title: 'Next Four Out', cls: 'n4o' }
+        ];
+
+        bubbleContainer.innerHTML = bubbleGroups.map(grp => {
+            const list = bracket[grp.key] || [];
+            return `
+                <div class="bubble-card ${grp.cls}">
+                    <h3>${grp.title}</h3>
+                    ${list.map(t => {
+                        const cols = teamColorLookup[t.team] || { primary: t.primary_color || '#38bdf8', secondary: t.secondary_color || '#1e293b' };
+                        return `
+                            <div class="bubble-row" style="border-left: 3px solid ${cols.primary};">
+                                <span class="team-cell">
+                                    ${swatchHTML(cols.primary, cols.secondary)}
+                                    <strong>${t.team}</strong>
+                                    <span class="conf-pill">${t.conference}</span>
+                                </span>
+                                <span style="color:var(--text-muted);font-size:0.82rem;">#${t.rank} (${Number(t.raa).toFixed(2)})</span>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+        }).join('');
+
+        // 2026 4-Quadrant Bracket
+        const quads = bracket.quadrants || [];
+        quadsContainer.innerHTML = quads.map(q => `
+            <div class="quadrant-card">
+                <div class="quadrant-title">
+                    <span>${q.title}</span>
+                    <span>WCWS Path</span>
+                </div>
+                ${(q.super_regionals || []).map((sr, idx) => `
+                    <div class="super-matchup">
+                        <div class="pods-stack">
+                            ${[sr.regional_a, sr.regional_b].map(pod => `
+                                <div class="regional-card">
+                                    <div class="regional-header">
+                                        <span>${pod.host_team} Regional (#${pod.host_overall_seed} Overall)</span>
+                                        <span>1–8 Quad Pod</span>
+                                    </div>
+                                    ${(pod.teams || []).map(tm => {
+                                        const cols = teamColorLookup[tm.team] || { primary: tm.primary_color || '#38bdf8', secondary: tm.secondary_color || '#1e293b' };
+                                        return `
+                                            <div class="regional-team" style="border-left: 3px solid ${cols.primary};">
+                                                <span class="team-cell">
+                                                    <span class="seed-badge">${tm.regional_seed}</span>
+                                                    ${swatchHTML(cols.primary, cols.secondary)}
+                                                    <strong>${tm.team}</strong>
+                                                    <span style="font-size:0.75rem;color:var(--text-muted);">(${tm.bid_type}${tm.overall_seed <= 32 ? ` • #${tm.overall_seed}` : ''})</span>
+                                                </span>
+                                                <span style="font-size:0.78rem;color:var(--text-muted);">${tm.conference}</span>
+                                            </div>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="super-node">
+                            <strong>Super Regional ${idx + 1}</strong>
+                            ${sr.regional_a.host_team} / ${sr.regional_b.host_team} Winners
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `).join('');
+
+        document.getElementById('bracket-loading').style.display = 'none';
+        document.getElementById('bracket-container').style.display = 'block';
+    }
+
+    document.addEventListener('DOMContentLoaded', initDashboard);
+</script>
+</body>
+</html>
