@@ -3,10 +3,6 @@
 ncaa_pull.py -- pull every NCAA D-I softball game + box score from the live
 NCAA API (https://ncaa-api.henrygd.me) and keep the CSVs up to date.
 
-Run it any time; it figures out what is missing or unfinished and only fetches
-that.  The same command works for backfilling a whole season and for the daily
-update during the season.
-
     python ncaa_pull.py                       # daily update (this season)
     python ncaa_pull.py --season 2026         # a specific season
     python ncaa_pull.py --start 2026-02-05 --end 2026-02-20
@@ -18,13 +14,10 @@ Files written to --out-dir (default: current folder):
     team_games_season.csv    two rows per game (one per team)  -> rc7.py
     player_games_season.csv  one row per player per game       -> rc7.py
     _completed_dates.txt     checkpoint of completed scoreboard dates
-
-Only third-party dependency: requests
 """
 
 import argparse
 import csv
-import json
 import os
 import random
 import re
@@ -38,15 +31,14 @@ from datetime import date, datetime, timedelta, timezone
 import requests
 
 API = os.environ.get("NCAA_API_BASE", "https://ncaa-api.henrygd.me").rstrip("/")
-# optional: send /game/... (box score + linescore) requests to a self-hosted ncaa-api container
 GAME_API = os.environ.get("NCAA_GAME_API_BASE", API).rstrip("/")
 SPORT = "softball"
 DIVISION = "d1"
-MAX_RPS = float(os.environ.get("NCAA_MAX_RPS", "3.0"))  # public API allows ~5/sec/IP; stay well under
+MAX_RPS = float(os.environ.get("NCAA_MAX_RPS", "3.0"))
 MIN_RPS = 0.7
 WORKERS = 4
-RECHECK_DAYS = 3        # always re-pull this many most-recent days (late finals / corrections)
-RETRY_RECENT_DAYS = 10  # games with no box score / linescore are retried this long
+RECHECK_DAYS = 3
+RETRY_RECENT_DAYS = 10
 CHECKPOINT_FILE = "_completed_dates.txt"
 
 GAME_COLS = [
@@ -66,21 +58,14 @@ PLAYER_COLS = [
     "doubles", "triples", "home_runs",
     "doubles_season_total", "triples_season_total", "home_runs_season_total",
     "season_at_bats", "season_hits", "season_walks", "xbh_ambiguous",
-    "ip", "pitching_runs", "earned_runs", "hits_allowed", "walks_allowed", "strikeouts_pitched",
 ]
 
 
-# ----------------------------------------------------------------------------
-# HTTP: one shared rate limiter, retries with backoff, 404 -> None
-# ----------------------------------------------------------------------------
 class ApiError(Exception):
     pass
 
 
 class Limiter:
-    """Shared by all threads. Spaces requests out, and when the CDN pushes back
-    (HTTP 428/429) it pauses everyone and slows down, then speeds up again."""
-
     def __init__(self, rps):
         self.max_rps = rps
         self.gap = 1.0 / rps
@@ -122,7 +107,6 @@ def _session():
 
 
 def api_get(path, params=None, tries=8):
-    """GET JSON. Returns None on 404. Raises ApiError if it keeps failing."""
     url = (GAME_API if path.startswith("/game/") else API) + path
     err = None
     for attempt in range(tries):
@@ -143,9 +127,9 @@ def api_get(path, params=None, tries=8):
                 return None
             elif r.status_code in (428, 429, 500, 502, 503, 504):
                 err = ApiError(f"HTTP {r.status_code}")
-                if r.status_code in (428, 429):   # CDN rate limit -> everyone backs off
+                if r.status_code in (428, 429):
                     _limiter.throttled()
-                elif attempt >= 2:                # 5xx that keeps happening: give up, retried next run
+                elif attempt >= 2:
                     break
                 ra = r.headers.get("Retry-After")
                 if ra and ra.isdigit():
@@ -157,9 +141,6 @@ def api_get(path, params=None, tries=8):
     raise ApiError(f"{url}: {err}")
 
 
-# ----------------------------------------------------------------------------
-# small helpers
-# ----------------------------------------------------------------------------
 def today_et():
     try:
         from zoneinfo import ZoneInfo
@@ -169,8 +150,6 @@ def today_et():
 
 
 def is_pitching_pos(pos):
-    """True for 'p', 'p/1b', 'dp/p', '1b/p' ... (NCAA puts the pitcher's walks/runs/Ks
-    allowed in the batting columns of these rows).  'dp' alone is a hitter."""
     return "p" in [t.strip().lower() for t in str(pos or "").split("/")]
 
 
@@ -227,11 +206,7 @@ def save_completed_dates(path, dates_set):
     os.replace(tmp, path)
 
 
-# ----------------------------------------------------------------------------
-# scoreboard: which games exist on which day
-# ----------------------------------------------------------------------------
 def season_dates(season):
-    """Dates NCAA lists games for (includes cancelled games, which is fine)."""
     try:
         data = api_get(f"/schedule-alt/{SPORT}/{DIVISION}/{season}")
         games = data["data"]["schedules"]["games"]
@@ -280,9 +255,6 @@ def is_final(g):
             and to_int(g.get("home_score")) is not None)
 
 
-# ----------------------------------------------------------------------------
-# per-game detail: linescore (innings) + box score (players)
-# ----------------------------------------------------------------------------
 def parse_ip(v):
     if blank(v):
         return None
@@ -294,7 +266,6 @@ def parse_ip(v):
 
 
 def fetch_linescore(game_id):
-    """Innings each team batted, from the inning-by-inning line score."""
     data = api_get(f"/game/{game_id}")
     if not data:
         return None
@@ -324,12 +295,11 @@ def _xbh_lists(team_stats):
         if isinstance(bs, dict) and key in bs:
             out[key] = [e for e in (bs.get(key) or []) if isinstance(e, dict)]
         else:
-            out[key] = None  # section missing -> unknown, not zero
+            out[key] = None
     return out
 
 
 def parse_boxscore(box, game):
-    """Returns (player_rows, ip_by_side, check). Raises ValueError if unusable."""
     teams = {str(t.get("teamId")): t for t in box.get("teams") or []}
     tbs = box.get("teamBoxscore") or []
     if len(teams) != 2 or len(tbs) != 2:
@@ -352,7 +322,6 @@ def parse_boxscore(box, game):
             b = p.get("batterStats") or {}
             f = p.get("fieldStats") or {}
             hs = p.get("hittingSeason") or {}
-            ps = p.get("pitcherStats") or {}
             pos = str(p.get("position") or "").strip()
             built.append({
                 "date": game["date"], "game_id": game["game_id"],
@@ -377,12 +346,6 @@ def parse_boxscore(box, game):
                 "season_hits": to_num(hs.get("hits")),
                 "season_walks": to_num(hs.get("walks")),
                 "xbh_ambiguous": False,
-                "ip": parse_ip(ps.get("inningsPitched")),
-                "pitching_runs": to_num(ps.get("runsAllowed")),
-                "earned_runs": to_num(ps.get("earnedRuns")),
-                "hits_allowed": to_num(ps.get("hitsAllowed")),
-                "walks_allowed": to_num(ps.get("walks")),
-                "strikeouts_pitched": to_num(ps.get("strikeouts")),
             })
 
         def full(r):
@@ -420,7 +383,6 @@ def parse_boxscore(box, game):
 
 
 def fetch_game_detail(game, want_box=True):
-    """All network work for one game. Returns dict of results (never raises)."""
     gid = game["game_id"]
     res = {"game_id": gid}
     try:
@@ -445,9 +407,6 @@ def fetch_game_detail(game, want_box=True):
     return res
 
 
-# ----------------------------------------------------------------------------
-# build team_games_season.csv from the games table
-# ----------------------------------------------------------------------------
 def build_team_rows(games):
     out = []
     for g in games:
@@ -468,9 +427,6 @@ def build_team_rows(games):
     return out
 
 
-# ----------------------------------------------------------------------------
-# duplicate tournament game filter
-# ----------------------------------------------------------------------------
 def mark_duplicates(games):
     for g in games.values():
         g["duplicate_of"] = ""
@@ -492,9 +448,6 @@ def mark_duplicates(games):
     return n
 
 
-# ----------------------------------------------------------------------------
-# audit against NCAA's official team totals
-# ----------------------------------------------------------------------------
 def fetch_official_team_scoring(season):
     rows, page, pages, updated = [], 1, 1, ""
     while page <= pages:
@@ -547,24 +500,8 @@ def audit(games, season):
     print(f"  {with_ns:3} match once you count games NCAA lists as FINAL but never published a score for")
     print(f"  {len(short):3} are missing 1+ games that are not in NCAA's game feed at all")
     print(f"  {len(over):3} have more games than the official count")
-    print(f"NCAA lists {sum(1 for g in games if g['state'] == 'final' and not is_final(g) and not g.get('duplicate_of'))} "
-          f"games as FINAL with no score/box score (mostly conference-tournament games); "
-          f"no data exists for them in this API.")
-    for label, rows_, fmt in (
-        ("most-short teams (team, games missing, of which listed-without-score, official G, our scored G):",
-         sorted(short, key=lambda x: -x[1])[:10], None),
-        ("teams with extra games (team, extra, official G, our G):", over[:10], None),
-    ):
-        if rows_:
-            print(label)
-            for x in rows_:
-                print("  ", x)
-    print("(NCAA's stats page can lag the scoreboard, so small differences right after games finish are normal)")
 
 
-# ----------------------------------------------------------------------------
-# main
-# ----------------------------------------------------------------------------
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--season", type=int, help="season year (default: current calendar year)")
@@ -586,7 +523,6 @@ def main():
     today = today_et()
     season = args.season or today.year
 
-    # ---- load saved state -------------------------------------------------
     games, players = {}, {}
     completed_dates = set()
     if not args.full_refresh:
@@ -596,8 +532,7 @@ def main():
                 r[k] = to_int(r.get(k))
             games[r["game_id"]] = r
         prow, pcols = read_csv(ppath)
-        if prow and ("pitcher_row" not in pcols or "ip" not in pcols):
-            print("Existing player_games_season.csv lacks pitching columns -- it will be rebuilt from scratch.")
+        if prow and "pitcher_row" not in pcols:
             for g in games.values():
                 g["box_status"] = g["box_check"] = ""
         else:
@@ -609,12 +544,11 @@ def main():
         audit(list(games.values()), season)
         return 0
 
-    # ---- decide which dates to (re)pull ----------------------------------
     start = date.fromisoformat(args.start) if args.start else date(season, 1, 1)
     end = date.fromisoformat(args.end) if args.end else min(today, date(season, 12, 31))
     cand = {d for d in season_dates(season) if start <= d <= end}
     d = max(start, end - timedelta(days=RECHECK_DAYS - 1))
-    while d <= end:                      # always include the recent window
+    while d <= end:
         cand.add(d)
         d += timedelta(days=1)
     have_dates = {g["date"] for g in games.values()} | completed_dates
@@ -622,7 +556,7 @@ def main():
     for d in cand:
         if d.isoformat() not in have_dates or d >= end - timedelta(days=RECHECK_DAYS - 1):
             todo.add(d)
-    for g in games.values():             # unfinished / scoreless games -> repull their day
+    for g in games.values():
         gd = date.fromisoformat(g["date"])
         if start <= gd <= end and not is_final(g):
             todo.add(gd)
@@ -652,7 +586,7 @@ def main():
                 print(f"  note: final game {gid} ({games[gid]['away_team']} @ {games[gid]['home_team']}) "
                       f"vanished from the {d} scoreboard; keeping it")
             else:
-                del games[gid]           # was cancelled / moved
+                del games[gid]
                 players.pop(gid, None)
         completed_dates.add(d.isoformat())
         if i % 20 == 0 or i == len(todo):
@@ -665,7 +599,6 @@ def main():
     if dup_n:
         print(f"{dup_n} tournament game(s) are listed twice by NCAA; the extra copy is ignored (duplicate_of column).")
 
-    # ---- which games need linescore / box score --------------------------
     def needs_detail(g):
         if not is_final(g) or g.get("duplicate_of"):
             return False
@@ -684,7 +617,7 @@ def main():
         atomic_write_csv(gpath, GAME_COLS, glist)
         atomic_write_csv(tpath, TEAM_COLS, build_team_rows([g for g in glist if not g.get("duplicate_of")]))
         plist = [r for g in glist if not g.get("duplicate_of") for r in players.get(g["game_id"], [])]
-        for r in plist:   # always recompute from the position text
+        for r in plist:
             r["pitcher_row"] = is_pitching_pos(r.get("position"))
         atomic_write_csv(ppath, PLAYER_COLS, plist)
         save_completed_dates(cpath, completed_dates)
@@ -706,14 +639,14 @@ def main():
                     errors["linescore"] += 1
                     err_msgs[re.sub(r"/game/\d+", "/game/N", res["linescore_error"])[:110]] += 1
                     if not g.get("innings_source"):
-                        g["innings_source"] = ""   # retry next run
+                        g["innings_source"] = ""
                 if not args.no_boxscores:
                     st = res.get("box_status", "error")
                     g["box_status"] = st
                     if st == "ok":
                         players[g["game_id"]] = res["rows"]
                         g["box_check"] = res["box_check"]
-                        if not ls:   # fall back to box-score innings pitched
+                        if not ls:
                             ai, hi = res["ip"].get("home"), res["ip"].get("away")
                             if ai and hi:
                                 g["away_innings"], g["home_innings"] = ai, hi
@@ -724,7 +657,7 @@ def main():
                             errors["boxscore"] += 1
                             err_msgs[re.sub(r"/game/\d+", "/game/N", res.get("box_error", ""))[:110]] += 1
                 if not g.get("innings_source") and not res.get("linescore_error"):
-                    g["innings_source"] = "missing"   # NCAA has no linescore for it
+                    g["innings_source"] = "missing"
                 done += 1
                 if done % 250 == 0:
                     save()
@@ -737,7 +670,6 @@ def main():
 
     save()
 
-    # ---- summary ----------------------------------------------------------
     gl = list(games.values())
     final = [g for g in gl if is_final(g) and not g.get("duplicate_of")]
     c_box = Counter(g.get("box_status") or "?" for g in final)
