@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-rc7.py -- Unified metrics generator for the Kahl Index & Hitter RC7.
+rc7.py -- Unified metrics generator for the Kahl Index, Hitter RC7,
+Conference Rankings & 2026 4-Quadrant Bracketology.
 
 Reads:
     team_games_season.csv
@@ -11,10 +12,7 @@ Writes:
     bracketology.json
     players.json
     qualified_players.json
-
-Usage:
-    python rc7.py
-    python rc7.py --audit --season 2026
+    conferences.json
 """
 
 import argparse
@@ -25,6 +23,7 @@ import sys
 
 import numpy as np
 import pandas as pd
+import requests
 
 
 # ----------------------------------------------------------------------------
@@ -85,8 +84,8 @@ RAW_CONFERENCES = [
     ("ASUN Conference", "North Florida"),
     ("ASUN Conference", "Queens (NC)"),
     ("ASUN Conference", "Stetson"),
-    ("ASUN Conference", "West Ga."),
     ("ASUN Conference", "West Florida"),
+    ("ASUN Conference", "West Ga."),
     ("Big 12 Conference", "Arizona"),
     ("Big 12 Conference", "Arizona St."),
     ("Big 12 Conference", "Baylor"),
@@ -406,6 +405,14 @@ NAME_ALIGNMENT = {
     "SIUE": "SIUE",
     "SIU Edwardsville": "SIUE",
     "West Georgia": "West Ga.",
+    "West Florida": "West Florida",
+    "UWF": "West Florida",
+    "Univ. of West Florida": "West Florida",
+    "University of West Florida": "West Florida",
+    "UMBC": "UMBC",
+    "Maryland-Baltimore County": "UMBC",
+    "Maryland Baltimore County": "UMBC",
+    "Md.-Baltimore County": "UMBC",
     "Southern": "Southern U.",
     "Texas A&M-Corpus Christi": "A&M-Corpus Christi",
     "Texas A&M Corpus Christi": "A&M-Corpus Christi",
@@ -542,7 +549,7 @@ def alnum(s):
 
 
 # ----------------------------------------------------------------------------
-# 2. Kahl Index Team Ratings & Bracketology
+# 2. Kahl Index Team Ratings, Conference Rankings & 2026 Bracketology
 # ----------------------------------------------------------------------------
 def compute_kahl_index(team_df, min_games=20, max_iters=100, tol=1e-6):
     team_df = team_df[(team_df["team"] != "TBA") & (team_df["opponent"] != "TBA")].copy()
@@ -653,10 +660,21 @@ def save_ratings_json(final_df, output_path="ratings.json"):
 
 
 def generate_bracketology(final_df, output_path="bracketology.json"):
+    """
+    2026 NCAA Division I Softball Championship Bracketology:
+      - 31 Conference Automatic Qualifiers + 33 At-Large = 64 Teams
+      - Bubble Watch: Last Four In, First Four Out, Next Four Out (from At-Large pool)
+      - Top 32 teams seeded in four 1-8 groups across 4 Quadrants:
+          * Q1 (Upper Left, #1):  (1 vs 32), (16 vs 17), (9 vs 24), (8 vs 25)
+          * Q3 (Top Right, #3):   (3 vs 30), (14 vs 19), (11 vs 22), (6 vs 27)
+          * Q4 (Bottom Left, #4): (4 vs 29), (13 vs 20), (12 vs 21), (5 vs 28)
+          * Q2 (Bottom Right, #2):(2 vs 31), (15 vs 18), (10 vs 23), (7 vs 26)
+      - Enforces one team per conference per 4-team regional pod.
+    """
     if final_df is None or final_df.empty:
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump({}, f)
-        return
+        return set()
 
     df = final_df.copy()
     df["conference"] = df["team"].map(lambda t: CONFERENCE_MAP.get(t, "Independent / Other"))
@@ -666,63 +684,128 @@ def generate_bracketology(final_df, output_path="bracketology.json"):
     aq_team_names = set(aq_teams["team"])
 
     at_large_candidates = df[~df["team"].isin(aq_team_names)].sort_values("rank").reset_index(drop=True)
-    at_large_teams = at_large_candidates.head(33)
+    at_large_slots = max(0, 64 - len(aq_teams))
+    at_large_teams = at_large_candidates.head(at_large_slots)
 
     field_df = pd.concat([aq_teams, at_large_teams]).sort_values("rank").reset_index(drop=True)
-
     if len(field_df) < 64:
         print(f"Warning: Only {len(field_df)} teams available for Bracketology.")
         with open(output_path, "w", encoding="utf-8") as f:
             json.dump({}, f)
-        return
+        return set(field_df["team"])
 
     field = field_df.head(64).to_dict("records")
-    hosts = field[0:16]
-    seed_2s_serpentine = list(reversed(field[16:32]))
-    band_3 = field[32:48]
-    band_4 = field[48:64]
+    for idx, t in enumerate(field, 1):
+        t["overall_seed"] = idx
+        t["bid_type"] = "AQ" if t["team"] in aq_team_names else "AL"
 
-    regionals = []
-    for i in range(16):
-        host = hosts[i]
-        seed_2 = seed_2s_serpentine[i]
-        pod_conferences = {host["conference"], seed_2["conference"]}
+    top32 = field[:32]
+    unseeded = field[32:64]
 
-        def pick_candidate(band):
-            for idx, candidate in enumerate(band):
-                conf = candidate["conference"]
-                if conf == "Independent / Other" or conf not in pod_conferences:
-                    pod_conferences.add(conf)
-                    return band.pop(idx)
-            candidate = band.pop(0)
-            pod_conferences.add(candidate["conference"])
-            return candidate
+    def fmt_pod_team(t, regional_seed):
+        return {
+            "regional_seed": regional_seed,
+            "overall_seed": t["overall_seed"],
+            "team": t["team"],
+            "conference": t["conference"],
+            "record": f"{int(t['wins'])}-{int(t['losses'])}",
+            "overall_rank": int(t["rank"]),
+            "raa": round(float(t["raa"]), 2),
+            "bid_type": t["bid_type"],
+        }
 
-        seed_3 = pick_candidate(band_3)
-        seed_4 = pick_candidate(band_4)
+    quadrant_specs = [
+        {
+            "id": "Q1",
+            "title": "Quadrant 1 — Upper Left (#1 Overall)",
+            "super_pairs": [[(1, 32), (16, 17)], [(9, 24), (8, 25)]],
+        },
+        {
+            "id": "Q3",
+            "title": "Quadrant 3 — Top Right (#3 Overall)",
+            "super_pairs": [[(3, 30), (14, 19)], [(11, 22), (6, 27)]],
+        },
+        {
+            "id": "Q4",
+            "title": "Quadrant 4 — Bottom Left (#4 Overall)",
+            "super_pairs": [[(4, 29), (13, 20)], [(12, 21), (5, 28)]],
+        },
+        {
+            "id": "Q2",
+            "title": "Quadrant 2 — Bottom Right (#2 Overall)",
+            "super_pairs": [[(2, 31), (15, 18)], [(10, 23), (7, 26)]],
+        },
+    ]
 
-        regionals.append({
-            "regional_number": i + 1,
-            "host_team": host["team"],
-            "host_rank": host["rank"],
-            "teams": [
-                {"seed_in_pod": 1, "national_seed": i + 1, "team": host["team"], "conference": host["conference"], "overall_rank": host["rank"], "raa": round(float(host["raa"]), 2)},
-                {"seed_in_pod": 2, "national_seed": 32 - i, "team": seed_2["team"], "conference": seed_2["conference"], "overall_rank": seed_2["rank"], "raa": round(float(seed_2["raa"]), 2)},
-                {"seed_in_pod": 3, "national_seed": None, "team": seed_3["team"], "conference": seed_3["conference"], "overall_rank": seed_3["rank"], "raa": round(float(seed_3["raa"]), 2)},
-                {"seed_in_pod": 4, "national_seed": None, "team": seed_4["team"], "conference": seed_4["conference"], "overall_rank": seed_4["rank"], "raa": round(float(seed_4["raa"]), 2)},
-            ]
+    pods = []
+    for q in quadrant_specs:
+        for sp_idx, pair in enumerate(q["super_pairs"]):
+            for top_ovr, sec_ovr in pair:
+                t_top = top32[top_ovr - 1]
+                t_sec = top32[sec_ovr - 1]
+                r_seed_top = ((top_ovr - 1) // 4) + 1     # 1, 2, 3, or 4
+                r_seed_sec = ((sec_ovr - 1) // 4) + 1     # 5, 6, 7, or 8
+                pods.append({
+                    "quadrant": q["id"],
+                    "super_idx": sp_idx,
+                    "host_team": t_top["team"],
+                    "host_overall_seed": top_ovr,
+                    "confs_used": {t_top["conference"], t_sec["conference"]},
+                    "teams": [
+                        fmt_pod_team(t_top, r_seed_top),
+                        fmt_pod_team(t_sec, r_seed_sec),
+                    ],
+                })
+
+    for tier in (unseeded[:16], unseeded[16:32]):
+        remaining = list(range(len(pods)))
+        for ut in tier:
+            chosen = next((i for i in remaining if ut["conference"] not in pods[i]["confs_used"]), remaining[0])
+            remaining.remove(chosen)
+            pods[chosen]["confs_used"].add(ut["conference"])
+            pods[chosen]["teams"].append(fmt_pod_team(ut, "—"))
+
+    cursor = 0
+    quadrants_out = []
+    for q in quadrant_specs:
+        supers = []
+        for sp_idx in range(2):
+            pa = pods[cursor]
+            pb = pods[cursor + 1]
+            cursor += 2
+            pa.pop("confs_used", None)
+            pb.pop("confs_used", None)
+            supers.append({
+                "super_id": f"{q['id']}-SR{sp_idx + 1}",
+                "regional_a": pa,
+                "regional_b": pb,
+            })
+        quadrants_out.append({
+            "id": q["id"],
+            "title": q["title"],
+            "super_regionals": supers,
         })
 
-    last_four_in = at_large_candidates.iloc[29:33][["team", "conference", "rank", "raa"]].to_dict("records")
-    first_four_out = at_large_candidates.iloc[33:37][["team", "conference", "rank", "raa"]].to_dict("records")
-    next_four_out = at_large_candidates.iloc[37:41][["team", "conference", "rank", "raa"]].to_dict("records")
+    def fmt_bubble(df_slice):
+        rows = []
+        for _, r in df_slice.iterrows():
+            rows.append({
+                "team": r["team"],
+                "conference": r["conference"],
+                "rank": int(r["rank"]),
+                "record": f"{int(r['wins'])}-{int(r['losses'])}",
+                "raa": round(float(r["raa"]), 2),
+                "sos": round(float(r["sos"]), 2),
+            })
+        return rows
 
-    for group in (last_four_in, first_four_out, next_four_out):
-        for item in group:
-            item["raa"] = round(float(item["raa"]), 2)
+    l4i_start = max(0, at_large_slots - 4)
+    last_four_in = fmt_bubble(at_large_candidates.iloc[l4i_start:at_large_slots])
+    first_four_out = fmt_bubble(at_large_candidates.iloc[at_large_slots:at_large_slots + 4])
+    next_four_out = fmt_bubble(at_large_candidates.iloc[at_large_slots + 4:at_large_slots + 8])
 
     bracket_data = {
-        "regionals": regionals,
+        "quadrants": quadrants_out,
         "last_four_in": last_four_in,
         "first_four_out": first_four_out,
         "next_four_out": next_four_out,
@@ -730,11 +813,46 @@ def generate_bracketology(final_df, output_path="bracketology.json"):
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(bracket_data, f, indent=2)
-    print(f"Generated 64-team bracketology -> {output_path}")
+    print(f"Generated 2026 4-Quadrant bracketology -> {output_path}")
+
+    return {t["team"] for t in field}
+
+
+def save_conferences_json(final_df, tourney_teams, output_path="conferences.json"):
+    if final_df is None or final_df.empty:
+        with open(output_path, "w", encoding="utf-8") as f:
+            json.dump([], f)
+        return
+
+    df = final_df.copy()
+    df["conference"] = df["team"].map(lambda t: CONFERENCE_MAP.get(t, "Independent / Other"))
+    df = df[df["conference"] != "Independent / Other"]
+
+    records = []
+    for conf, grp in df.groupby("conference"):
+        grp_sorted = grp.sort_values("raa", ascending=False)
+        best = grp_sorted.iloc[0]
+        records.append({
+            "conference": conf,
+            "avg_raa": round(float(grp_sorted["raa"].mean()), 2),
+            "team_count": int(len(grp_sorted)),
+            "best_team": best["team"],
+            "best_team_raa": round(float(best["raa"]), 2),
+            "top25_teams": int((grp_sorted["rank"] <= 25).sum()),
+            "projected_tourney_teams": int(grp_sorted["team"].isin(tourney_teams).sum()),
+        })
+
+    records.sort(key=lambda x: x["avg_raa"], reverse=True)
+    for idx, rec in enumerate(records, 1):
+        rec["rank"] = idx
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(records, f, indent=2)
+    print(f"Saved {len(records)} conferences -> {output_path}")
 
 
 # ----------------------------------------------------------------------------
-# 3. Player Resolution & Hitter RC7 Leaderboards
+# 3. Player Resolution & Hitter RC7 Leaderboards (Qualified Only)
 # ----------------------------------------------------------------------------
 def _surname(name):
     toks = str(name).replace(",", " ").split()
@@ -747,7 +865,6 @@ def _initial(name):
 
 
 def same_player(a, b):
-    """'Smith' ~ 'Jane Smith' ~ 'J. Smith'; 'Jane Smith' !~ 'Kate Smith'."""
     na, nb = alnum(a), alnum(b)
     if na == nb or na.endswith(nb) or nb.endswith(na):
         return True
@@ -804,7 +921,6 @@ def resolve_players(df):
 
 
 def team_context(t):
-    """Games played and runs-allowed-per-7 for every team, from real innings."""
     agg = t.groupby("team").agg(
         games=("game_id", "nunique"),
         runs_against=("runs_against", "sum"),
@@ -830,7 +946,6 @@ def calculate_rc7(p, t, out_all="players.json", out_qualified="qualified_players
     p["ab0"] = p["at_bats"].fillna(0)
     p["h0"] = p["hits"].fillna(0)
 
-    # Opponent Pitching Adjustment Factor (weighted by plate appearances)
     ctx = team_context(t)
     d1_ra7 = (ctx["runs_against"].sum() / ctx["innings_fielded"].sum() * 7) if len(ctx) else 4.0
 
@@ -846,7 +961,6 @@ def calculate_rc7(p, t, out_all="players.json", out_qualified="qualified_players
         "ab": g["ab0"].sum(),
         "hits": g["h0"].sum(),
         "walks": g["walks_clean"].sum(),
-        "pitcher_rows": g["pitcher_row"].sum(),
         "d2_pg": g["doubles"].sum(min_count=1),
         "d3_pg": g["triples"].sum(min_count=1),
         "hr_pg": g["home_runs"].sum(min_count=1),
@@ -882,21 +996,26 @@ def calculate_rc7(p, t, out_all="players.json", out_qualified="qualified_players
 
         team_games = int(ctx["games"].get(r.team, r.games))
         qualified = bool(ab >= team_games * ab_per_team_game and ab >= min_qualified_ab)
+        conf_name = CONFERENCE_MAP.get(r.team, "Independent / Other")
+
         out.append({
-            "player_name": r.player_name, "name": r.player_name, "team": r.team,
-            "PA": int(ab + bb), "HR": int(hr),
-            "pitching_games": int(r.pitcher_rows),
+            "player_name": r.player_name,
+            "name": r.player_name,
+            "team": r.team,
+            "conference": conf_name,
             "RC7_raw": round(rc7, 2),
             "OPAF": round(opaf, 2),
             "RC7_adj": round(rc7 * opaf, 2),
-            "ab": int(ab), "hits": int(h), "doubles": int(d2), "triples": int(d3),
-            "tb": int(tb), "walks": int(bb), "qualified": qualified,
-            "rc": round(rc, 2), "rc7": round(rc7, 2), "rc7_adj": round(rc7 * opaf, 2),
+            "ab": int(ab),
+            "hits": int(h),
+            "walks": int(bb),
+            "qualified": qualified,
         })
 
     out.sort(key=lambda x: x["RC7_adj"], reverse=True)
     for i, row in enumerate(out, 1):
         row["rank"] = i
+
     qual = [dict(x) for x in out if x["qualified"]]
     for i, row in enumerate(qual, 1):
         row["rank"] = i
@@ -915,8 +1034,6 @@ def calculate_rc7(p, t, out_all="players.json", out_qualified="qualified_players
 # 4. NCAA Official Leaderboard Audit
 # ----------------------------------------------------------------------------
 def audit(players, api="https://ncaa-api.henrygd.me", season=None):
-    """Compare our AB/H/BB with NCAA's official On-Base-Percentage leaderboard."""
-    import requests
     season = season or pd.Timestamp.today().year
     rows, page, pages = [], 1, 1
     while page <= pages:
@@ -964,7 +1081,7 @@ def audit(players, api="https://ncaa-api.henrygd.me", season=None):
 # 5. Main Entrypoint
 # ----------------------------------------------------------------------------
 def main():
-    ap = argparse.ArgumentParser(description="Generate Kahl Index ratings, bracketology, and hitter RC7 leaderboards.")
+    ap = argparse.ArgumentParser(description="Generate Kahl Index ratings, bracketology, conferences & RC7 leaderboards.")
     ap.add_argument("--data-dir", default=".")
     ap.add_argument("--out-dir", default=None)
     ap.add_argument("--audit", action="store_true")
@@ -989,7 +1106,8 @@ def main():
 
     final_ratings = compute_kahl_index(t_df, min_games=20)
     save_ratings_json(final_ratings, os.path.join(out_dir, "ratings.json"))
-    generate_bracketology(final_ratings, os.path.join(out_dir, "bracketology.json"))
+    tourney_teams = generate_bracketology(final_ratings, os.path.join(out_dir, "bracketology.json"))
+    save_conferences_json(final_ratings, tourney_teams, os.path.join(out_dir, "conferences.json"))
 
     players = calculate_rc7(
         p_df, t_df,
