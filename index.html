@@ -171,29 +171,6 @@
             font-variant-numeric: tabular-nums;
         }
 
-        /* Team Color Swatches */
-        .team-cell {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .color-swatch {
-            display: inline-flex;
-            width: 15px;
-            height: 15px;
-            border-radius: 4px;
-            overflow: hidden;
-            flex-shrink: 0;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-        }
-
-        .color-swatch span {
-            width: 50%;
-            height: 100%;
-            display: block;
-        }
-
         .conf-pill {
             font-size: 0.78rem;
             color: var(--text-muted);
@@ -233,11 +210,19 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 7px 10px;
+            gap: 8px;
+            padding: 8px 10px;
             background-color: rgba(15, 23, 42, 0.55);
             border-radius: 6px;
             margin-bottom: 6px;
             font-size: 0.88rem;
+        }
+
+        .bubble-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         /* 2026 4-Quadrant Bracket Layout */
@@ -294,7 +279,7 @@
 
         .super-matchup {
             display: grid;
-            grid-template-columns: 1fr 135px;
+            grid-template-columns: 1fr 140px;
             gap: 12px;
             align-items: center;
             margin-bottom: 16px;
@@ -306,6 +291,12 @@
             border-bottom: none;
             margin-bottom: 0;
             padding-bottom: 0;
+        }
+
+        @media (max-width: 600px) {
+            .super-matchup {
+                grid-template-columns: 1fr;
+            }
         }
 
         .pods-stack {
@@ -322,7 +313,7 @@
         }
 
         .regional-header {
-            background-color: rgba(30, 41, 59, 0.9);
+            background-color: rgba(30, 41, 59, 0.95);
             padding: 6px 10px;
             font-size: 0.78rem;
             font-weight: 700;
@@ -335,9 +326,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 8px;
             padding: 6px 10px;
             font-size: 0.85rem;
             border-top: 1px solid rgba(51, 65, 85, 0.5);
+        }
+
+        .regional-team-left {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .seed-badge {
@@ -347,7 +345,8 @@
             font-size: 0.75rem;
             font-weight: 700;
             background-color: var(--card-bg);
-            color: var(--text-main);
+            color: var(--accent-color);
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             padding: 1px 4px;
         }
@@ -356,7 +355,7 @@
             background-color: rgba(15, 23, 42, 0.75);
             border: 1px solid var(--border-color);
             border-radius: 8px;
-            padding: 10px;
+            padding: 12px 10px;
             text-align: center;
             font-size: 0.78rem;
             color: var(--text-muted);
@@ -366,7 +365,7 @@
             display: block;
             color: var(--text-main);
             margin-bottom: 4px;
-            font-size: 0.82rem;
+            font-size: 0.84rem;
         }
     </style>
 </head>
@@ -498,7 +497,6 @@
 
 <script>
     let allTeams = [];
-    let teamColorLookup = {};
     let teamConfLookup = {};
     let qualifiedPlayers = [];
     let conferenceRows = [];
@@ -513,12 +511,6 @@
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         document.getElementById(tabId).classList.add('active');
         if (e && e.target) e.target.classList.add('active');
-    }
-
-    function swatchHTML(primary, secondary) {
-        const p = primary || '#38bdf8';
-        const s = secondary || '#1e293b';
-        return `<span class="color-swatch"><span style="background:${p};"></span><span style="background:${s};"></span></span>`;
     }
 
     function genericSort(list, key, asc) {
@@ -559,13 +551,11 @@
         filtered = genericSort(filtered, rSort.key, rSort.asc);
 
         tbodyEl.innerHTML = filtered.map(t => {
-            const pCol = t.primary_color || '#38bdf8';
-            const sCol = t.secondary_color || '#1e293b';
             const sosVal = Number(t.sos ?? 0);
             return `
-                <tr style="border-left: 4px solid ${pCol};">
+                <tr>
                     <td>${t.rank}</td>
-                    <td><span class="team-cell">${swatchHTML(pCol, sCol)}<strong>${t.team}</strong></span></td>
+                    <td><strong>${t.team}</strong></td>
                     <td><span class="conf-pill">${t.conference}</span></td>
                     <td class="num">${t.wins}-${t.losses}</td>
                     <td class="num"><strong>${Number(t.raa).toFixed(2)}</strong></td>
@@ -619,23 +609,20 @@
         );
         filtered = genericSort(filtered, pSort.key, pSort.asc);
 
-        tbodyEl.innerHTML = filtered.map(p => {
-            const cols = teamColorLookup[p.team] || { primary: p.primary_color || '#38bdf8', secondary: p.secondary_color || '#1e293b' };
-            return `
-                <tr style="border-left: 4px solid ${cols.primary};">
-                    <td>${p.rank}</td>
-                    <td><strong>${p.player_name}</strong></td>
-                    <td><span class="team-cell">${swatchHTML(cols.primary, cols.secondary)}<span>${p.team}</span></span></td>
-                    <td><span class="conf-pill">${p.conference}</span></td>
-                    <td class="num">${Number(p.RC7_raw).toFixed(2)}</td>
-                    <td class="num">${Number(p.OPAF).toFixed(2)}</td>
-                    <td class="num"><strong>${Number(p.RC7_adj).toFixed(2)}</strong></td>
-                </tr>
-            `;
-        }).join('');
+        tbodyEl.innerHTML = filtered.map(p => `
+            <tr>
+                <td>${p.rank}</td>
+                <td><strong>${p.player_name}</strong></td>
+                <td>${p.team}</td>
+                <td><span class="conf-pill">${p.conference}</span></td>
+                <td class="num">${Number(p.RC7_raw).toFixed(2)}</td>
+                <td class="num">${Number(p.OPAF).toFixed(2)}</td>
+                <td class="num"><strong>${Number(p.RC7_adj).toFixed(2)}</strong></td>
+            </tr>
+        `).join('');
     }
 
-    // 3. CONFERENCE RANKINGS (BEST TEAM, TOP 25 TEAMS, PROJECTED TOURNEY TEAMS)
+    // 3. CONFERENCE RANKINGS
     function sortConferences(key) {
         const descByDefault = ['avg_raa', 'top25_teams', 'projected_tourney_teams'];
         if (cSort.key === key) {
@@ -670,8 +657,6 @@
                 avg_raa: Number(avgRaa.toFixed(2)),
                 best_team: best.team,
                 best_team_raa: Number(best.raa).toFixed(2),
-                best_primary: best.primary_color || '#38bdf8',
-                best_secondary: best.secondary_color || '#1e293b',
                 top25_teams: top25Count,
                 projected_tourney_teams: tourneyCount
             };
@@ -695,20 +680,187 @@
                 <td>${c.rank}</td>
                 <td><strong>${c.conference}</strong></td>
                 <td class="num">${c.avg_raa >= 0 ? '+' : ''}${c.avg_raa.toFixed(2)}</td>
-                <td>
-                    <span class="team-cell">
-                        ${swatchHTML(c.best_primary, c.best_secondary)}
-                        <strong>${c.best_team}</strong>
-                        <span class="conf-pill">${c.best_team_raa}</span>
-                    </span>
-                </td>
+                <td><strong>${c.best_team}</strong> <span class="conf-pill">${c.best_team_raa}</span></td>
                 <td class="num"><strong>${c.top25_teams}</strong></td>
                 <td class="num"><strong>${c.projected_tourney_teams}</strong></td>
             </tr>
         `).join('');
     }
 
-    // 4. LOAD DATA & 2026 BRACKETOLOGY
+    // 4. 2026 4-QUADRANT BRACKET BUILDER (FALLBACK FROM allTeams IF JSON HAS OLD SCHEMA)
+    function build2026BracketFromTeams(teams) {
+        const ranked = [...teams].sort((a, b) => a.rank - b.rank);
+        const aqByConf = {};
+        ranked.forEach(t => {
+            if (t.conference && t.conference !== 'Independent / Other' && !aqByConf[t.conference]) {
+                aqByConf[t.conference] = t;
+            }
+        });
+        const aqNames = new Set(Object.values(aqByConf).map(t => t.team));
+        const atLargePool = ranked.filter(t => !aqNames.has(t.team));
+        const atLargeSlots = Math.max(0, 64 - aqNames.size);
+        const atLargeIn = atLargePool.slice(0, atLargeSlots);
+
+        const fieldNames = new Set([...aqNames, ...atLargeIn.map(t => t.team)]);
+        const field = ranked.filter(t => fieldNames.has(t.team)).slice(0, 64).map((t, idx) => ({
+            ...t,
+            overall_seed: idx + 1,
+            bid_type: aqNames.has(t.team) ? 'AQ' : 'AL'
+        }));
+
+        if (field.length < 64) return { quadrants: [], last_four_in: [], first_four_out: [], next_four_out: [] };
+
+        const top32 = field.slice(0, 32);
+        const unseeded = field.slice(32, 64);
+
+        const quadrantSpecs = [
+            { id: 'Q1', title: 'Quadrant 1 — Upper Left (#1 Overall)', super_pairs: [[ [1, 32], [16, 17] ], [ [9, 24], [8, 25] ]] },
+            { id: 'Q4', title: 'Quadrant 4 — Bottom Left (#4 Overall)', super_pairs: [[ [4, 29], [13, 20] ], [ [12, 21], [5, 28] ]] },
+            { id: 'Q3', title: 'Quadrant 3 — Top Right (#3 Overall)', super_pairs: [[ [3, 30], [14, 19] ], [ [11, 22], [6, 27] ]] },
+            { id: 'Q2', title: 'Quadrant 2 — Bottom Right (#2 Overall)', super_pairs: [[ [2, 31], [15, 18] ], [ [10, 23], [7, 26] ]] },
+        ];
+
+        const pods = [];
+        quadrantSpecs.forEach(q => {
+            q.super_pairs.forEach(pair => {
+                pair.forEach(([topOvr, secOvr]) => {
+                    const tTop = top32[topOvr - 1];
+                    const tSec = top32[secOvr - 1];
+                    const rSeedTop = Math.floor((topOvr - 1) / 4) + 1;
+                    const rSeedSec = Math.floor((secOvr - 1) / 4) + 1;
+                    pods.push({
+                        host_team: tTop.team,
+                        host_overall_seed: topOvr,
+                        confs: new Set([tTop.conference, tSec.conference]),
+                        teams: [
+                            { ...tTop, regional_seed: rSeedTop },
+                            { ...tSec, regional_seed: rSeedSec }
+                        ]
+                    });
+                });
+            });
+        });
+
+        [unseeded.slice(0, 16), unseeded.slice(16, 32)].forEach(tier => {
+            const avail = pods.map((_, i) => i);
+            tier.forEach(ut => {
+                let chosen = avail.find(i => !pods[i].confs.has(ut.conference));
+                if (chosen === undefined) chosen = avail[0];
+                avail.splice(avail.indexOf(chosen), 1);
+                pods[chosen].confs.add(ut.conference);
+                pods[chosen].teams.push({ ...ut, regional_seed: '—' });
+            });
+        });
+
+        let cursor = 0;
+        const quadrants = quadrantSpecs.map(q => ({
+            id: q.id,
+            title: q.title,
+            super_regionals: [0, 1].map(() => {
+                const pa = pods[cursor];
+                const pb = pods[cursor + 1];
+                cursor += 2;
+                return { regional_a: pa, regional_b: pb };
+            })
+        }));
+
+        return {
+            quadrants,
+            last_four_in: atLargeIn.slice(-4),
+            first_four_out: atLargePool.slice(atLargeSlots, atLargeSlots + 4),
+            next_four_out: atLargePool.slice(atLargeSlots + 4, atLargeSlots + 8)
+        };
+    }
+
+    function renderBracketology(rawBracket) {
+        const bubbleContainer = document.getElementById('bubble-container');
+        const quadsContainer = document.getElementById('quadrants-container');
+
+        // Use server quadrants if available, otherwise compute 2026 4-Quadrant bracket from allTeams
+        const fallback = build2026BracketFromTeams(allTeams);
+        const bracket = {
+            quadrants: (rawBracket && rawBracket.quadrants && rawBracket.quadrants.length) ? rawBracket.quadrants : fallback.quadrants,
+            last_four_in: (rawBracket && rawBracket.last_four_in && rawBracket.last_four_in.length) ? rawBracket.last_four_in : fallback.last_four_in,
+            first_four_out: (rawBracket && rawBracket.first_four_out && rawBracket.first_four_out.length) ? rawBracket.first_four_out : fallback.first_four_out,
+            next_four_out: (rawBracket && rawBracket.next_four_out && rawBracket.next_four_out.length) ? rawBracket.next_four_out : fallback.next_four_out,
+        };
+
+        tourneyTeamSet = new Set();
+        (bracket.quadrants || []).forEach(q => {
+            (q.super_regionals || []).forEach(sr => {
+                [sr.regional_a, sr.regional_b].forEach(pod => {
+                    (pod.teams || []).forEach(tm => tourneyTeamSet.add(tm.team));
+                });
+            });
+        });
+
+        const bubbleGroups = [
+            { key: 'last_four_in', title: 'Last Four In', cls: 'l4i' },
+            { key: 'first_four_out', title: 'First Four Out', cls: 'f4o' },
+            { key: 'next_four_out', title: 'Next Four Out', cls: 'n4o' }
+        ];
+
+        bubbleContainer.innerHTML = bubbleGroups.map(grp => {
+            const list = bracket[grp.key] || [];
+            return `
+                <div class="bubble-card ${grp.cls}">
+                    <h3>${grp.title}</h3>
+                    ${list.map(t => `
+                        <div class="bubble-row">
+                            <span class="bubble-left">
+                                <strong>${t.team}</strong>
+                                <span class="conf-pill">${t.conference}</span>
+                            </span>
+                            <span style="color:var(--text-muted);font-size:0.82rem;white-space:nowrap;">#${t.rank} (${Number(t.raa).toFixed(2)})</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }).join('');
+
+        const quads = bracket.quadrants || [];
+        quadsContainer.innerHTML = quads.map(q => `
+            <div class="quadrant-card">
+                <div class="quadrant-title">
+                    <span>${q.title}</span>
+                    <span>WCWS Path</span>
+                </div>
+                ${(q.super_regionals || []).map((sr, idx) => `
+                    <div class="super-matchup">
+                        <div class="pods-stack">
+                            ${[sr.regional_a, sr.regional_b].map(pod => `
+                                <div class="regional-card">
+                                    <div class="regional-header">
+                                        <span>${pod.host_team} Regional (#${pod.host_overall_seed} Overall)</span>
+                                        <span>1–8 Quad Pod</span>
+                                    </div>
+                                    ${(pod.teams || []).map(tm => `
+                                        <div class="regional-team">
+                                            <span class="regional-team-left">
+                                                <span class="seed-badge">${tm.regional_seed}</span>
+                                                <strong>${tm.team}</strong>
+                                                <span style="font-size:0.75rem;color:var(--text-muted);">(${tm.bid_type}${tm.overall_seed <= 32 ? ` • #${tm.overall_seed}` : ''})</span>
+                                            </span>
+                                            <span style="font-size:0.78rem;color:var(--text-muted);">${tm.conference}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="super-node">
+                            <strong>Super Regional ${idx + 1}</strong>
+                            ${sr.regional_a.host_team} / ${sr.regional_b.host_team} Winners
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `).join('');
+
+        document.getElementById('bracket-loading').style.display = 'none';
+        document.getElementById('bracket-container').style.display = 'block';
+    }
+
+    // 5. INITIALIZE DASHBOARD
     async function initDashboard() {
         try {
             const [ratingsRes, playersRes, bracketRes] = await Promise.all([
@@ -721,14 +873,9 @@
             allTeams = await ratingsRes.json();
 
             allTeams.forEach(t => {
-                teamColorLookup[t.team] = {
-                    primary: t.primary_color || '#38bdf8',
-                    secondary: t.secondary_color || '#1e293b'
-                };
                 teamConfLookup[t.team] = t.conference || 'Independent / Other';
             });
 
-            // Populate Ratings conference filter
             const confs = [...new Set(allTeams.map(t => t.conference).filter(Boolean))].sort();
             const rConfSel = document.getElementById('rankings-conf-filter');
             confs.forEach(c => rConfSel.insertAdjacentHTML('beforeend', `<option value="${c}">${c}</option>`));
@@ -737,7 +884,6 @@
             document.getElementById('rankings-wrapper').style.display = 'block';
             renderRatingsTable();
 
-            // Load Qualified Players
             if (playersRes.ok) {
                 const rawPlayers = await playersRes.json();
                 qualifiedPlayers = rawPlayers
@@ -758,13 +904,8 @@
                 document.getElementById('players-wrapper').style.display = 'block';
             }
 
-            // Load 2026 Bracketology
-            if (bracketRes.ok) {
-                const bracket = await bracketRes.json();
-                renderBracketology(bracket);
-            }
-
-            // Build Conference Rankings using Bracketology field
+            const bracketData = bracketRes.ok ? await bracketRes.json() : {};
+            renderBracketology(bracketData);
             buildConferenceRows();
 
         } catch (err) {
@@ -772,96 +913,6 @@
             document.getElementById('rankings-loading').innerHTML =
                 `<p style="color:#ef4444;">Failed to load data (${err.message}).</p>`;
         }
-    }
-
-    function renderBracketology(bracket) {
-        const bubbleContainer = document.getElementById('bubble-container');
-        const quadsContainer = document.getElementById('quadrants-container');
-
-        // Track all 64 tournament teams for Conference Rankings
-        tourneyTeamSet = new Set();
-        (bracket.quadrants || []).forEach(q => {
-            (q.super_regionals || []).forEach(sr => {
-                [sr.regional_a, sr.regional_b].forEach(pod => {
-                    (pod.teams || []).forEach(tm => tourneyTeamSet.add(tm.team));
-                });
-            });
-        });
-
-        // Bubble Cards: Last Four In, First Four Out, Next Four Out
-        const bubbleGroups = [
-            { key: 'last_four_in', title: 'Last Four In', cls: 'l4i' },
-            { key: 'first_four_out', title: 'First Four Out', cls: 'f4o' },
-            { key: 'next_four_out', title: 'Next Four Out', cls: 'n4o' }
-        ];
-
-        bubbleContainer.innerHTML = bubbleGroups.map(grp => {
-            const list = bracket[grp.key] || [];
-            return `
-                <div class="bubble-card ${grp.cls}">
-                    <h3>${grp.title}</h3>
-                    ${list.map(t => {
-                        const cols = teamColorLookup[t.team] || { primary: t.primary_color || '#38bdf8', secondary: t.secondary_color || '#1e293b' };
-                        return `
-                            <div class="bubble-row" style="border-left: 3px solid ${cols.primary};">
-                                <span class="team-cell">
-                                    ${swatchHTML(cols.primary, cols.secondary)}
-                                    <strong>${t.team}</strong>
-                                    <span class="conf-pill">${t.conference}</span>
-                                </span>
-                                <span style="color:var(--text-muted);font-size:0.82rem;">#${t.rank} (${Number(t.raa).toFixed(2)})</span>
-                            </div>
-                        `;
-                    }).join('')}
-                </div>
-            `;
-        }).join('');
-
-        // 2026 4-Quadrant Bracket
-        const quads = bracket.quadrants || [];
-        quadsContainer.innerHTML = quads.map(q => `
-            <div class="quadrant-card">
-                <div class="quadrant-title">
-                    <span>${q.title}</span>
-                    <span>WCWS Path</span>
-                </div>
-                ${(q.super_regionals || []).map((sr, idx) => `
-                    <div class="super-matchup">
-                        <div class="pods-stack">
-                            ${[sr.regional_a, sr.regional_b].map(pod => `
-                                <div class="regional-card">
-                                    <div class="regional-header">
-                                        <span>${pod.host_team} Regional (#${pod.host_overall_seed} Overall)</span>
-                                        <span>1–8 Quad Pod</span>
-                                    </div>
-                                    ${(pod.teams || []).map(tm => {
-                                        const cols = teamColorLookup[tm.team] || { primary: tm.primary_color || '#38bdf8', secondary: tm.secondary_color || '#1e293b' };
-                                        return `
-                                            <div class="regional-team" style="border-left: 3px solid ${cols.primary};">
-                                                <span class="team-cell">
-                                                    <span class="seed-badge">${tm.regional_seed}</span>
-                                                    ${swatchHTML(cols.primary, cols.secondary)}
-                                                    <strong>${tm.team}</strong>
-                                                    <span style="font-size:0.75rem;color:var(--text-muted);">(${tm.bid_type}${tm.overall_seed <= 32 ? ` • #${tm.overall_seed}` : ''})</span>
-                                                </span>
-                                                <span style="font-size:0.78rem;color:var(--text-muted);">${tm.conference}</span>
-                                            </div>
-                                        `;
-                                    }).join('')}
-                                </div>
-                            `).join('')}
-                        </div>
-                        <div class="super-node">
-                            <strong>Super Regional ${idx + 1}</strong>
-                            ${sr.regional_a.host_team} / ${sr.regional_b.host_team} Winners
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `).join('');
-
-        document.getElementById('bracket-loading').style.display = 'none';
-        document.getElementById('bracket-container').style.display = 'block';
     }
 
     document.addEventListener('DOMContentLoaded', initDashboard);
