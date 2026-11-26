@@ -1,454 +1,723 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Kahl Index | NCAA Softball Ratings & Bracketology</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --accent-color: #38bdf8;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
+import json
+import math
+import os
+import re
+import time
+import urllib.parse
+import urllib.request
+from bs4 import BeautifulSoup
+
+# ---------------------------------------------------------------------------
+# CONFIGURATION & PATHS
+# ---------------------------------------------------------------------------
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+COLOR_CACHE_PATH = os.path.join(BASE_DIR, "team_colors.json")
+OUTPUT_JSON_PATH = os.path.join(BASE_DIR, "softball_data.json")
+
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 (KHTML, like Gecko) "
+        "Chrome/124.0.0.0 Safari/537.36"
+    )
+}
+
+# Qualified hitter threshold: 2.0 PA per team game (standard NCAA softball)
+QUALIFIED_PA_PER_GAME = 2.0
+
+# 2026 NCAA D1 Softball Automatic Qualifier Conferences (32 AQs + 32 At-Large = 64 Teams)
+CONFERENCES = [
+    "ACC", "America East", "American", "ASUN", "Atlantic 10", "Big 12",
+    "Big East", "Big Sky", "Big South", "Big Ten", "Big West", "CAA",
+    "CUSA", "Horizon", "Ivy League", "MAAC", "MAC", "MEAC", "Missouri Valley",
+    "Mountain West", "NEC", "OVC", "Patriot", "SEC", "SoCon", "Southland",
+    "Summit", "Sun Belt", "SWAC", "WAC", "WCC"
+]
+
+# Common NCAA stats name -> TeamColorCodes school slug/name aliases
+TEAM_NAME_ALIASES = {
+    "uconn": "connecticut huskies",
+    "ole miss": "mississippi rebels",
+    "lsu": "lsu tigers",
+    "ucla": "ucla bruins",
+    "usc": "usc trojans",
+    "ucf": "ucf knights",
+    "unlv": "unlv rebels",
+    "utep": "utep miners",
+    "utsa": "utsa roadrunners",
+    "smu": "smu mustangs",
+    "tcu": "tcu horned frogs",
+    "byu": "byu cougars",
+    "vcu": "vcu rams",
+    "umbc": "umbc retrievers",
+    "uab": "uab blazers",
+    "ut arlington": "texas arlington mavericks",
+    "ut martin": "tennessee martin skyhawks",
+    "utrgv": "texas rio grande valley vaqueros",
+    "texas a&m": "texas am aggies",
+    "miami (fl)": "miami hurricanes",
+    "miami (oh)": "miami redhawks",
+    "st. john's (ny)": "st johns red storm",
+    "saint mary's (ca)": "saint marys gaels",
+    "loyola marymount": "loyola marymount lions",
+    "loyola chicago": "loyola ramblers",
+    "nc state": "north carolina state wolfpack",
+    "pitt": "pittsburgh panthers",
+    "umass": "massachusetts minutemen",
+    "louisiana": "louisiana ragin cajuns",
+    "ul monroe": "louisiana monroe warhawks",
+    "app state": "appalachian state mountaineers",
+    "southern miss": "southern mississippi golden eagles",
+    "fla. atlantic": "florida atlantic owls",
+    "fiu": "florida international panthers",
+    "fgcu": "florida gulf coast eagles",
+    "usc upstate": "south carolina upstate spartans",
+    "csun": "cal state northridge matadors",
+    "cal st. fullerton": "cal state fullerton titans",
+    "uc santa barbara": "uc santa barbara gauchos",
+    "uc san diego": "uc san diego tritons",
+    "uc davis": "uc davis aggies",
+    "uc riverside": "uc riverside highland",
+    "siue": "siu edwardsville cougars",
+    "southern ill.": "southern illinois salukis",
+    "eastern ill.": "eastern illinois panthers",
+    "western ill.": "western illinois leathernecks",
+    "northern ill.": "northern illinois huskies",
+    "central mich.": "central michigan chippewas",
+    "eastern mich.": "eastern michigan eagles",
+    "western mich.": "western michigan broncos",
+    "eastern ky.": "eastern kentucky colonels",
+    "western ky.": "western kentucky hilltoppers",
+    "middle tenn.": "middle tennessee blue raiders",
+    "east tenn. st.": "east tennessee state buccaneers",
+    "tennessee tech": "tennessee tech golden eagles",
+    "southeast mo. st.": "southeast missouri state redhawks",
+    "missouri st.": "missouri state bears",
+    "sam houston": "sam houston state bearkats",
+    "sfa": "stephen f austin lumberjacks",
+    "mcneese": "mcneese state cowboys",
+    "nicholls": "nicholls state colonels",
+    "southeastern la.": "southeastern louisiana lions",
+    "northwestern st.": "northwestern state demons",
+    "am-corpus christi": "texas am corpus christi islanders",
+    "uiw": "incarnate word cardinals",
+    "prairie view": "prairie view am panthers",
+    "ark.-pine bluff": "arkansas pine bluff golden lions",
+    "mississippi val.": "mississippi valley state delta devils",
+    "alabama a&m": "alabama am bulldogs",
+    "alabama st.": "alabama state hornets",
+    "jackson st.": "jackson state tigers",
+    "alcorn": "alcorn state braves",
+    "grambling": "grambling state tigers",
+    "bethune-cookman": "bethune cookman wildcats",
+    "florida a&m": "florida am rattlers",
+    "n.c. a&t": "north carolina at aggies",
+    "n.c. central": "north carolina central eagles",
+    "south carolina st.": "south carolina state bulldogs",
+    "coppin st.": "coppin state eagles",
+    "morgan st.": "morgan state bears",
+    "delaware st.": "delaware state hornets",
+    "norfolk st.": "norfolk state spartans",
+    "umes": "maryland eastern shore hawks",
+    "army west point": "army black knights",
+    "boston u.": "boston university terriers",
+    "col. of charleston": "charleston cougars",
+    "uncw": "unc wilmington seahawks",
+    "uncg": "unc greensboro spartans",
+    "etsu": "east tennessee state buccaneers",
+    "uni": "northern iowa panthers",
+    "uic": "illinois chicago flames",
+    "iupui": "iu indy jaguars",
+    "iu indy": "iu indy jaguars",
+    "green bay": "wisconsin green bay phoenix",
+    "milwaukee": "wisconsin milwaukee panthers",
+    "omaha": "nebraska omaha mavericks",
+    "south dakota st.": "south dakota state jackrabbits",
+    "north dakota st.": "north dakota state bison",
+    "st. thomas (mn)": "st thomas tommies",
+    "cal baptist": "california baptist lancers",
+    "grand canyon": "grand canyon antelopes",
+    "seattle u": "seattle redhawks",
+    "utah tech": "utah tech trailblazers",
+    "tarleton st.": "tarleton state texans",
+    "abilene christian": "abilene christian wildcats",
+    "saint francis (pa)": "saint francis red flash",
+    "central conn. st.": "central connecticut state blue devils",
+    "liu": "long island sharks",
+    "fdu": "fairleigh dickinson knights",
+    "mount st. mary's": "mount st marys mountaineers",
+    "sacred heart": "sacred heart pioneers",
+    "stonehill": "stonehill skyhawks",
+    "le moyne": "le moyne dolphins",
+    "queens (nc)": "queens royals",
+    "west ga.": "west georgia wolves",
+    "lindenwood": "lindenwood lions",
+    "southern ind.": "southern indiana screaming eagles",
+    "east tex. a&m": "texas am commerce lions",
+}
+
+
+# ---------------------------------------------------------------------------
+# 1. TEAM COLOR SCRAPER (teamcolorcodes.com/ncaa-color-codes/)
+# ---------------------------------------------------------------------------
+def _fetch_html(url: str, timeout: int = 12) -> str:
+    req = urllib.request.Request(url, headers=HEADERS)
+    with urllib.request.urlopen(req, timeout=timeout) as resp:
+        return resp.read().decode("utf-8", errors="ignore")
+
+
+def _normalize_key(name: str) -> str:
+    s = name.lower().strip()
+    s = s.replace("&", "and").replace("'", "").replace(".", "")
+    s = re.sub(r"\(.*?\)", "", s)
+    s = re.sub(r"[^a-z0-9\s-]", "", s)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def _extract_hex_from_team_page(html: str) -> tuple[str, str]:
+    """Extract primary and secondary hex codes from a teamcolorcodes.com team page."""
+    soup = BeautifulSoup(html, "html.parser")
+    hexes = []
+
+    # TeamColorCodes stores swatches in .colorblock divs or inline background-color styles
+    for block in soup.select(".colorblock, [style*='background-color']"):
+        style = block.get("style", "")
+        m = re.search(r"background-color:\s*(#[0-9a-fA-F]{6})", style)
+        if m:
+            code = m.group(1).upper()
+            if code not in ("#FFFFFF", "#000000", "#F5F5F5", "#EEEEEE") and code not in hexes:
+                hexes.append(code)
+        text = block.get_text(" ", strip=True)
+        for hm in re.findall(r"#[0-9a-fA-F]{6}", text):
+            code = hm.upper()
+            if code not in ("#FFFFFF", "#000000") and code not in hexes:
+                hexes.append(code)
+
+    # Fallback: scan page body text for Hex Color: #XXXXXX
+    if len(hexes) < 2:
+        for hm in re.findall(r"Hex(?:\s+Color)?:\s*(#[0-9a-fA-F]{6})", soup.get_text(), re.I):
+            code = hm.upper()
+            if code not in ("#FFFFFF", "#000000") and code not in hexes:
+                hexes.append(code)
+
+    primary = hexes[0] if len(hexes) >= 1 else "#1E293B"
+    secondary = hexes[1] if len(hexes) >= 2 else "#64748B"
+    return primary, secondary
+
+
+def scrape_ncaa_team_colors(force_refresh: bool = False) -> dict[str, dict[str, str]]:
+    """
+    Scrapes NCAA team primary & secondary hex codes from
+    https://teamcolorcodes.com/ncaa-color-codes/ and caches to team_colors.json.
+    """
+    if not force_refresh and os.path.exists(COLOR_CACHE_PATH):
+        try:
+            with open(COLOR_CACHE_PATH, "r", encoding="utf-8") as f:
+                cached = json.load(f)
+                if len(cached) > 50:
+                    return cached
+        except Exception:
+            pass
+
+    color_map: dict[str, dict[str, str]] = {}
+    root_url = "https://teamcolorcodes.com/ncaa-color-codes/"
+
+    try:
+        root_html = _fetch_html(root_url)
+        soup = BeautifulSoup(root_html, "html.parser")
+
+        conf_links = set()
+        team_links = set()
+
+        for a in soup.select("a[href*='teamcolorcodes.com/']"):
+            href = a.get("href", "").split("#")[0].rstrip("/") + "/"
+            if "/ncaa-color-codes/" in href and href != root_url:
+                conf_links.add(href)
+            elif href.endswith("-color-codes/") or href.endswith("-colors/"):
+                if "/ncaa-color-codes/" not in href:
+                    team_links.add(href)
+
+        # Crawl conference subpages to collect all individual school pages
+        for clink in sorted(conf_links):
+            try:
+                chtml = _fetch_html(clink, timeout=10)
+                csoup = BeautifulSoup(chtml, "html.parser")
+                for a in csoup.select("a[href*='teamcolorcodes.com/']"):
+                    href = a.get("href", "").split("#")[0].rstrip("/") + "/"
+                    if (href.endswith("-color-codes/") or href.endswith("-colors/")) and "/ncaa-color-codes/" not in href:
+                        team_links.add(href)
+                time.sleep(0.08)
+            except Exception:
+                continue
+
+        # Fetch each school page and parse primary/secondary hex codes
+        for tlink in sorted(team_links):
+            slug = tlink.rstrip("/").split("/")[-1]
+            clean_slug = re.sub(r"-(team-)?color(s|-codes)\$", "", slug).replace("-", " ")
+            try:
+                thtml = _fetch_html(tlink, timeout=10)
+                primary, secondary = _extract_hex_from_team_page(thtml)
+                entry = {"primary": primary, "secondary": secondary, "slug": slug}
+                color_map[_normalize_key(clean_slug)] = entry
+                # Also index without mascot (first 1-3 words)
+                words = clean_slug.split()
+                if len(words) >= 2:
+                    color_map.setdefault(_normalize_key(" ".join(words[:-1])), entry)
+                time.sleep(0.05)
+            except Exception:
+                continue
+
+        if color_map:
+            with open(COLOR_CACHE_PATH, "w", encoding="utf-8") as f:
+                json.dump(color_map, f, indent=2)
+    except Exception as e:
+        print(f"[Warn] Color scrape fallback triggered: {e}")
+
+    return color_map
+
+
+def resolve_team_colors(team_name: str, color_map: dict[str, dict[str, str]]) -> dict[str, str]:
+    """Resolves a team's primary and secondary hex colors with deterministic fallback."""
+    norm = _normalize_key(team_name)
+    alias = TEAM_NAME_ALIASES.get(norm)
+    candidates = [norm]
+    if alias:
+        candidates.insert(0, _normalize_key(alias))
+
+    # Expand common abbreviations (St. -> State)
+    if " st" in norm:
+        candidates.append(norm.replace(" st", " state"))
+
+    for cand in candidates:
+        if cand in color_map:
+            return {"primary": color_map[cand]["primary"], "secondary": color_map[cand]["secondary"]}
+        # Prefix match against scraped school + mascot keys
+        for k, val in color_map.items():
+            if k.startswith(cand + " ") or cand.startswith(k + " "):
+                return {"primary": val["primary"], "secondary": val["secondary"]}
+
+    # Deterministic fallback palette if offline/unmatched
+    h = sum(ord(c) * (i + 1) for i, c in enumerate(norm))
+    palette = [
+        ("#990000", "#FFC72C"), ("#00274C", "#FFCB05"), ("#BA0C2F", "#000000"),
+        ("#0033A0", "#FFFFFF"), ("#4E2A84", "#B6ACD1"), ("#005030", "#F47321"),
+        ("#0021A5", "#FA4616"), ("#841617", "#FDF9D8"), ("#BF5700", "#333F48"),
+        ("#006747", "#CFC493"), ("#154734", "#FFB81C"), ("#0C2340", "#C8102E"),
+    ]
+    p, s = palette[h % len(palette)]
+    return {"primary": p, "secondary": s}
+
+
+# ---------------------------------------------------------------------------
+# 2. KAHL INDEX, R/7 & RA/7 TEAM CALCULATIONS
+# ---------------------------------------------------------------------------
+def compute_team_metrics(teams: list[dict], games: list[dict], color_map: dict) -> list[dict]:
+    """
+    Computes:
+      - R/7  (Runs Scored per 7 innings)
+      - RA/7 (Runs Allowed per 7 innings)
+      - SOS  (Strength of Schedule via iterative opponent rating)
+      - Kahl Index (opponent-adjusted net run differential per 7 innings + SOS)
+      - Team Primary & Secondary Colors
+    """
+    team_lookup = {t["team"]: t for t in teams}
+
+    # Accumulate raw runs, runs allowed, innings, and opponent lists
+    for t in teams:
+        t.setdefault("runs", 0.0)
+        t.setdefault("runs_allowed", 0.0)
+        t.setdefault("innings_off", 0.0)
+        t.setdefault("innings_def", 0.0)
+        t.setdefault("wins", 0)
+        t.setdefault("losses", 0)
+        t["opponents"] = []
+
+    for g in games:
+        t1, t2 = g["home"], g["away"]
+        r1, r2 = float(g["home_runs"]), float(g["away_runs"])
+        inn = float(g.get("innings", 7.0))
+        if t1 in team_lookup and t2 in team_lookup:
+            team_lookup[t1]["runs"] += r1
+            team_lookup[t1]["runs_allowed"] += r2
+            team_lookup[t1]["innings_off"] += inn
+            team_lookup[t1]["innings_def"] += inn
+            team_lookup[t1]["opponents"].append(t2)
+            if r1 > r2:
+                team_lookup[t1]["wins"] += 1
+            else:
+                team_lookup[t1]["losses"] += 1
+
+            team_lookup[t2]["runs"] += r2
+            team_lookup[t2]["runs_allowed"] += r1
+            team_lookup[t2]["innings_off"] += inn
+            team_lookup[t2]["innings_def"] += inn
+            team_lookup[t2]["opponents"].append(t1)
+            if r2 > r1:
+                team_lookup[t2]["wins"] += 1
+            else:
+                team_lookup[t2]["losses"] += 1
+
+    # Straight-up R/7 and RA/7
+    for t in teams:
+        off_inn = t["innings_off"] if t["innings_off"] > 0 else max(1, (t["wins"] + t["losses"]) * 7)
+        def_inn = t["innings_def"] if t["innings_def"] > 0 else max(1, (t["wins"] + t["losses"]) * 7)
+        t["r_per_7"] = round((t["runs"] / off_inn) * 7.0, 2)
+        t["ra_per_7"] = round((t["runs_allowed"] / def_inn) * 7.0, 2)
+        t["raw_margin"] = t["r_per_7"] - t["ra_per_7"]
+
+    # Iterative Kahl Index & SOS solver (25 iterations to convergence)
+    ratings = {t["team"]: t["raw_margin"] for t in teams}
+    sos_map = {t["team"]: 0.0 for t in teams}
+
+    for _ in range(25):
+        new_ratings = {}
+        for t in teams:
+            name = t["team"]
+            opps = [o for o in t["opponents"] if o in ratings]
+            if opps:
+                avg_opp = sum(ratings[o] for o in opps) / len(opps)
+            else:
+                avg_opp = 0.0
+            sos_map[name] = avg_opp
+            new_ratings[name] = t["raw_margin"] + avg_opp
+        mean_r = sum(new_ratings.values()) / max(1, len(new_ratings))
+        ratings = {k: v - mean_r for k, v in new_ratings.items()}
+
+    # Normalize SOS on a clean 0-100 or signed scale (signed SOS runs/7 centered at 0.00)
+    for t in teams:
+        name = t["team"]
+        colors = resolve_team_colors(name, color_map)
+        t["kahl_index"] = round(ratings[name], 2)
+        t["sos"] = round(sos_map[name], 2)
+        t["primary_color"] = colors["primary"]
+        t["secondary_color"] = colors["secondary"]
+        t["games_played"] = t["wins"] + t["losses"]
+        t.pop("opponents", None)
+
+    teams.sort(key=lambda x: x["kahl_index"], reverse=True)
+    for idx, t in enumerate(teams, 1):
+        t["rank"] = idx
+
+    return teams
+
+
+# ---------------------------------------------------------------------------
+# 3. RC7 PLAYER METRICS (QUALIFIED ONLY, NO PA/HR IN OUTPUT)
+# ---------------------------------------------------------------------------
+def compute_player_rc7(players: list[dict], team_lookup: dict[str, dict]) -> list[dict]:
+    """
+    Filters to qualified hitters (PA >= 2.0 * team games played),
+    computes RC7 (Raw), OPAF (Opponent Pitching Adjustment Factor), and RC7 (Adj),
+    and strips PA/HR from the final display payload.
+    """
+    qualified = []
+    d1_avg_ra7 = (
+        sum(t["ra_per_7"] for t in team_lookup.values()) / max(1, len(team_lookup))
+    )
+
+    for p in players:
+        team_name = p["team"]
+        team_info = team_lookup.get(team_name)
+        if not team_info:
+            continue
+
+        gp = team_info.get("games_played", 0)
+        min_pa = math.ceil(gp * QUALIFIED_PA_PER_GAME)
+        pa = int(p.get("pa", 0))
+        if pa < max(1, min_pa):
+            continue
+
+        # Runs Created per 21 outs (7 innings): RC = ((H + BB) * TB) / (AB + BB)
+        ab = float(p.get("ab", 0))
+        h = float(p.get("h", 0))
+        bb = float(p.get("bb", 0))
+        hbp = float(p.get("hbp", 0))
+        tb = float(p.get("tb", 0))
+        outs = max(1.0, (ab - h) + float(p.get("sh", 0)) + float(p.get("sf", 0)))
+
+        on_base = h + bb + hbp
+        denom = ab + bb + hbp
+        rc_total = (on_base * tb) / denom if denom > 0 else 0.0
+        rc7_raw = (rc_total / outs) * 21.0
+
+        # OPAF: Opponent Pitching Adjustment Factor based on team SOS & opponent RA/7
+        opp_ra7_est = max(1.5, d1_avg_ra7 - (team_info["sos"] * 0.5))
+        opaf = p.get("opaf") if p.get("opaf") is not None else (d1_avg_ra7 / opp_ra7_est)
+        rc7_adj = rc7_raw * opaf
+
+        qualified.append({
+            "player": p["player"],
+            "team": team_name,
+            "conference": team_info["conference"],
+            "primary_color": team_info["primary_color"],
+            "secondary_color": team_info["secondary_color"],
+            "rc7_raw": round(rc7_raw, 2),
+            "opaf": round(opaf, 3),
+            "rc7_adj": round(rc7_adj, 2),
+        })
+
+    qualified.sort(key=lambda x: x["rc7_adj"], reverse=True)
+    for idx, p in enumerate(qualified, 1):
+        p["rank"] = idx
+
+    return qualified
+
+
+# ---------------------------------------------------------------------------
+# 4. 2026 NCAA SOFTBALL BRACKETOLOGY (64 TEAMS, 1-8 QUADRANT SEEDING, BUBBLE)
+# ---------------------------------------------------------------------------
+def build_2026_bracketology(teams: list[dict]) -> dict:
+    """
+    Implements the 2026 NCAA Division I Softball Championship structure:
+      - 32 Automatic Qualifiers (highest-ranked Kahl Index team per conference)
+      - 32 At-Large selections (top 32 remaining teams by Kahl Index)
+      - Bubble lists: Last Four In (at-large #29-#32), First Four Out (#33-#36), Next Four Out (#37-#40)
+      - Top 32 overall teams seeded in four 1-8 groups across 4 Quadrants:
+          * Quadrant 1 (Upper Left, #1 Overall):  1-seed (#1),  8-seed (#32) | 4-seed (#16), 5-seed (#17)
+          * Quadrant 2 (Bottom Right, #2 Overall): 1-seed (#2),  8-seed (#31) | 4-seed (#15), 5-seed (#18)
+          * Quadrant 3 (Top Right, #3 Overall):    1-seed (#3),  8-seed (#30) | 4-seed (#14), 5-seed (#19)
+          * Quadrant 4 (Bottom Left, #4 Overall):  1-seed (#4),  8-seed (#29) | 4-seed (#13), 5-seed (#20)
+        And the 2/7 & 3/6 pods in each quadrant:
+          * Q1: 2-seed (#8) + 7-seed (#25) | 3-seed (#9)  + 6-seed (#24)
+          * Q2: 2-seed (#7) + 7-seed (#26) | 3-seed (#10) + 6-seed (#23)
+          * Q3: 2-seed (#6) + 7-seed (#27) | 3-seed (#11) + 6-seed (#22)
+          * Q4: 2-seed (#5) + 7-seed (#28) | 3-seed (#12) + 6-seed (#21)
+      - Enforces one team per conference per 4-team regional pod.
+    """
+    ranked = sorted(teams, key=lambda x: x["kahl_index"], reverse=True)
+
+    # 1. Determine Conference Automatic Qualifiers (best team per conference)
+    aq_by_conf: dict[str, dict] = {}
+    for t in ranked:
+        conf = t["conference"]
+        if conf not in aq_by_conf:
+            aq_by_conf[conf] = t
+
+    aq_names = {t["team"] for t in aq_by_conf.values()}
+
+    # 2. Rank all non-AQ teams for At-Large & Bubble Watch
+    at_large_pool = [t for t in ranked if t["team"] not in aq_names]
+    num_aqs = len(aq_names)
+    at_large_slots = max(0, 64 - num_aqs)
+
+    at_large_in = at_large_pool[:at_large_slots]
+    last_four_in = at_large_in[-4:] if len(at_large_in) >= 4 else at_large_in
+    first_four_out = at_large_pool[at_large_slots : at_large_slots + 4]
+    next_four_out = at_large_pool[at_large_slots + 4 : at_large_slots + 8]
+
+    # 3. Combine full 64-team tournament field sorted by Kahl Index
+    field_names = aq_names | {t["team"] for t in at_large_in}
+    field = [t for t in ranked if t["team"] in field_names][:64]
+
+    for idx, t in enumerate(field, 1):
+        t["overall_seed"] = idx
+        t["bid_type"] = "AQ" if t["team"] in aq_names else "AL"
+
+    # Top 32 get 1-8 regional seeds; teams 33-64 are unseeded regional pod teams
+    top32 = field[:32]
+    unseeded = field[32:64]
+
+    def _fmt_team(t: dict, regional_seed: int | str) -> dict:
+        return {
+            "team": t["team"],
+            "conference": t["conference"],
+            "kahl_index": t["kahl_index"],
+            "record": f"{t['wins']}-{t['losses']}",
+            "overall_seed": t["overall_seed"],
+            "regional_seed": regional_seed,
+            "bid_type": t["bid_type"],
+            "primary_color": t["primary_color"],
+            "secondary_color": t["secondary_color"],
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
+    # 2026 NCAA 4-Quadrant S-Curve Pod Assignments
+    # Each quadrant has 4 regionals: (1 vs 8), (4 vs 5), (3 vs 6), (2 vs 7)
+    quadrant_specs = [
+        {
+            "id": "Q1",
+            "title": "Quadrant 1 — Upper Left (#1 Overall)",
+            "super_pairs": [
+                [(1, 32), (16, 17)],  # Regional 1 (1/8) vs Regional 4 (4/5)
+                [(9, 24), (8, 25)],   # Regional 3 (3/6) vs Regional 2 (2/7)
+            ],
+        },
+        {
+            "id": "Q4",
+            "title": "Quadrant 4 — Bottom Left (#4 Overall)",
+            "super_pairs": [
+                [(4, 29), (13, 20)],
+                [(12, 21), (5, 28)],
+            ],
+        },
+        {
+            "id": "Q3",
+            "title": "Quadrant 3 — Top Right (#3 Overall)",
+            "super_pairs": [
+                [(3, 30), (14, 19)],
+                [(11, 22), (6, 27)],
+            ],
+        },
+        {
+            "id": "Q2",
+            "title": "Quadrant 2 — Bottom Right (#2 Overall)",
+            "super_pairs": [
+                [(2, 31), (15, 18)],
+                [(10, 23), (7, 26)],
+            ],
+        },
+    ]
+
+    # Flatten all 16 regional pods in snake order to assign unseeded teams (33-64) without conference conflicts
+    pods = []
+    for q in quadrant_specs:
+        for sp_idx, pair in enumerate(q["super_pairs"]):
+            for top_ovr, second_ovr in pair:
+                t_top = top32[top_ovr - 1]
+                t_sec = top32[second_ovr - 1]
+                r_seed_top = ((top_ovr - 1) // 4) + 1       # 1, 2, 3, or 4
+                r_seed_sec = ((second_ovr - 1) // 4) + 1    # 5, 6, 7, or 8
+                pods.append({
+                    "quadrant": q["id"],
+                    "super_idx": sp_idx,
+                    "host": t_top["team"],
+                    "host_seed": top_ovr,
+                    "confs_used": {t_top["conference"], t_sec["conference"]},
+                    "teams": [
+                        _fmt_team(t_top, r_seed_top),
+                        _fmt_team(t_sec, r_seed_sec),
+                    ],
+                })
+
+    # Assign 3-line (ranks 33-48) and 4-line (ranks 49-64) avoiding same-conference pods
+    tier3 = unseeded[:16]
+    tier4 = unseeded[16:32]
+
+    for tier_list in (tier3, tier4):
+        remaining_pods = list(range(len(pods)))
+        for ut in tier_list:
+            chosen_idx = None
+            for pidx in remaining_pods:
+                if ut["conference"] not in pods[pidx]["confs_used"]:
+                    chosen_idx = pidx
+                    break
+            if chosen_idx is None:
+                chosen_idx = remaining_pods[0]
+            remaining_pods.remove(chosen_idx)
+            pods[chosen_idx]["confs_used"].add(ut["conference"])
+            pods[chosen_idx]["teams"].append(_fmt_team(ut, "—"))
+
+    # Group pods back into their 4 Quadrants & Super Regional pairings
+    pod_cursor = 0
+    quadrants_out = []
+    for q in quadrant_specs:
+        super_regionals = []
+        for sp_idx in range(2):
+            p_a = pods[pod_cursor]
+            p_b = pods[pod_cursor + 1]
+            pod_cursor += 2
+            p_a.pop("confs_used", None)
+            p_b.pop("confs_used", None)
+            super_regionals.append({
+                "super_id": f"{q['id']}-SR{sp_idx + 1}",
+                "regional_a": p_a,
+                "regional_b": p_b,
+            })
+        quadrants_out.append({
+            "id": q["id"],
+            "title": q["title"],
+            "super_regionals": super_regionals,
+        })
+
+    def _bubble_card(t: dict, idx: int) -> dict:
+        return {
+            "order": idx,
+            "team": t["team"],
+            "conference": t["conference"],
+            "kahl_index": t["kahl_index"],
+            "sos": t["sos"],
+            "record": f"{t['wins']}-{t['losses']}",
+            "primary_color": t["primary_color"],
+            "secondary_color": t["secondary_color"],
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 20px;
-        }
-
-        h1 {
-            color: var(--accent-color);
-            margin-bottom: 5px;
-            font-size: 2.2rem;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 1rem;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            background-color: var(--card-bg);
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
-            padding: 10px 20px;
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .tab-btn.active, .tab-btn:hover {
-            background-color: var(--accent-color);
-            color: #000;
-            border-color: var(--accent-color);
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* Bracketology Grid */
-        .regionals-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-        }
-
-        .regional-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-        }
-
-        .regional-header {
-            border-bottom: 2px solid var(--accent-color);
-            padding-bottom: 8px;
-            margin-bottom: 12px;
-        }
-
-        .regional-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--accent-color);
-        }
-
-        .team-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .team-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 10px;
-            margin-bottom: 4px;
-            background-color: rgba(255, 255, 255, 0.03);
-            border-radius: 6px;
-            font-size: 0.9rem;
-        }
-
-        .seed-num {
-            font-weight: 700;
-            color: var(--text-muted);
-            width: 35px;
-        }
-
-        .team-name {
-            flex-grow: 1;
-            font-weight: 500;
-        }
-
-        /* Tables */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        th, td {
-            padding: 12px 16px;
-            text-align: left;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        th {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--accent-color);
-            font-weight: 600;
-        }
-
-        tr:hover {
-            background-color: rgba(255, 255, 255, 0.02);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--text-muted);
-        }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <header>
-        <h1>The Kahl Index</h1>
-        <div class="subtitle">NCAA Softball Ratings, Player Sabermetrics & Bracketology</div>
-    </header>
-
-    <div class="tabs">
-        <button class="tab-btn active" onclick="switchTab(event, 'rankings')">Kahl Index Rankings</button>
-        <button class="tab-btn" onclick="switchTab(event, 'players')">Player Metrics (RC7/adj)</button>
-        <button class="tab-btn" onclick="switchTab(event, 'conferences')">Conference Rankings</button>
-        <button class="tab-btn" onclick="switchTab(event, 'bracketology')">Bracketology (64-Team)</button>
-    </div>
-
-    <!-- Kahl Index Rankings Tab -->
-    <div id="rankings" class="tab-content active">
-        <div id="rankings-loading" class="loading">Loading Kahl Index Rankings...</div>
-        <table id="rankings-table" style="display:none;">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Team</th>
-                    <th>Conference</th>
-                    <th>Record</th>
-                    <th>SOS</th>
-                    <th>RAA</th>
-                </tr>
-            </thead>
-            <tbody id="rankings-body"></tbody>
-        </table>
-    </div>
-
-    <!-- Player Metrics Tab (NEW) -->
-    <div id="players" class="tab-content">
-        <div id="players-loading" class="loading">Loading Player RC7 Data...</div>
-        <table id="players-table" style="display:none;">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Player</th>
-                    <th>Team</th>
-                    <th>PA</th>
-                    <th>HR</th>
-                    <th>RC7 (Raw)</th>
-                    <th>OPAF</th>
-                    <th>RC7 (Adj)</th>
-                </tr>
-            </thead>
-            <tbody id="players-body"></tbody>
-        </table>
-    </div>
-
-    <!-- Conference Rankings Tab -->
-    <div id="conferences" class="tab-content">
-        <div id="conferences-loading" class="loading">Loading Conference Rankings...</div>
-        <table id="conferences-table" style="display:none;">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Conference</th>
-                    <th>Average RAA</th>
-                    <th>Teams</th>
-                </tr>
-            </thead>
-            <tbody id="conferences-body"></tbody>
-        </table>
-    </div>
-
-    <!-- Bracketology Tab -->
-    <div id="bracketology" class="tab-content">
-        <div id="bracket-loading" class="loading">Loading Bracketology Projection...</div>
-        <div id="bracket-container" class="regionals-grid"></div>
-    </div>
-</div>
-
-<script>
-    function switchTab(e, tabId) {
-        document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-        
-        document.getElementById(tabId).classList.add('active');
-        if (e && e.target) e.target.classList.add('active');
+    return {
+        "field_teams": list(field_names),
+        "quadrants": quadrants_out,
+        "bubble": {
+            "last_four_in": [_bubble_card(t, i + 1) for i, t in enumerate(last_four_in)],
+            "first_four_out": [_bubble_card(t, i + 1) for i, t in enumerate(first_four_out)],
+            "next_four_out": [_bubble_card(t, i + 1) for i, t in enumerate(next_four_out)],
+        },
     }
 
-    // Load Ratings & Conferences
-    async function loadRatings() {
-        const loadingEl = document.getElementById('rankings-loading');
-        const tableEl = document.getElementById('rankings-table');
-        const tbodyEl = document.getElementById('rankings-body');
 
-        try {
-            const res = await fetch(`ratings.json?v=${Date.now()}`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+# ---------------------------------------------------------------------------
+# 5. CONFERENCE RANKINGS (WITH BEST TEAM, TOP 25 COUNT & PROJECTED TOURNEY TEAMS)
+# ---------------------------------------------------------------------------
+def compute_conference_rankings(teams: list[dict], tourney_team_names: set[str]) -> list[dict]:
+    """
+    Aggregates conference metrics:
+      - Avg Kahl Index
+      - Best Team (name + colors + Kahl Index)
+      - Total Top 25 Teams (teams ranked #1-#25 in Kahl Index)
+      - Projected Tournament Teams (teams in the 64-team Bracketology field)
+    """
+    top25_names = {t["team"] for t in teams if t["rank"] <= 25}
+    by_conf: dict[str, list[dict]] = {}
+    for t in teams:
+        by_conf.setdefault(t["conference"], []).append(t)
 
-            const teams = await res.json();
-            tbodyEl.innerHTML = '';
+    conf_rows = []
+    for conf, members in by_conf.items():
+        members_sorted = sorted(members, key=lambda x: x["kahl_index"], reverse=True)
+        best = members_sorted[0]
+        avg_kahl = sum(m["kahl_index"] for m in members_sorted) / len(members_sorted)
+        top25_count = sum(1 for m in members_sorted if m["team"] in top25_names)
+        tourney_count = sum(1 for m in members_sorted if m["team"] in tourney_team_names)
 
-            teams.forEach(t => {
-                const rank = t.rank ?? 'N/A';
-                const teamName = t.team ?? 'N/A';
-                const conf = t.conference ?? 'N/A';
-                const wins = t.wins ?? 0;
-                const losses = t.losses ?? 0;
-                const sos = typeof t.sos === 'number' ? t.sos.toFixed(2) : (t.sos ?? 'N/A');
-                const raa = typeof t.raa === 'number' ? t.raa.toFixed(2) : (t.raa ?? 'N/A');
+        conf_rows.append({
+            "conference": conf,
+            "team_count": len(members_sorted),
+            "avg_kahl": round(avg_kahl, 2),
+            "best_team": best["team"],
+            "best_team_kahl": best["kahl_index"],
+            "best_team_primary": best["primary_color"],
+            "best_team_secondary": best["secondary_color"],
+            "top25_teams": top25_count,
+            "projected_tourney_teams": tourney_count,
+        })
 
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${rank}</td>
-                    <td><strong>${teamName}</strong></td>
-                    <td>${conf}</td>
-                    <td>${wins}-${losses}</td>
-                    <td>${sos}</td>
-                    <td>${raa}</td>
-                `;
-                tbodyEl.appendChild(row);
-            });
+    conf_rows.sort(key=lambda x: x["avg_kahl"], reverse=True)
+    for idx, c in enumerate(conf_rows, 1):
+        c["rank"] = idx
 
-            loadingEl.style.display = 'none';
-            tableEl.style.display = 'table';
+    return conf_rows
 
-            renderConferences(teams);
 
-        } catch (err) {
-            console.error('Ratings Fetch Error:', err);
-            loadingEl.innerHTML = `<p style="color: #ef4444;">Failed to load ratings.json (${err.message})</p>`;
-        }
+# ---------------------------------------------------------------------------
+# 6. PIPELINE RUNNER
+# ---------------------------------------------------------------------------
+def run_pipeline(raw_teams: list[dict], raw_games: list[dict], raw_players: list[dict]) -> dict:
+    color_map = scrape_ncaa_team_colors(force_refresh=False)
+    teams = compute_team_metrics(raw_teams, raw_games, color_map)
+    team_lookup = {t["team"]: t for t in teams}
+    players = compute_player_rc7(raw_players, team_lookup)
+    bracketology = build_2026_bracketology(teams)
+    conferences = compute_conference_rankings(teams, set(bracketology["field_teams"]))
+
+    payload = {
+        "updated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "teams": teams,
+        "players": players,
+        "conferences": conferences,
+        "bracketology": bracketology,
     }
+    with open(OUTPUT_JSON_PATH, "w", encoding="utf-8") as f:
+        json.dump(payload, f, indent=2)
+    return payload
 
-    // Load Player RC7 Metrics
-    async function loadPlayers() {
-        const loadingEl = document.getElementById('players-loading');
-        const tableEl = document.getElementById('players-table');
-        const tbodyEl = document.getElementById('players-body');
 
-        try {
-            const res = await fetch(`players.json?v=${Date.now()}`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-            const players = await res.json();
-            tbodyEl.innerHTML = '';
-
-            players.forEach((p, index) => {
-                const playerName = p.player_name ?? 'N/A';
-                const team = p.team ?? 'N/A';
-                const pa = p.PA ?? 0;
-                const hr = p.HR ?? 0;
-                const rc7Raw = typeof p.RC7_raw === 'number' ? p.RC7_raw.toFixed(2) : (p.RC7_raw ?? 'N/A');
-                const opaf = typeof p.OPAF === 'number' ? p.OPAF.toFixed(2) : (p.OPAF ?? '1.00');
-                const rc7Adj = typeof p.RC7_adj === 'number' ? p.RC7_adj.toFixed(2) : (p.RC7_adj ?? 'N/A');
-
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><strong>${playerName}</strong></td>
-                    <td>${team}</td>
-                    <td>${pa}</td>
-                    <td>${hr}</td>
-                    <td>${rc7Raw}</td>
-                    <td>${opaf}</td>
-                    <td><strong>${rc7Adj}</strong></td>
-                `;
-                tbodyEl.appendChild(row);
-            });
-
-            loadingEl.style.display = 'none';
-            tableEl.style.display = 'table';
-
-        } catch (err) {
-            console.error('Players Fetch Error:', err);
-            loadingEl.innerHTML = `<p style="color: #ef4444;">Failed to load players.json (${err.message}). Workflow may still be building player data.</p>`;
-        }
-    }
-
-    // Render Conference Averages
-    function renderConferences(teams) {
-        const loadingEl = document.getElementById('conferences-loading');
-        const tableEl = document.getElementById('conferences-table');
-        const tbodyEl = document.getElementById('conferences-body');
-
-        try {
-            const confMap = {};
-            teams.forEach(t => {
-                const conf = t.conference;
-                const raa = typeof t.raa === 'number' ? t.raa : parseFloat(t.raa);
-
-                if (conf && !isNaN(raa)) {
-                    if (!confMap[conf]) confMap[conf] = { total: 0, count: 0 };
-                    confMap[conf].total += raa;
-                    confMap[conf].count += 1;
-                }
-            });
-
-            const sortedConfs = Object.keys(confMap).map(c => ({
-                name: c,
-                avg: confMap[c].total / confMap[c].count,
-                count: confMap[c].count
-            })).sort((a, b) => b.avg - a.avg);
-
-            tbodyEl.innerHTML = '';
-            sortedConfs.forEach((c, i) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${i + 1}</td>
-                    <td><strong>${c.name}</strong></td>
-                    <td>${c.avg.toFixed(2)}</td>
-                    <td>${c.count}</td>
-                `;
-                tbodyEl.appendChild(row);
-            });
-
-            loadingEl.style.display = 'none';
-            tableEl.style.display = 'table';
-        } catch (err) {
-            console.error('Conference Error:', err);
-            loadingEl.innerHTML = `<p style="color: #ef4444;">Unable to compute conference averages.</p>`;
-        }
-    }
-
-    // Load Bracketology
-    async function loadBracketology() {
-        const loadingEl = document.getElementById('bracket-loading');
-        const containerEl = document.getElementById('bracket-container');
-
-        try {
-            const res = await fetch(`bracketology.json?v=${Date.now()}`);
-            if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-            const json = await res.json();
-            const regionals = Array.isArray(json) ? json : (json.regionals || []);
-
-            containerEl.innerHTML = '';
-            regionals.forEach((reg, i) => {
-                const card = document.createElement('div');
-                card.className = 'regional-card';
-
-                const teamList = reg.teams || reg.seeds || [];
-                let host = reg.host || reg.host_school || '';
-                if (!host && teamList.length > 0) {
-                    const top = teamList[0];
-                    host = typeof top === 'string' ? top : (top.team || top.name || '');
-                }
-
-                const regionalTitle = host ? `${host} Regional` : `Regional ${i + 1}`;
-
-                let listHTML = '';
-                teamList.forEach((t, idx) => {
-                    const name = typeof t === 'string' ? t : (t.team || t.name || 'TBD');
-                    const seed = (typeof t === 'object' && t.seed) ? t.seed : (idx + 1);
-
-                    listHTML += `
-                        <li class="team-item">
-                            <span class="seed-num">#${seed}</span>
-                            <span class="team-name">${name}</span>
-                        </li>
-                    `;
-                });
-
-                card.innerHTML = `
-                    <div class="regional-header">
-                        <span class="regional-title">${regionalTitle}</span>
-                    </div>
-                    <ul class="team-list">${listHTML}</ul>
-                `;
-
-                containerEl.appendChild(card);
-            });
-
-            loadingEl.style.display = 'none';
-
-        } catch (err) {
-            console.error('Bracketology Fetch Error:', err);
-            loadingEl.innerHTML = `<p style="color: #ef4444;">Failed to load bracketology.json (${err.message})</p>`;
-        }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-        loadRatings();
-        loadPlayers();
-        loadBracketology();
-    });
-</script>
-
-</body>
-</html>
+if __name__ == "__main__":
+    # Pre-warm color cache when executed directly
+    colors = scrape_ncaa_team_colors(force_refresh=False)
+    print(f"Loaded {len(colors)} NCAA team color profiles.")
