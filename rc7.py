@@ -86,6 +86,7 @@ RAW_CONFERENCES = [
     ("ASUN Conference", "Queens (NC)"),
     ("ASUN Conference", "Stetson"),
     ("ASUN Conference", "West Ga."),
+    ("ASUN Conference", "West Florida"),
     ("Big 12 Conference", "Arizona"),
     ("Big 12 Conference", "Arizona St."),
     ("Big 12 Conference", "Baylor"),
